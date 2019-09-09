@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Linear Regression | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Linear Regression | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Linear Regression | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-09-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="literature.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>3</b> Literature</a></li>
+<li class="chapter" data-level="4" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>4</b> Methods</a></li>
+<li class="chapter" data-level="5" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>5</b> Applications</a><ul>
+<li class="chapter" data-level="5.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>5.1</b> Example one</a></li>
+<li class="chapter" data-level="5.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>5.2</b> Example two</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="7" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>7</b> Introduction</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="linear-regression" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Linear Regression</h1>
+<p>You probably learned something about linear regression in a previous course. Here, we briefly review the main concepts of simple linear regression and quickly expand our tool box to multiple regression (with both quantitative and categorical predictors).</p>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">2.1</span> Data</h2>
+<p>We will consider a small dataset from an article by J.S. Martin and colleagues, titled <a href="https://royalsocietypublishing.org/doi/suppl/10.1098/rsbl.2019.0232"><em>Facial width-to-height ratio is associated with agonistic and affiliative dominance in bonobos (<strong>Pan paniscus</strong>)</em></a></p>
+<p>Notes: variable <code>fWHR</code> is the facial width-height ratio and <code>AssR</code> is the Assertiveness score of affiliative dominance. <code>normDS</code> is another dominance score. A few figures of the data are below - we will do some more exploration together.</p>
+<pre><code>## Observations: 117
+## Variables: 8
+## $ Name   &lt;fct&gt; Zuani, Zuani, Zorba, Zorba, Zorba, Zomi, Zomi, Zamba, Z...
+## $ Group  &lt;fct&gt; Apenheul, Apenheul, Wilhelma, Wilhelma, Wilhelma, Frank...
+## $ Sex    &lt;fct&gt; Female, Female, Male, Male, Male, Female, Female, Male,...
+## $ Age    &lt;int&gt; 22, 22, 34, 34, 34, 15, 15, 14, 14, 14, 18, 18, 18, 18,...
+## $ fWHR   &lt;dbl&gt; 1.475052, 1.321814, 1.581446, 1.479237, 1.390086, 1.340...
+## $ AssR   &lt;dbl&gt; 5.36, 5.36, 2.36, 2.36, 2.36, 3.92, 3.92, 4.74, 4.74, 4...
+## $ normDS &lt;dbl&gt; 1.430, 1.430, 2.341, 2.341, 2.341, 3.087, 3.087, 3.035,...
+## $ weight &lt;dbl&gt; 24.0, 24.0, NA, NA, NA, NA, NA, 41.6, 41.6, 41.6, 38.0,...</code></pre>
+<p><img src="bookdown-demo_files/figure-html/view-data-1.png" width="336" /><img src="bookdown-demo_files/figure-html/view-data-2.png" width="336" /></p>
+</div>
+<div id="simple-linear-regression-residuals-least-squares" class="section level2">
+<h2><span class="header-section-number">2.2</span> Simple linear regression, Residuals &amp; Least squares</h2>
+<p>First, let’s review and consider a simple (one-predictor) linear regression model. Fit the model</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">slr &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>bonobos)</a></code></pre></div>
+<p>Extract the slope and intercept values:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">coef</span>(slr)</a></code></pre></div>
+<pre><code>## (Intercept)        AssR 
+##  1.30685287  0.02918242</code></pre>
+<p>Add the regression line to the plot:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">gf_point</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>bonobos) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">gf_lm</span>()</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/lm-scatter-with-line-1.png" width="624" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">summary</span>(slr)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = fWHR ~ AssR, data = bonobos)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.31320 -0.11369 -0.01242  0.09008  0.49241 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  1.30685    0.06283  20.801   &lt;2e-16 ***
+## AssR         0.02918    0.01420   2.055   0.0421 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1689 on 115 degrees of freedom
+## Multiple R-squared:  0.03542,    Adjusted R-squared:  0.02704 
+## F-statistic: 4.223 on 1 and 115 DF,  p-value: 0.04213</code></pre>
+<div id="using-lm-to-fit-a-linear-regression-in-r" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Using <code>lm()</code> to fit a linear regression in R</h3>
+
+</div>
+<div id="equation-of-the-fitted-regression-line" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> Equation of the fitted regression line</h3>
+
+</div>
+</div>
+<div id="multiple-regression" class="section level2">
+<h2><span class="header-section-number">2.3</span> Multiple regression</h2>
+<p>Rarely does our response variable <strong>really</strong> depend on only one predictor. Can we improve the model by adding more predictors?</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">mlr &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight, <span class="dt">data=</span>bonobos)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">coef</span>(mlr)</a></code></pre></div>
+<pre><code>## (Intercept)        AssR      weight 
+## 0.944790930 0.039888045 0.008644299</code></pre>
+<p><img src="bookdown-demo_files/figure-html/mult-reg-plots-1.png" width="312" /><img src="bookdown-demo_files/figure-html/mult-reg-plots-2.png" width="312" /></p>
+<div id="is-it-really-better" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Is it really better?</h3>
+<p>How do we know if the model with more predictors is “better”? (For a more detailed answer, wait about a week…) But before we can define a “beter” model: how did R find the “best” intercept and slopes?</p>
+</div>
+<div id="regression-residuals-errors" class="section level3">
+<h3><span class="header-section-number">2.3.2</span> Regression residuals = “errors”</h3>
+
+</div>
+<div id="computing-predictions" class="section level3">
+<h3><span class="header-section-number">2.3.3</span> Computing Predictions</h3>
+<p>Use the regression equation to compute <strong>predicted values</strong> for the three data points below:</p>
+<pre><code>##        fWHR AssR weight
+## 8  1.880866 4.74   41.6
+## 25 1.798387 5.38   50.6
+## 41 1.591440 3.97     NA
+## 65 1.545019 4.87   38.5</code></pre>
+
+</div>
+</div>
+<div id="predictors-with-two-categories" class="section level2">
+<h2><span class="header-section-number">2.4</span> Predictors with two categories</h2>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">mlr2 &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight <span class="op">+</span><span class="st"> </span>Sex, <span class="dt">data =</span> bonobos)</a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="kw">coef</span>(mlr2)</a></code></pre></div>
+<pre><code>## (Intercept)        AssR      weight     SexMale 
+## 1.065420976 0.058435841 0.002257142 0.128484275</code></pre>
+<p>How does the model incorporate this covariate mathematically?</p>
+
+<div id="predictors-with-more-categories" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Predictors with more categories</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">gf_boxplot</span>(fWHR <span class="op">~</span><span class="st"> </span>Group, <span class="dt">data =</span> bonobos)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">mlr3 &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>Group, <span class="dt">data =</span> bonobos)</a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="kw">coef</span>(mlr3)</a></code></pre></div>
+<pre><code>##       (Intercept)              AssR            weight           SexMale 
+##       1.007734691       0.064361973       0.003458979       0.124854271 
+##    GroupFrankfurt GroupPlanckendael     GroupTwycross     GroupWilhelma 
+##       0.037426358      -0.008464572      -0.112907589       0.011186724 
+##    GroupWuppertal 
+##      -0.004364826</code></pre>
+<p>How does the model incorporate <strong>this</strong> covariate mathematically?</p>
+
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="literature.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/01-lm1.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
