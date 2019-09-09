@@ -1,0 +1,111 @@
+
+# Linear Regression
+You probably learned something about linear regression in a previous course. Here, we briefly review the main concepts of simple linear regression and quickly expand our tool box to multiple regression (with both quantitative and categorical predictors).
+
+## Data
+We will consider a small dataset from an article by J.S. Martin and colleagues, titled [*Facial width-to-height ratio is associated with agonistic and affiliative dominance in bonobos (**Pan paniscus**)*](https://royalsocietypublishing.org/doi/suppl/10.1098/rsbl.2019.0232)
+
+```{r data-in, include=FALSE}
+bonobos <- read.csv(file='http://sldr.netlify.com/data/bonobo_faces.csv')
+```
+Notes: variable `fWHR` is the facial width-height ratio and `AssR` is the Assertiveness score of affiliative dominance. `normDS` is another dominance score. A few figures of the data are below - we will do some more exploration together.
+
+```{r view-data, echo=FALSE, fig.width = 3.5, fig.height = 3, fig.show = 'hold'}
+glimpse(bonobos)
+gf_histogram(~fWHR, data=bonobos, bins=15)
+gf_point(fWHR ~ AssR, data=bonobos) 
+```
+
+## Simple linear regression, Residuals & Least squares
+First, let's review and consider a simple (one-predictor) linear regression model. Fit the model 
+
+```{r, lm-fit, fig.width=6.5, fig.height=4, echo=TRUE}
+slr <- lm(fWHR ~ AssR, data=bonobos)
+```
+
+Extract the slope and intercept values:
+```{r, lm-coef, fig.width=6.5, fig.height=4, echo=TRUE}
+coef(slr)
+```
+
+Add the regression line to the plot:
+```{r, lm-scatter-with-line, fig.width=6.5, fig.height=4, echo=TRUE}
+gf_point(fWHR ~ AssR, data=bonobos) %>% 
+  gf_lm()
+summary(slr)
+```
+
+### Using `lm()` to fit a linear regression in R
+\vspace{1.5in}
+
+### Equation of the fitted regression line
+\vspace{1.5in}
+
+
+## Multiple regression
+Rarely does our response variable **really** depend on only one predictor. Can we improve the model by adding more predictors?
+
+```{r, mult-reg, fig.show='hold'}
+mlr <- lm(fWHR ~ AssR + weight, data=bonobos)
+coef(mlr)
+```
+
+```{r, mult-reg-plots, echo=FALSE, warning = FALSE, fig.width = 3.25, fig.height=2, fig.show='hold'}
+my_points <- c(8,25,41,65)
+bonobos$three <- 'no'
+bonobos$three[my_points] <- 'yes'
+bonobos <- bonobos %>%
+  mutate(pt_size = ifelse(three == 'yes', 1.1, 1))
+gf_point(fWHR ~ AssR, data=bonobos, shape = ~three,
+         size = ~pt_size,
+         show.legend=FALSE) 
+gf_point(fWHR ~ weight, data=bonobos, shape = ~three,
+         size = ~pt_size,
+         show.legend=FALSE) 
+```
+
+### Is it really better?
+How do we know if the model with more predictors is "better"? (For a more detailed answer, wait about a week...) But before we can define a "beter" model: how did R find the "best" intercept and slopes?
+
+### Regression residuals = "errors"
+
+
+\vspace{1.25in}
+
+
+### Computing Predictions
+Use the regression equation to compute **predicted values** for the three data points below:
+
+```{r, three-points, echo=FALSE}
+bonobo3 <- bonobos[my_points,c('fWHR', 'AssR', 'weight')]
+bonobo3
+```
+
+\vspace{2in}
+
+## Predictors with two categories
+```{r, echo=FALSE, fig.width=6.5, fig.height=1.5}
+gf_boxplot(fWHR ~ Sex, data = bonobos) %>%
+  gf_refine(coord_flip())
+```
+
+```{r}
+mlr2 <- lm(fWHR ~ AssR + weight + Sex, data = bonobos)
+coef(mlr2)
+```
+
+How does the model incorporate this covariate mathematically?
+
+\vspace{1.75in}
+
+### Predictors with more categories
+
+```{r, fig.width=6.5, fig.height=2}
+gf_boxplot(fWHR ~ Group, data = bonobos)
+mlr3 <- lm(fWHR ~ AssR + weight + Sex + Group, data = bonobos)
+coef(mlr3)
+```
+
+How does the model incorporate **this** covariate mathematically?
+
+\vspace{1.75in}
