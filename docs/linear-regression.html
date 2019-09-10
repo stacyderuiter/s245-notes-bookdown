@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-09-09" />
+<meta name="date" content="2019-09-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="index.html"/>
-<link rel="next" href="literature.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -125,7 +125,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li><a href="./">A Minimal Book Example</a></li>
+<li><a href="./">STAT 245 Notes</a></li>
 
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
@@ -143,16 +143,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
 <li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
 </ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="literature.html"><a href="literature.html"><i class="fa fa-check"></i><b>3</b> Literature</a></li>
-<li class="chapter" data-level="4" data-path="methods.html"><a href="methods.html"><i class="fa fa-check"></i><b>4</b> Methods</a></li>
-<li class="chapter" data-level="5" data-path="applications.html"><a href="applications.html"><i class="fa fa-check"></i><b>5</b> Applications</a><ul>
-<li class="chapter" data-level="5.1" data-path="applications.html"><a href="applications.html#example-one"><i class="fa fa-check"></i><b>5.1</b> Example one</a></li>
-<li class="chapter" data-level="5.2" data-path="applications.html"><a href="applications.html#example-two"><i class="fa fa-check"></i><b>5.2</b> Example two</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="final-words.html"><a href="final-words.html"><i class="fa fa-check"></i><b>6</b> Final Words</a></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
-<li class="chapter" data-level="7" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>7</b> Introduction</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -282,7 +279,115 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##      -0.004364826</code></pre>
 <p>How does the model incorporate <strong>this</strong> covariate mathematically?</p>
 
+</div>
+</div>
+<div id="returning-to-the-r-model-summary" class="section level2">
+<h2><span class="header-section-number">2.5</span> Returning to the R Model Summary</h2>
+<p>There are several bits of information you should be able to extract from the <code>summary()</code> output R produces on a fitted linear regression model:</p>
+<ul>
+<li><span class="math inline">\(\beta\)</span>s, Coefficient Estimates</li>
+<li><p><span class="math inline">\(\sigma\)</span>, labeled “residual standard error”
+</p></li>
+<li><p><span class="math inline">\(R^2\)</span> (adjusted)</p></li>
+</ul>
 
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">mlr3 &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>Group, <span class="dt">data =</span> bonobos)</a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="kw">summary</span>(mlr3)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = fWHR ~ AssR + weight + Sex + Group, data = bonobos)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.38288 -0.09488 -0.02642  0.07196  0.48464 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        1.007735   0.217585   4.631 2.05e-05 ***
+## AssR               0.064362   0.021158   3.042   0.0035 ** 
+## weight             0.003459   0.005547   0.624   0.5353    
+## SexMale            0.124854   0.059278   2.106   0.0394 *  
+## GroupFrankfurt     0.037426   0.074892   0.500   0.6191    
+## GroupPlanckendael -0.008465   0.075407  -0.112   0.9110    
+## GroupTwycross     -0.112908   0.074779  -1.510   0.1364    
+## GroupWilhelma      0.011187   0.085538   0.131   0.8964    
+## GroupWuppertal    -0.004365   0.071292  -0.061   0.9514    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1691 on 59 degrees of freedom
+##   (49 observations deleted due to missingness)
+## Multiple R-squared:  0.2517, Adjusted R-squared:  0.1502 
+## F-statistic:  2.48 on 8 and 59 DF,  p-value: 0.02167</code></pre>
+</div>
+<div id="predictions-from-the-model" class="section level2">
+<h2><span class="header-section-number">2.6</span> Predictions from the model</h2>
+<div id="by-hand" class="section level3">
+<h3><span class="header-section-number">2.6.1</span> By Hand</h3>
+<p>The equation for the fitted model above is:</p>
+<p><span class="math display">\[ y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3I_{Male} + \beta_4I_{Frankfurt} + \beta_5I_{Planckendael} + \beta_6I_{Twycross} + \beta_7I_{Wilhelma} + \beta_7I_{Wuppertal} + \epsilon\]</span></p>
+<p>where</p>
+<ul>
+<li><span class="math inline">\(y =\)</span></li>
+<li><span class="math inline">\(\beta_0=\)</span></li>
+</ul>
+
+<ul>
+<li><span class="math inline">\(x_1=\)</span></li>
+<li><span class="math inline">\(x_2=\)</span></li>
+<li><span class="math inline">\(\beta_1, \beta_2, \beta_3 ...\)</span> are:</li>
+<li><span class="math inline">\(I_{Male} =\)</span></li>
+<li><span class="math inline">\(I_{Frankfurt} =\)</span></li>
+<li><span class="math inline">\(I_{Planckendael} =\)</span> , etc.</li>
+<li><span class="math inline">\(\epsilon=\)</span></li>
+</ul>
+<div id="comprehension-check" class="section level4">
+<h4><span class="header-section-number">2.6.1.1</span> Comprehension check:</h4>
+<p>What is the expected fWHR (according to this model) for a 30 kg female bonobo at the Wilhelma zoo?</p>
+
+</div>
+</div>
+<div id="prediction-plots-in-r" class="section level3">
+<h3><span class="header-section-number">2.6.2</span> Prediction Plots in R</h3>
+<p>We can ask R to compute predictions for <strong>all</strong> the data points in the real dataset.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">bonobos &lt;-<span class="st"> </span>bonobos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3))</a></code></pre></div>
+<pre><code>## Error: Column `preds` must be length 117 (the number of rows) or one, not 68</code></pre>
+<p>Wait, what? This error is because the <code>lm()</code> function removes rows containing missing values from the dataset, so it computes only 68 residuals (for the complete cases in the data). This doesn’t match the 117 rows in the original data. We can solve the problem by omitting rows with missing values first. To be safe, we first select only the variables we need, so we don’t omit rows based on missing values in unused variables.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">b2 &lt;-<span class="st"> </span>bonobos <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="st">  </span><span class="kw">select</span>(fWHR, weight, AssR, Sex, Group) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="st">  </span><span class="kw">na.omit</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3))</a></code></pre></div>
+<p><em>We have a full set of predictions!</em></p>
+<p>But if we plot these predictions on a scatter plot of <code>fWHR</code> as a function of <code>AssR</code>, we <em>do not</em> get a straight line, because the predictions are also impacted by varying values of <code>weight</code>, <code>Sex</code>, and <code>Group</code>:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">gf_point</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data =</span> b2) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="st">  </span><span class="kw">gf_line</span>(preds <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>b2)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
+<p><em>But…we would really like a straight line that helps us visualize the meaning of the <span class="math inline">\(\beta\)</span> (slope coefficient) for <code>AssR</code>.</em> We can make predictions for a <strong>hypothetical</strong> dataset, in which <code>AssR</code> varies over a reasonable range, but the other predictors stay constant. This lets us see how <code>AssR</code> (and only <code>AssR</code>) affects the response, without contributions from other predictors. In choosing the values to include in hypothetical dataset, we often choose to hold variables constant at their most common or median values, but not blindly: also, avoid impossible or implausible variable combinations (for example, specifying that a person lives in the state of Michigan but the city of Chicago, or that they are a 5-year-old person with 4 children). <em>In this case, to match the figures in the published paper, we are also going to vary the <code>Sex</code> - but generally you’d only allow one predictor to vary.</em></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">fake_data &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">AssR =</span> <span class="kw">seq</span>(<span class="dt">from=</span><span class="fl">1.8</span>, <span class="dt">to=</span><span class="fl">5.7</span>, <span class="dt">by=</span><span class="fl">0.05</span>),</a>
+<a class="sourceLine" id="cb22-2" title="2">                         <span class="dt">weight =</span> <span class="fl">38.5</span>,</a>
+<a class="sourceLine" id="cb22-3" title="3">                         <span class="dt">Sex =</span> <span class="kw">c</span>(<span class="st">&#39;Female&#39;</span>, <span class="st">&#39;Male&#39;</span>),</a>
+<a class="sourceLine" id="cb22-4" title="4">                         <span class="dt">Group =</span> <span class="st">&#39;Wuppertal&#39;</span>)</a>
+<a class="sourceLine" id="cb22-5" title="5"></a>
+<a class="sourceLine" id="cb22-6" title="6">fake_data &lt;-<span class="st"> </span>fake_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3, <span class="dt">newdata =</span> fake_data))</a>
+<a class="sourceLine" id="cb22-8" title="8"><span class="kw">gf_line</span>(preds <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">color =</span> <span class="op">~</span>Sex, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
+<div id="comprehension-checks" class="section level4">
+<h4><span class="header-section-number">2.6.2.1</span> Comprehension checks:</h4>
+<ul>
+<li>Should we overlay prediction-plot line(s) on the data scatter plot?</li>
+<li>How do you think the plot would look if we changed the constant predictor values?</li>
+<li>What is missing from this picture?</li>
+</ul>
+</div>
+<div id="shortcut" class="section level4">
+<h4><span class="header-section-number">2.6.2.2</span> Shortcut</h4>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">require</span>(s245)</a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;AssR&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
+
+</div>
 </div>
 </div>
 </div>
@@ -292,7 +397,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
         </div>
       </div>
 <a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="literature.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -337,6 +442,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

@@ -124,7 +124,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019-09-09}
+    \date{2019-09-10}
 
 \usepackage{booktabs}
 \usepackage{amsthm}
@@ -342,102 +342,187 @@ How does the model incorporate \textbf{this} covariate mathematically?
 
 \vspace{1.75in}
 
-\hypertarget{literature}{%
-\chapter{Literature}\label{literature}}
+\hypertarget{returning-to-the-r-model-summary}{%
+\section{Returning to the R Model Summary}\label{returning-to-the-r-model-summary}}
 
-Here is a review of existing methods.
+There are several bits of information you should be able to extract from the \texttt{summary()} output R produces on a fitted linear regression model:
 
-\hypertarget{methods}{%
-\chapter{Methods}\label{methods}}
+\begin{itemize}
+\item
+  \(\beta\)s, Coefficient Estimates
+\item
+  \(\sigma\), labeled ``residual standard error''
+  \vspace{2.5in}
+\item
+  \(R^2\) (adjusted)
+\end{itemize}
 
-We describe our methods in this chapter.
-
-\hypertarget{applications}{%
-\chapter{Applications}\label{applications}}
-
-Some \emph{significant} applications are demonstrated in this chapter.
-
-\hypertarget{example-one}{%
-\section{Example one}\label{example-one}}
-
-\hypertarget{example-two}{%
-\section{Example two}\label{example-two}}
-
-\hypertarget{final-words}{%
-\chapter{Final Words}\label{final-words}}
-
-We have finished a nice book.
-
-\hypertarget{intro}{%
-\chapter{Introduction}\label{intro}}
-
-You can label chapter and section titles using \texttt{\{\#label\}} after them, e.g., we can reference Chapter \ref{intro}. If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \ref{methods}.
-
-Figures and tables with captions will be placed in \texttt{figure} and \texttt{table} environments, respectively.
+\vspace{2.5in}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mar =} \KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, }\FloatTok{.1}\NormalTok{, }\FloatTok{.1}\NormalTok{))}
-\KeywordTok{plot}\NormalTok{(pressure, }\DataTypeTok{type =} \StringTok{'b'}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{)}
+\NormalTok{mlr3 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(fWHR }\OperatorTok{~}\StringTok{ }\NormalTok{AssR }\OperatorTok{+}\StringTok{ }\NormalTok{weight }\OperatorTok{+}\StringTok{ }\NormalTok{Sex }\OperatorTok{+}\StringTok{ }\NormalTok{Group, }\DataTypeTok{data =}\NormalTok{ bonobos)}
+\KeywordTok{summary}\NormalTok{(mlr3)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{figure}
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = fWHR ~ AssR + weight + Sex + Group, data = bonobos)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.38288 -0.09488 -0.02642  0.07196  0.48464 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)        1.007735   0.217585   4.631 2.05e-05 ***
+## AssR               0.064362   0.021158   3.042   0.0035 ** 
+## weight             0.003459   0.005547   0.624   0.5353    
+## SexMale            0.124854   0.059278   2.106   0.0394 *  
+## GroupFrankfurt     0.037426   0.074892   0.500   0.6191    
+## GroupPlanckendael -0.008465   0.075407  -0.112   0.9110    
+## GroupTwycross     -0.112908   0.074779  -1.510   0.1364    
+## GroupWilhelma      0.011187   0.085538   0.131   0.8964    
+## GroupWuppertal    -0.004365   0.071292  -0.061   0.9514    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1691 on 59 degrees of freedom
+##   (49 observations deleted due to missingness)
+## Multiple R-squared:  0.2517, Adjusted R-squared:  0.1502 
+## F-statistic:  2.48 on 8 and 59 DF,  p-value: 0.02167
+\end{verbatim}
 
-{\centering \includegraphics[width=0.8\linewidth]{bookdown-demo_files/figure-latex/nice-fig-1} 
+\hypertarget{predictions-from-the-model}{%
+\section{Predictions from the model}\label{predictions-from-the-model}}
 
-}
+\hypertarget{by-hand}{%
+\subsection{By Hand}\label{by-hand}}
 
-\caption{Here is a nice figure!}\label{fig:nice-fig}
-\end{figure}
+The equation for the fitted model above is:
 
-Reference a figure by its code chunk label with the \texttt{fig:} prefix, e.g., see Figure \ref{fig:nice-fig}. Similarly, you can reference tables generated from \texttt{knitr::kable()}, e.g., see Table \ref{tab:nice-tab}.
+\[ y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3I_{Male} + \beta_4I_{Frankfurt} + \beta_5I_{Planckendael} + \beta_6I_{Twycross} + \beta_7I_{Wilhelma} + \beta_7I_{Wuppertal} + \epsilon\]
+
+where
+
+\begin{itemize}
+\tightlist
+\item
+  \(y =\)
+\item
+  \(\beta_0=\)
+\end{itemize}
+
+\vspace{0.25in}
+
+\begin{itemize}
+\tightlist
+\item
+  \(x_1=\)
+\item
+  \(x_2=\)
+\item
+  \(\beta_1, \beta_2, \beta_3 ...\) are:
+\item
+  \(I_{Male} =\)
+\item
+  \(I_{Frankfurt} =\)
+\item
+  \(I_{Planckendael} =\) \hspace{3in}, etc.
+\item
+  \(\epsilon=\)
+\end{itemize}
+
+\hypertarget{comprehension-check}{%
+\subsubsection{Comprehension check:}\label{comprehension-check}}
+
+What is the expected fWHR (according to this model) for a 30 kg female bonobo at the Wilhelma zoo?
+
+\vspace{1.5in}
+
+\hypertarget{prediction-plots-in-r}{%
+\subsection{Prediction Plots in R}\label{prediction-plots-in-r}}
+
+We can ask R to compute predictions for \textbf{all} the data points in the real dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(}
-  \KeywordTok{head}\NormalTok{(iris, }\DecValTok{20}\NormalTok{), }\DataTypeTok{caption =} \StringTok{'Here is a nice table!'}\NormalTok{,}
-  \DataTypeTok{booktabs =} \OtherTok{TRUE}
-\NormalTok{)}
+\NormalTok{bonobos <-}\StringTok{ }\NormalTok{bonobos }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{preds =} \KeywordTok{predict}\NormalTok{(mlr3))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{table}[t]
+\begin{verbatim}
+## Error: Column `preds` must be length 117 (the number of rows) or one, not 68
+\end{verbatim}
 
-\caption{\label{tab:nice-tab}Here is a nice table!}
-\centering
-\begin{tabular}{rrrrl}
-\toprule
-Sepal.Length & Sepal.Width & Petal.Length & Petal.Width & Species\\
-\midrule
-5.1 & 3.5 & 1.4 & 0.2 & setosa\\
-4.9 & 3.0 & 1.4 & 0.2 & setosa\\
-4.7 & 3.2 & 1.3 & 0.2 & setosa\\
-4.6 & 3.1 & 1.5 & 0.2 & setosa\\
-5.0 & 3.6 & 1.4 & 0.2 & setosa\\
-\addlinespace
-5.4 & 3.9 & 1.7 & 0.4 & setosa\\
-4.6 & 3.4 & 1.4 & 0.3 & setosa\\
-5.0 & 3.4 & 1.5 & 0.2 & setosa\\
-4.4 & 2.9 & 1.4 & 0.2 & setosa\\
-4.9 & 3.1 & 1.5 & 0.1 & setosa\\
-\addlinespace
-5.4 & 3.7 & 1.5 & 0.2 & setosa\\
-4.8 & 3.4 & 1.6 & 0.2 & setosa\\
-4.8 & 3.0 & 1.4 & 0.1 & setosa\\
-4.3 & 3.0 & 1.1 & 0.1 & setosa\\
-5.8 & 4.0 & 1.2 & 0.2 & setosa\\
-\addlinespace
-5.7 & 4.4 & 1.5 & 0.4 & setosa\\
-5.4 & 3.9 & 1.3 & 0.4 & setosa\\
-5.1 & 3.5 & 1.4 & 0.3 & setosa\\
-5.7 & 3.8 & 1.7 & 0.3 & setosa\\
-5.1 & 3.8 & 1.5 & 0.3 & setosa\\
-\bottomrule
-\end{tabular}
-\end{table}
+Wait, what? This error is because the \texttt{lm()} function removes rows containing missing values from the dataset, so it computes only 68 residuals (for the complete cases in the data). This doesn't match the 117 rows in the original data. We can solve the problem by omitting rows with missing values first. To be safe, we first select only the variables we need, so we don't omit rows based on missing values in unused variables.
 
-You can write citations, too. For example, we are using the \textbf{bookdown} package \citep{R-bookdown} in this sample book, which was built on top of R Markdown and \textbf{knitr} \citep{xie2015}.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b2 <-}\StringTok{ }\NormalTok{bonobos }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(fWHR, weight, AssR, Sex, Group) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{na.omit}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{preds =} \KeywordTok{predict}\NormalTok{(mlr3))}
+\end{Highlighting}
+\end{Shaded}
+
+\emph{We have a full set of predictions!}
+
+But if we plot these predictions on a scatter plot of \texttt{fWHR} as a function of \texttt{AssR}, we \emph{do not} get a straight line, because the predictions are also impacted by varying values of \texttt{weight}, \texttt{Sex}, and \texttt{Group}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{gf_point}\NormalTok{(fWHR }\OperatorTok{~}\StringTok{ }\NormalTok{AssR, }\DataTypeTok{data =}\NormalTok{ b2) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_line}\NormalTok{(preds }\OperatorTok{~}\StringTok{ }\NormalTok{AssR, }\DataTypeTok{data=}\NormalTok{b2)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\emph{But\ldots{}we would really like a straight line that helps us visualize the meaning of the \(\beta\) (slope coefficient) for \texttt{AssR}.} We can make predictions for a \textbf{hypothetical} dataset, in which \texttt{AssR} varies over a reasonable range, but the other predictors stay constant. This lets us see how \texttt{AssR} (and only \texttt{AssR}) affects the response, without contributions from other predictors. In choosing the values to include in hypothetical dataset, we often choose to hold variables constant at their most common or median values, but not blindly: also, avoid impossible or implausible variable combinations (for example, specifying that a person lives in the state of Michigan but the city of Chicago, or that they are a 5-year-old person with 4 children). \emph{In this case, to match the figures in the published paper, we are also going to vary the \texttt{Sex} - but generally you'd only allow one predictor to vary.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fake_data <-}\StringTok{ }\KeywordTok{expand.grid}\NormalTok{(}\DataTypeTok{AssR =} \KeywordTok{seq}\NormalTok{(}\DataTypeTok{from=}\FloatTok{1.8}\NormalTok{, }\DataTypeTok{to=}\FloatTok{5.7}\NormalTok{, }\DataTypeTok{by=}\FloatTok{0.05}\NormalTok{),}
+                         \DataTypeTok{weight =} \FloatTok{38.5}\NormalTok{,}
+                         \DataTypeTok{Sex =} \KeywordTok{c}\NormalTok{(}\StringTok{'Female'}\NormalTok{, }\StringTok{'Male'}\NormalTok{),}
+                         \DataTypeTok{Group =} \StringTok{'Wuppertal'}\NormalTok{)}
+
+\NormalTok{fake_data <-}\StringTok{ }\NormalTok{fake_data }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{preds =} \KeywordTok{predict}\NormalTok{(mlr3, }\DataTypeTok{newdata =}\NormalTok{ fake_data))}
+\KeywordTok{gf_line}\NormalTok{(preds }\OperatorTok{~}\StringTok{ }\NormalTok{AssR, }\DataTypeTok{color =} \OperatorTok{~}\NormalTok{Sex, }\DataTypeTok{data=}\NormalTok{fake_data) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{gf_labs}\NormalTok{(}\DataTypeTok{y=}\StringTok{'Predicted}\CharTok{\textbackslash{}n}\StringTok{fWHR'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\hypertarget{comprehension-checks}{%
+\subsubsection{Comprehension checks:}\label{comprehension-checks}}
+
+\begin{itemize}
+\tightlist
+\item
+  Should we overlay prediction-plot line(s) on the data scatter plot?
+\item
+  How do you think the plot would look if we changed the constant predictor values?
+\item
+  What is missing from this picture?
+\end{itemize}
+
+\hypertarget{shortcut}{%
+\subsubsection{Shortcut}\label{shortcut}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{require}\NormalTok{(s245)}
+\KeywordTok{pred_plot}\NormalTok{(mlr3, }\StringTok{'AssR'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-10-1.pdf}
 
 \bibliography{book.bib,packages.bib}
 

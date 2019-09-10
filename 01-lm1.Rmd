@@ -109,3 +109,98 @@ coef(mlr3)
 How does the model incorporate **this** covariate mathematically?
 
 \vspace{1.75in}
+
+## Returning to the R Model Summary
+There are several bits of information you should be able to extract from the `summary()` output R produces on a fitted linear regression model:
+
+- $\beta$s, Coefficient Estimates
+- $\sigma$, labeled "residual standard error" 
+\vspace{2.5in}
+
+- $R^2$ (adjusted)
+
+\vspace{2.5in}
+
+```{r}
+mlr3 <- lm(fWHR ~ AssR + weight + Sex + Group, data = bonobos)
+summary(mlr3)
+```
+
+## Predictions from the model
+
+### By Hand
+The equation for the fitted model above is:
+
+$$ y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3I_{Male} + \beta_4I_{Frankfurt} + \beta_5I_{Planckendael} + \beta_6I_{Twycross} + \beta_7I_{Wilhelma} + \beta_7I_{Wuppertal} + \epsilon$$
+
+where
+
+- $y =$
+- $\beta_0=$
+
+\vspace{0.25in}
+
+- $x_1=$
+- $x_2=$
+- $\beta_1, \beta_2, \beta_3 ...$ are:
+- $I_{Male} =$
+- $I_{Frankfurt} =$
+- $I_{Planckendael} =$ \hspace{3in}, etc.
+- $\epsilon=$
+
+#### Comprehension check: 
+What is the expected fWHR (according to this model) for a 30 kg female bonobo at the Wilhelma zoo?
+
+\vspace{1.5in}
+
+### Prediction Plots in R
+We can ask R to compute predictions for **all** the data points in the real dataset.
+
+```{r, echo=TRUE, error = TRUE}
+bonobos <- bonobos %>% 
+  mutate(preds = predict(mlr3))
+```
+
+Wait, what? This error is because the `lm()` function removes rows containing missing values from the dataset, so it computes only 68 residuals (for the complete cases in the data). This doesn't match the 117 rows in the original data. We can solve the problem by omitting rows with missing values first. To be safe, we first select only the variables we need, so we don't omit rows based on missing values in unused variables.
+
+```{r}
+b2 <- bonobos %>%
+  select(fWHR, weight, AssR, Sex, Group) %>%
+  na.omit() %>%
+  mutate(preds = predict(mlr3))
+```
+
+*We have a full set of predictions!*
+
+But if we plot these predictions on a scatter plot of `fWHR` as a function of `AssR`, we *do not* get a straight line, because the predictions are also impacted by varying values of `weight`, `Sex`, and `Group`:
+
+```{r, fig.width=6, fig.height=2.5}
+gf_point(fWHR ~ AssR, data = b2) %>%
+  gf_line(preds ~ AssR, data=b2)
+```
+
+*But...we would really like a straight line that helps us visualize the meaning of the $\beta$ (slope coefficient) for `AssR`.* We can make predictions for a **hypothetical** dataset, in which `AssR` varies over a reasonable range, but the other predictors stay constant. This lets us see how `AssR` (and only `AssR`) affects the response, without contributions from other predictors. In choosing the values to include in hypothetical dataset, we often choose to hold variables constant at their most common or median values, but not blindly: also, avoid impossible or implausible variable combinations (for example, specifying that a person lives in the state of Michigan but the city of Chicago, or that they are a 5-year-old person with 4 children). *In this case, to match the figures in the published paper, we are also going to vary the `Sex` - but generally you'd only allow one predictor to vary.*
+
+```{r, echo=TRUE, fig.width=6, fig.height=2}
+fake_data <- expand.grid(AssR = seq(from=1.8, to=5.7, by=0.05),
+                         weight = 38.5,
+                         Sex = c('Female', 'Male'),
+                         Group = 'Wuppertal')
+
+fake_data <- fake_data %>% 
+  mutate(preds = predict(mlr3, newdata = fake_data))
+gf_line(preds ~ AssR, color = ~Sex, data=fake_data) %>% gf_labs(y='Predicted\nfWHR')
+```
+
+#### Comprehension checks:
+
+- Should we overlay prediction-plot line(s) on the data scatter plot?
+- How do you think the plot would look if we changed the constant predictor values?
+- What is missing from this picture?
+
+#### Shortcut
+
+```{r, fig.width=6.5, fig.height = 2.5}
+require(s245)
+pred_plot(mlr3, 'AssR')
+```
