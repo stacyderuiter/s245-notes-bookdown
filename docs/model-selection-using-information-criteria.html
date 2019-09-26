@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Model Selection Using Information Criteria | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Model Selection Using Information Criteria | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Model Selection Using Information Criteria | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-09-26" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="linear-regression.html"/>
+<link rel="next" href="likelihood.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT 245 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#why-are-we-doing-this-again"><i class="fa fa-check"></i><b>2.7</b> Why are we doing this again?</a></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#shortcut-method---with-uncertainty"><i class="fa fa-check"></i><b>2.8</b> Shortcut Method - With Uncertainty</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="linear-regression.html"><a href="linear-regression.html#anatomy-of-a-confidence-interval"><i class="fa fa-check"></i><b>2.8.1</b> Anatomy of a Confidence Interval</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#diy-method"><i class="fa fa-check"></i><b>2.9</b> DIY Method</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-a-hypothetical-dataset"><i class="fa fa-check"></i><b>2.9.1</b> Creating a hypothetical dataset</a></li>
+<li class="chapter" data-level="2.9.2" data-path="linear-regression.html"><a href="linear-regression.html#making-the-plot"><i class="fa fa-check"></i><b>2.9.2</b> Making the plot</a></li>
+<li class="chapter" data-level="2.9.3" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors"><i class="fa fa-check"></i><b>2.9.3</b> Categorical predictors</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html"><i class="fa fa-check"></i><b>3</b> Model Selection Using Information Criteria</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#data-and-model"><i class="fa fa-check"></i><b>3.1</b> Data and Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#calculations"><i class="fa fa-check"></i><b>3.2</b> Calculations</a></li>
+<li class="chapter" data-level="3.3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#decisions-with-ics"><i class="fa fa-check"></i><b>3.3</b> Decisions with ICs</a></li>
+<li class="chapter" data-level="3.4" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#all-possible-subsets-selection"><i class="fa fa-check"></i><b>3.4</b> All-possible-subsets Selection</a></li>
+<li class="chapter" data-level="3.5" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#which-ic-should-i-use"><i class="fa fa-check"></i><b>3.5</b> Which IC should I use?</a></li>
+<li class="chapter" data-level="3.6" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#quantities-derived-from-aic"><i class="fa fa-check"></i><b>3.6</b> Quantities derived from AIC</a></li>
+<li class="chapter" data-level="3.7" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#important-caution"><i class="fa fa-check"></i><b>3.7</b> Important Caution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="likelihood.html"><a href="likelihood.html"><i class="fa fa-check"></i><b>4</b> Likelihood</a><ul>
+<li class="chapter" data-level="4.1" data-path="likelihood.html"><a href="likelihood.html#data-1"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="likelihood.html"><a href="likelihood.html#review---the-normal-probability-density-function-pdf"><i class="fa fa-check"></i><b>4.2</b> Review - the Normal probability density function (PDF)</a></li>
+<li class="chapter" data-level="4.3" data-path="likelihood.html"><a href="likelihood.html#a-simple-model"><i class="fa fa-check"></i><b>4.3</b> A simple model</a></li>
+<li class="chapter" data-level="4.4" data-path="likelihood.html"><a href="likelihood.html#using-the-model-to-make-predictions"><i class="fa fa-check"></i><b>4.4</b> Using the Model to Make Predictions</a></li>
+<li class="chapter" data-level="4.5" data-path="likelihood.html"><a href="likelihood.html#likelihood-to-the-rescue"><i class="fa fa-check"></i><b>4.5</b> Likelihood to the Rescue!</a></li>
+<li class="chapter" data-level="4.6" data-path="likelihood.html"><a href="likelihood.html#how-does-this-relate-to-linear-regression"><i class="fa fa-check"></i><b>4.6</b> How does this relate to linear regression?</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="likelihood.html"><a href="likelihood.html#model-equation"><i class="fa fa-check"></i><b>4.6.1</b> Model Equation:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="likelihood.html"><a href="likelihood.html#likelihood-of-a-dataset-given-a-model"><i class="fa fa-check"></i><b>4.7</b> Likelihood of a dataset, given a model</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="model-selection-using-information-criteria" class="section level1">
+<h1><span class="header-section-number">Chapter 3</span> Model Selection Using Information Criteria</h1>
+<p>So far, we have learned to fit models with multiple predictors, both quantitative and categorical, and to assess whether required conditions are met for linear regression to be an appropriate model for a dataset.</p>
+<p>One missing piece is: If I have an appropriate model with a set of multiple predictors, how can I choose which predictors are worth retaining in a “best” model for the data (and which ones have no relationship, or a weak relationship, with the response, so should be discarded)?</p>
+<div id="data-and-model" class="section level2">
+<h2><span class="header-section-number">3.1</span> Data and Model</h2>
+<p>Today we will recreate part of the analysis from <a href="https://doi.org/10.1111/1365-2664.12798"><em>Vertebrate community composition and diversity declines along a defaunation gradient radiating from rural villages in Gabon</em></a>, by Sally Koerner and colleagues. They investigated the relationship between rural villages, hunting, and wildlife in Gabon. They asked how monkey abundance depends on distance from villages, village size, and vegetation characteristics. They shared their data at <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.vs97g">Dryad.org</a> and we can read it in and fit a regression model like this:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">defaun &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;http://sldr.netlify.com/data/koerner_gabon_defaunation.csv&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">ape_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(RA_Apes <span class="op">~</span><span class="st"> </span>Veg_DBH <span class="op">+</span><span class="st"> </span>Veg_Canopy <span class="op">+</span><span class="st"> </span>Veg_Understory <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-2" title="2"><span class="st">                   </span>Veg_Rich <span class="op">+</span><span class="st"> </span>Veg_Stems <span class="op">+</span><span class="st"> </span>Veg_liana <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-3" title="3"><span class="st">                   </span>LandUse <span class="op">+</span><span class="st"> </span>Distance <span class="op">+</span><span class="st"> </span>NumHouseholds, <span class="dt">data =</span> defaun)</a>
+<a class="sourceLine" id="cb38-4" title="4"><span class="kw">summary</span>(ape_mod)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = RA_Apes ~ Veg_DBH + Veg_Canopy + Veg_Understory + 
+##     Veg_Rich + Veg_Stems + Veg_liana + LandUse + Distance + NumHouseholds, 
+##     data = defaun)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.9857 -0.9419 -0.0360  0.8239  6.3832 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)  
+## (Intercept)     5.752517  13.372210   0.430   0.6741  
+## Veg_DBH        -0.093171   0.073114  -1.274   0.2249  
+## Veg_Canopy      0.670094   2.062545   0.325   0.7504  
+## Veg_Understory -1.691235   2.071299  -0.817   0.4289  
+## Veg_Rich        0.361960   0.480362   0.754   0.4646  
+## Veg_Stems      -0.097211   0.169073  -0.575   0.5751  
+## Veg_liana      -0.158505   0.253031  -0.626   0.5419  
+## LandUseNeither  1.696755   2.058937   0.824   0.4247  
+## LandUsePark    -2.947189   2.222710  -1.326   0.2077  
+## Distance        0.302626   0.119865   2.525   0.0254 *
+## NumHouseholds  -0.002107   0.043458  -0.048   0.9621  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.725 on 13 degrees of freedom
+## Multiple R-squared:  0.5439, Adjusted R-squared:  0.1931 
+## F-statistic: 1.551 on 10 and 13 DF,  p-value: 0.2262</code></pre>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="kw">as.numeric</span>(<span class="kw">logLik</span>(ape_mod))</a></code></pre></div>
+<pre><code>## [1] -50.75799</code></pre>
+</div>
+<div id="calculations" class="section level2">
+<h2><span class="header-section-number">3.2</span> Calculations</h2>
+<ul>
+<li><p>Information criteria allow us to <strong>balance the conflicting goals</strong> of having a model that <em>fits the data as well as possible</em> (which pushes us toward models with more predictors) and <em>parsimony</em> (choosing the simplest model, with the fewest predictors, that works for the data and research question). The basic idea is that we <strong>minimize</strong> the quantity <span class="math inline">\(-(2LogLikelihood - penalty) = -2LogLikelihood + penalty\)</span></p></li>
+<li><p>AIC is computed according to <span class="math inline">\(-2LogLikelihood +2k\)</span>, where <span class="math inline">\(k\)</span> is the number of coefficients being estimated (don’t forget <span class="math inline">\(\sigma\)</span>!) <strong>Smaller AIC is better.</strong></p></li>
+<li><p>BIC is computed according to <span class="math inline">\(-2LogLikelihood + ln(n)k\)</span>, where <span class="math inline">\(n\)</span> is the number of observations (rows) in the dataset and <span class="math inline">\(k\)</span> is the number of coefficients being estimated. <strong>Smaller BIC is better.</strong></p></li>
+<li><p>Verify that the BIC for this model is 139.65.</p></li>
+</ul>
+</div>
+<div id="decisions-with-ics" class="section level2">
+<h2><span class="header-section-number">3.3</span> Decisions with ICs</h2>
+<p>The following rules of thumb (<strong>not</strong> laws, just common rules of thumb) may help you make decisions with ICs:</p>
+<ul>
+<li>A model with lower IC <em>by at least 3 units</em> is notably better.</li>
+<li>If two or more models have ICs <em>within</em> 3 IC units of each other, there is not a lot of difference between them. Here, we usually choose the model with fewest predictors.</li>
+<li>In some cases, if the research question is to measure the influence of some particular predictor on the response, but <em>the IC does not strongly support including that predictor</em> in the best model (IC difference less than 3), you might want to keep it in anyway and then discuss the situation honestly, for example, “AIC does not provide strong support for including predictor x in the best model, but the model including predictor x indicates that as x increases the response decreases slightly. More research would be needed…”</li>
+</ul>
+</div>
+<div id="all-possible-subsets-selection" class="section level2">
+<h2><span class="header-section-number">3.4</span> All-possible-subsets Selection</h2>
+<p>The model we just fitted is our <em>full model</em>, with all predictors of potential interest included. How can we use information criteria to choose the best model from possible models with subsets of the predictors?</p>
+<p>We can use the <code>dredge()</code> function from the <code>MuMIn</code> package to get and display ICs for all these models.</p>
+<p>Before using dredge, we need to make sure our dataset has no missing values, and also set the “na.action” input for our model (can be done in call to <code>lm(..., na.action = 'na.fail')</code> also).</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="kw">require</span>(MuMIn)</a></code></pre></div>
+<pre><code>## Loading required package: MuMIn</code></pre>
+<pre><code>## Warning: package &#39;MuMIn&#39; was built under R version 3.6.1</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">ape_mod &lt;-<span class="st"> </span>ape_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">update</span>(<span class="dt">na.action =</span> <span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb45-2" title="2">ape_dredge &lt;-<span class="st"> </span><span class="kw">dredge</span>(ape_mod, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a></code></pre></div>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1">pander<span class="op">::</span><span class="kw">pander</span>(<span class="kw">head</span>(ape_dredge, <span class="dv">7</span>))</a></code></pre></div>
+<table>
+<caption>Table continues below</caption>
+<colgroup>
+<col width="13%" />
+<col width="18%" />
+<col width="14%" />
+<col width="13%" />
+<col width="21%" />
+<col width="17%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">(Intercept)</th>
+<th align="center">Distance</th>
+<th align="center">LandUse</th>
+<th align="center">NumHouseholds</th>
+<th align="center">Veg_Canopy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>258</strong></td>
+<td align="center">8.753</td>
+<td align="center">0.195</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>2</strong></td>
+<td align="center">-0.6912</td>
+<td align="center">0.2303</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>274</strong></td>
+<td align="center">11.44</td>
+<td align="center">0.1848</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>322</strong></td>
+<td align="center">11.9</td>
+<td align="center">0.2033</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>290</strong></td>
+<td align="center">9.805</td>
+<td align="center">0.1884</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>386</strong></td>
+<td align="center">9.49</td>
+<td align="center">0.1976</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>266</strong></td>
+<td align="center">7.783</td>
+<td align="center">0.1896</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">0.2771</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Table continues below</caption>
+<colgroup>
+<col width="12%" />
+<col width="14%" />
+<col width="15%" />
+<col width="14%" />
+<col width="15%" />
+<col width="21%" />
+<col width="6%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Veg_DBH</th>
+<th align="center">Veg_liana</th>
+<th align="center">Veg_Rich</th>
+<th align="center">Veg_Stems</th>
+<th align="center">Veg_Understory</th>
+<th align="center">df</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>258</strong></td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">-2.988</td>
+<td align="center">4</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>2</strong></td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">3</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>274</strong></td>
+<td align="center">-0.04551</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">-3.144</td>
+<td align="center">5</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>322</strong></td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">-0.1939</td>
+<td align="center">NA</td>
+<td align="center">-3.11</td>
+<td align="center">5</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>290</strong></td>
+<td align="center">NA</td>
+<td align="center">-0.09802</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">-2.952</td>
+<td align="center">5</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>386</strong></td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">-0.03113</td>
+<td align="center">-2.904</td>
+<td align="center">5</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>266</strong></td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">NA</td>
+<td align="center">-2.964</td>
+<td align="center">5</td>
+</tr>
+</tbody>
+</table>
+<table style="width:64%;">
+<colgroup>
+<col width="13%" />
+<col width="12%" />
+<col width="11%" />
+<col width="12%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">logLik</th>
+<th align="center">BIC</th>
+<th align="center">delta</th>
+<th align="center">weight</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>258</strong></td>
+<td align="center">-53.9</td>
+<td align="center">120.5</td>
+<td align="center">0</td>
+<td align="center">0.3284</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>2</strong></td>
+<td align="center">-55.8</td>
+<td align="center">121.1</td>
+<td align="center">0.6241</td>
+<td align="center">0.2404</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>274</strong></td>
+<td align="center">-53.38</td>
+<td align="center">122.7</td>
+<td align="center">2.146</td>
+<td align="center">0.1123</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>322</strong></td>
+<td align="center">-53.55</td>
+<td align="center">123</td>
+<td align="center">2.491</td>
+<td align="center">0.09449</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>290</strong></td>
+<td align="center">-53.67</td>
+<td align="center">123.2</td>
+<td align="center">2.727</td>
+<td align="center">0.08399</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>386</strong></td>
+<td align="center">-53.82</td>
+<td align="center">123.5</td>
+<td align="center">3.03</td>
+<td align="center">0.0722</td>
+</tr>
+<tr class="odd">
+<td align="center"><strong>266</strong></td>
+<td align="center">-53.88</td>
+<td align="center">123.7</td>
+<td align="center">3.144</td>
+<td align="center">0.0682</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>What is the best model according to BIC, for this dataset?</li>
+</ul>
+</div>
+<div id="which-ic-should-i-use" class="section level2">
+<h2><span class="header-section-number">3.5</span> Which IC should I use?</h2>
+<p>AIC and BIC may give different best models, especially if the dataset is large. You may want to just choose one to use <em>a priori</em> (before making calculations). You might prefer BIC if you want to err on the “conservative” side, as it is more likely to select a “smaller” model with fewer predictors. This is because of its larger penalty.</p>
+</div>
+<div id="quantities-derived-from-aic" class="section level2">
+<h2><span class="header-section-number">3.6</span> Quantities derived from AIC</h2>
+<ul>
+<li><span class="math inline">\(\Delta AIC\)</span> is the AIC for a given model, minus the AIC of the best one in the dataset. (Same for <span class="math inline">\(\Delta BIC\)</span>)</li>
+<li><em>Akaike weights</em> are values (ranging from 0-1) that measure the weight of evidence suggesting that a model is the best one (given that there is one best one in the set)</li>
+</ul>
+</div>
+<div id="important-caution" class="section level2">
+<h2><span class="header-section-number">3.7</span> Important Caution</h2>
+<p><strong>Very important</strong>: IC can <strong>ONLY</strong> be compared for models with the same response variable, and the exact same rows of data.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="linear-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="likelihood.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/02-IC-based-selection.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -36,10 +36,16 @@ summary(slr)
 ```
 
 ### Using `lm()` to fit a linear regression in R
-\vspace{1.5in}
+<br>
+<br>
+<br>
+<br>
 
 ### Equation of the fitted regression line
-\vspace{1.5in}
+<br>
+<br>
+<br>
+<br>
 
 
 ## Multiple regression
@@ -70,7 +76,10 @@ How do we know if the model with more predictors is "better"? (For a more detail
 ### Regression residuals = "errors"
 
 
-\vspace{1.25in}
+<br>
+<br>
+<br>
+<br>
 
 
 ### Computing Predictions
@@ -81,7 +90,10 @@ bonobo3 <- bonobos[my_points,c('fWHR', 'AssR', 'weight')]
 bonobo3
 ```
 
-\vspace{2in}
+<br>
+<br>
+<br>
+<br>
 
 ## Predictors with two categories
 ```{r, echo=FALSE, fig.width=6.5, fig.height=1.5}
@@ -96,7 +108,11 @@ coef(mlr2)
 
 How does the model incorporate this covariate mathematically?
 
-\vspace{1.75in}
+<br>
+<br>
+<br>
+<br>
+
 
 ### Predictors with more categories
 
@@ -108,18 +124,26 @@ coef(mlr3)
 
 How does the model incorporate **this** covariate mathematically?
 
-\vspace{1.75in}
+<br>
+<br>
+<br>
 
 ## Returning to the R Model Summary
 There are several bits of information you should be able to extract from the `summary()` output R produces on a fitted linear regression model:
 
 - $\beta$s, Coefficient Estimates
 - $\sigma$, labeled "residual standard error" 
-\vspace{2.5in}
+<br>
+<br>
+<br>
+<br>
 
 - $R^2$ (adjusted)
 
-\vspace{2.5in}
+<br>
+<br>
+<br>
+<br>
 
 ```{r}
 mlr3 <- lm(fWHR ~ AssR + weight + Sex + Group, data = bonobos)
@@ -138,7 +162,10 @@ where
 - $y =$
 - $\beta_0=$
 
-\vspace{0.25in}
+<br>
+<br>
+<br>
+<br>
 
 - $x_1=$
 - $x_2=$
@@ -151,7 +178,10 @@ where
 #### Comprehension check: 
 What is the expected fWHR (according to this model) for a 30 kg female bonobo at the Wilhelma zoo?
 
-\vspace{1.5in}
+<br>
+<br>
+<br>
+<br>
 
 ### Prediction Plots in R
 We can ask R to compute predictions for **all** the data points in the real dataset.
@@ -203,4 +233,120 @@ gf_line(preds ~ AssR, color = ~Sex, data=fake_data) %>% gf_labs(y='Predicted\nfW
 ```{r, fig.width=6.5, fig.height = 2.5}
 require(s245)
 pred_plot(mlr3, 'AssR')
+```
+
+
+## Why are we doing this again?
+Why make prediction plots?
+
+## Shortcut Method - With Uncertainty
+We saw before that `pred_plot()` makes it very easy for us to generate prediction plots showing what a (multiple regression) model says about the relationship between the response and *one* of the predictors:
+
+```{r, fig.width=6.5, fig.height = 1.75, message = FALSE}
+require(s245)
+pred_plot(mlr3, 'AssR') %>%
+  gf_labs(y = 'Predicted fWHR')
+```
+
+*Note the custom axis label - otherwise you get a long, unwieldy default "Predictions from fitted model"*
+
+```{r, fig.width=6.5, fig.height = 1.75, message = FALSE}
+require(s245)
+pred_plot(mlr3, 'Group') %>%
+  gf_labs(y = 'Predicted fWHR')
+```
+
+They look nice! But they should raise two questions:
+
+- Uncertainty:
+
+- Fixed values:
+
+
+```{r}
+get_fixed(bonobos)  %>% 
+  pander::pander()
+```
+
+### Anatomy of a Confidence Interval
+
+```{r, fig.width=3, fig.height = 1.5}
+pred_plot(mlr3, 'Sex') %>%
+  gf_labs(y = 'Predicted fWHR')
+```
+
+
+## DIY Method
+
+### Creating a hypothetical dataset
+We would like to create a hypothetical dataset where one predictor variable varies, and all the rest stay fixed. Let's choose `AssR`. We use `expand.grid()`:
+
+```{r}
+fake_data <- expand.grid(AssR = seq(from=1.8, to=5.7, by=0.05),
+                         weight = 40,
+                         Sex = 'Female',
+                         Group = 'Twycross')
+glimpse(fake_data)
+```
+
+
+Now, make predictions for our fake data.
+
+```{r}
+preds <- predict(mlr3, newdata = fake_data, se.fit = TRUE)
+fake_data <- fake_data %>%
+  mutate(fitted = preds$fit,
+         se.fit = preds$se.fit)
+glimpse(fake_data)
+```
+
+How do we go from *standard errors* to *confidence intervals*?  We can either do this before plotting, or while plotting. To do it before and add the results to the hypothetical dataset:
+
+```{r}
+fake_data <- fake_data %>%
+  mutate(CI_lower = fitted - 1.96*se.fit,
+         CI_upper = fitted + 1.96*se.fit)
+glimpse(fake_data)
+```
+
+### Making the plot
+Now, we just need to plot!
+
+```{r, echo=TRUE, fig.width=6, fig.height=1.5}
+gf_line(fitted ~ AssR, data=fake_data) %>% 
+  gf_labs(y='Predicted\nfWHR') %>%
+  gf_ribbon(CI_lower + CI_upper ~ AssR, data = fake_data)
+```
+
+If we wanted to figure out the CI bounds *while* plotting, we could calculate them on the fly like this:
+
+```{r, echo=TRUE, fig.width=6, fig.height=1.5, fig.show = 'hide'}
+gf_line(fitted ~ AssR, data=fake_data) %>% 
+  gf_labs(y='Predicted\nfWHR') %>%
+  gf_ribbon((fitted - 1.96*se.fit ) + (fitted + 1.96*se.fit) ~ AssR,
+            data = fake_data)
+```
+(which will look just the same).
+
+### Categorical predictors
+What will be different if the predictor of interest is *categorical*?
+
+- hypothetical data:
+
+- plot:
+
+
+```{r, fig.width = 3.5, fig.height = 1.75}
+fake_sex_data <- expand.grid(AssR = 4.51,
+                         weight = 40,
+                         Sex = c('Male', 'Female'),
+                         Group = 'Twycross')
+preds <- predict(mlr3, newdata = fake_sex_data, se.fit = TRUE)
+fake_sex_data <- fake_sex_data %>%
+  mutate(fitted = preds$fit,
+         se.fit = preds$se.fit)
+gf_point(fitted ~ Sex, data=fake_sex_data) %>% 
+  gf_labs(y='Predicted fWHR') %>%
+  gf_errorbar((fitted - 1.96*se.fit ) + (fitted + 1.96*se.fit) ~ Sex, 
+            data = fake_sex_data)
 ```

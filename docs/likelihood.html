@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>References | STAT 245 Course Notes</title>
+  <title>Chapter 4 Likelihood | STAT 245 Course Notes</title>
   <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
   <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="References | STAT 245 Course Notes" />
+  <meta property="og:title" content="Chapter 4 Likelihood | STAT 245 Course Notes" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="References | STAT 245 Course Notes" />
+  <meta name="twitter:title" content="Chapter 4 Likelihood | STAT 245 Course Notes" />
   
   <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="likelihood.html"/>
-
+<link rel="prev" href="model-selection-using-information-criteria.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -199,17 +199,118 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="likelihood" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Likelihood</h1>
+<p>In the last section, we said that “likelihood” is a measure of goodness-of-fit of a model to a dataset. But what is it <em>exactly</em> and just how do we compute it?</p>
+<div id="data-1" class="section level2">
+<h2><span class="header-section-number">4.1</span> Data</h2>
+<p>Today’s dataset was collected in Senegal in 2015-2016 in a survey carried out by UNICEF, of 5440 households in the urban area of Dakar, Senegal. Among these households, information was collected about 4453 children under 5 years old, including their </p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb48-1" title="1"><span class="kw">gf_dhistogram</span>(<span class="op">~</span>AN3, <span class="dt">data=</span>wt, <span class="dt">binwidth=</span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb48-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Weight (kg)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability</span><span class="ch">\n</span><span class="st">Density&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb48-3" title="3"><span class="st">  </span><span class="kw">gf_fitdistr</span>(<span class="dt">dist=</span><span class="st">&#39;dnorm&#39;</span>, <span class="dt">size=</span><span class="fl">1.3</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb48-4" title="4"><span class="st">  </span><span class="kw">gf_refine</span>(<span class="kw">scale_x_continuous</span>(<span class="dt">breaks=</span><span class="kw">seq</span>(<span class="dt">from=</span><span class="dv">0</span>, <span class="dt">to=</span><span class="dv">30</span>, <span class="dt">by=</span><span class="dv">2</span>)))</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-23-1.png" width="624" /></p>
+</div>
+<div id="review---the-normal-probability-density-function-pdf" class="section level2">
+<h2><span class="header-section-number">4.2</span> Review - the Normal probability density function (PDF)</h2>
+<p><span class="math display">\[ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} \]</span>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br></p>
+</div>
+<div id="a-simple-model" class="section level2">
+<h2><span class="header-section-number">4.3</span> A simple model</h2>
+<p>The distribution of weights looks quite unimodal and symmetric, so we will model it with a normal distribution with mean 11.8 and standard deviation 3.53 (N( <span class="math inline">\(\mu=\)</span> 11.8, <span class="math inline">\(\sigma=\)</span> 3.53), black line).</p>
+</div>
+<div id="using-the-model-to-make-predictions" class="section level2">
+<h2><span class="header-section-number">4.4</span> Using the Model to Make Predictions</h2>
+<p>If you had to predict the weight of one child from this population, what weight would you guess?
+</p>
+<p>Is it more likely for a child in Dakar to weigh 10kg, or 20kg? How much more likely?
+<br>
+<br></p>
+<p>What is the <em>probability</em> of a child in Dakar weighing 11.5 kg?
+<br>
+<br></p>
+</div>
+<div id="likelihood-to-the-rescue" class="section level2">
+<h2><span class="header-section-number">4.5</span> Likelihood to the Rescue!</h2>
+<p>Which is more likely: three children who weigh 11, 8.2, and 13kg, or three who weigh 10, 12.5 and 15 kg?</p>
+<p>How did you:</p>
+<ul>
+<li>Find the likelihood of each observation?</li>
+</ul>
+<p><br>
+<br></p>
+<ul>
+<li>Combine the likelihoods of a set of three observations?</li>
+</ul>
+<p><br>
+<br></p>
+<p>What did you have to assume about the set of observations?
+<br>
+<br></p>
+</div>
+<div id="how-does-this-relate-to-linear-regression" class="section level2">
+<h2><span class="header-section-number">4.6</span> How does this relate to linear regression?</h2>
+<p>What if we think of this situation as a linear regression problem (with no predictors)?</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" title="1">lm_version &lt;-<span class="st"> </span><span class="kw">lm</span>(AN3 <span class="op">~</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> wt)</a>
+<a class="sourceLine" id="cb49-2" title="2"><span class="kw">summary</span>(lm_version)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = AN3 ~ 1, data = wt)
+## 
+## Residuals:
+## &lt;Labelled double&gt;: Poids de l&#39;enfant (kilogrammes)
+##     Min      1Q  Median      3Q     Max 
+## -9.8964 -2.3964  0.1036  2.4036 18.9036 
+## 
+## Labels:
+##  value            label
+##   99.9 poids non mesuré
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 11.79644    0.05435   217.1   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 3.529 on 4216 degrees of freedom
+##   (235 observations deleted due to missingness)</code></pre>
+<div id="model-equation" class="section level3">
+<h3><span class="header-section-number">4.6.1</span> Model Equation:</h3>
+<p><br>
+<br>
+<br>
+<br></p>
+</div>
+</div>
+<div id="likelihood-of-a-dataset-given-a-model" class="section level2">
+<h2><span class="header-section-number">4.7</span> Likelihood of a dataset, given a model</h2>
+<p>Finally, now, we can understand what we were computing when we did</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1"><span class="kw">logLik</span>(lm_version)</a></code></pre></div>
+<pre><code>## &#39;log Lik.&#39; -11301.19 (df=2)</code></pre>
+<p>For our chosen regression model, we know that the residuals should have a normal distribution with mean 0 and standard deviation <span class="math inline">\(\sigma\)</span> (estimated Residual Standard Error from R <code>summary()</code> output).</p>
+<p>For each data point in the dataset, for a given regression model, we can compute a model prediction.</p>
+<p>We can subtract the prediction from the observed response-variable values to get the residuals.</p>
+<p>We can compute the <strong>likelihood</strong> (<span class="math inline">\(L\)</span>) of this set of residuals by finding the likelihood of each individual residual <span class="math inline">\(e_i\)</span> in a <span class="math inline">\(N(0, \sigma)\)</span> distribution.</p>
+<p>To get the likelihood of the full dataset given the model, we use the fact that the residuals are independent (they better be, because that was one of the conditions of of linear regression model) – we can multiply the likelihoods of all the individual residuals together to get the joint likelihood of the full set.</p>
+<p><em>That</em> is the “likelihood” that is used in the AIC and BIC calculations we considered earlier.</p>
 
+</div>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="likelihood.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="model-selection-using-information-criteria.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -239,7 +340,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/06-references.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/03-likelihood.Rmd",
 "text": "Edit"
 },
 "history": {
