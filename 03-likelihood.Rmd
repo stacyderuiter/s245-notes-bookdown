@@ -4,7 +4,7 @@ library(haven)
 file <- 'C:/Users/Stacy DeRuiter/Dropbox/CalvinTeaching/STAT143/Fall2018/Tests/ch.sav'
 sch <- read_sav(file)
 set.seed(123)
-wt <- sch %>% select(AN3) %>%
+wt <- sch %>% dplyr::select(AN3) %>%
   filter(AN3 < 80 | is.na(AN3))
 ```
 

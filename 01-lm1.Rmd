@@ -195,7 +195,7 @@ Wait, what? This error is because the `lm()` function removes rows containing mi
 
 ```{r}
 b2 <- bonobos %>%
-  select(fWHR, weight, AssR, Sex, Group) %>%
+  dplyr::select(fWHR, weight, AssR, Sex, Group) %>%
   na.omit() %>%
   mutate(preds = predict(mlr3))
 ```

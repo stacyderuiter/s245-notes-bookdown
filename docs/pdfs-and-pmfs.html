@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 PDFs and PMFs | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 PDFs and PMFs | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 PDFs and PMFs | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-09-26" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="likelihood.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT 245 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#why-are-we-doing-this-again"><i class="fa fa-check"></i><b>2.7</b> Why are we doing this again?</a></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#shortcut-method---with-uncertainty"><i class="fa fa-check"></i><b>2.8</b> Shortcut Method - With Uncertainty</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="linear-regression.html"><a href="linear-regression.html#anatomy-of-a-confidence-interval"><i class="fa fa-check"></i><b>2.8.1</b> Anatomy of a Confidence Interval</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#diy-method"><i class="fa fa-check"></i><b>2.9</b> DIY Method</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-a-hypothetical-dataset"><i class="fa fa-check"></i><b>2.9.1</b> Creating a hypothetical dataset</a></li>
+<li class="chapter" data-level="2.9.2" data-path="linear-regression.html"><a href="linear-regression.html#making-the-plot"><i class="fa fa-check"></i><b>2.9.2</b> Making the plot</a></li>
+<li class="chapter" data-level="2.9.3" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors"><i class="fa fa-check"></i><b>2.9.3</b> Categorical predictors</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html"><i class="fa fa-check"></i><b>3</b> Model Selection Using Information Criteria</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#data-and-model"><i class="fa fa-check"></i><b>3.1</b> Data and Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#calculations"><i class="fa fa-check"></i><b>3.2</b> Calculations</a></li>
+<li class="chapter" data-level="3.3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#decisions-with-ics"><i class="fa fa-check"></i><b>3.3</b> Decisions with ICs</a></li>
+<li class="chapter" data-level="3.4" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#all-possible-subsets-selection"><i class="fa fa-check"></i><b>3.4</b> All-possible-subsets Selection</a></li>
+<li class="chapter" data-level="3.5" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#which-ic-should-i-use"><i class="fa fa-check"></i><b>3.5</b> Which IC should I use?</a></li>
+<li class="chapter" data-level="3.6" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#quantities-derived-from-aic"><i class="fa fa-check"></i><b>3.6</b> Quantities derived from AIC</a></li>
+<li class="chapter" data-level="3.7" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#important-caution"><i class="fa fa-check"></i><b>3.7</b> Important Caution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="likelihood.html"><a href="likelihood.html"><i class="fa fa-check"></i><b>4</b> Likelihood</a><ul>
+<li class="chapter" data-level="4.1" data-path="likelihood.html"><a href="likelihood.html#data-1"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="likelihood.html"><a href="likelihood.html#review---the-normal-probability-density-function-pdf"><i class="fa fa-check"></i><b>4.2</b> Review - the Normal probability density function (PDF)</a></li>
+<li class="chapter" data-level="4.3" data-path="likelihood.html"><a href="likelihood.html#a-simple-model"><i class="fa fa-check"></i><b>4.3</b> A simple model</a></li>
+<li class="chapter" data-level="4.4" data-path="likelihood.html"><a href="likelihood.html#using-the-model-to-make-predictions"><i class="fa fa-check"></i><b>4.4</b> Using the Model to Make Predictions</a></li>
+<li class="chapter" data-level="4.5" data-path="likelihood.html"><a href="likelihood.html#likelihood-to-the-rescue"><i class="fa fa-check"></i><b>4.5</b> Likelihood to the Rescue!</a></li>
+<li class="chapter" data-level="4.6" data-path="likelihood.html"><a href="likelihood.html#how-does-this-relate-to-linear-regression"><i class="fa fa-check"></i><b>4.6</b> How does this relate to linear regression?</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="likelihood.html"><a href="likelihood.html#model-equation"><i class="fa fa-check"></i><b>4.6.1</b> Model Equation:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="likelihood.html"><a href="likelihood.html#likelihood-of-a-dataset-given-a-model"><i class="fa fa-check"></i><b>4.7</b> Likelihood of a dataset, given a model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html"><i class="fa fa-check"></i><b>5</b> PDFs and PMFs</a><ul>
+<li class="chapter" data-level="5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beyond-normal"><i class="fa fa-check"></i><b>5.1</b> Beyond Normal</a></li>
+<li class="chapter" data-level="5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#types-of-probability-distributions"><i class="fa fa-check"></i><b>5.2</b> Types of probability distributions</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#continuous-distributions"><i class="fa fa-check"></i><b>5.2.1</b> Continuous distributions</a></li>
+<li class="chapter" data-level="5.2.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#discrete-distributions"><i class="fa fa-check"></i><b>5.2.2</b> Discrete Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#relevant-features-of-distributions"><i class="fa fa-check"></i><b>5.3</b> Relevant Features of Distributions</a></li>
+<li class="chapter" data-level="5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-continuous-distributions"><i class="fa fa-check"></i><b>5.4</b> Examples of Continuous Distributions</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#normal"><i class="fa fa-check"></i><b>5.4.1</b> Normal</a></li>
+<li class="chapter" data-level="5.4.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#gamma"><i class="fa fa-check"></i><b>5.4.2</b> Gamma</a></li>
+<li class="chapter" data-level="5.4.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beta"><i class="fa fa-check"></i><b>5.4.3</b> Beta</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-discrete-distributions"><i class="fa fa-check"></i><b>5.5</b> Examples of Discrete Distributions</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#binomial"><i class="fa fa-check"></i><b>5.5.1</b> Binomial</a></li>
+<li class="chapter" data-level="5.5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#poisson"><i class="fa fa-check"></i><b>5.5.2</b> Poisson</a></li>
+<li class="chapter" data-level="5.5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#negative-binomial"><i class="fa fa-check"></i><b>5.5.3</b> Negative Binomial</a></li>
+<li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="pdfs-and-pmfs" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> PDFs and PMFs</h1>
+<div id="beyond-normal" class="section level2">
+<h2><span class="header-section-number">5.1</span> Beyond Normal</h2>
+<p>In our exploration of likelihoods, we did a little bit of work with the Normal probability density function. Here, we will state some characteristics of the normal distribution slightly more formally, and then we will get familiar with some other probability distributions (a.k.a. “the normal distribution’s wierd friends”).</p>
+</div>
+<div id="types-of-probability-distributions" class="section level2">
+<h2><span class="header-section-number">5.2</span> Types of probability distributions</h2>
+<div id="continuous-distributions" class="section level3">
+<h3><span class="header-section-number">5.2.1</span> Continuous distributions</h3>
+<p>The probability distribution of a continuous variable (one that can take on continuous real values, at least within a certain range) is called a <em>probability density function</em> or <strong>PDF</strong> for short.</p>
+<p>PDFs are functions of one continuous variable (we’ll call it <span class="math inline">\(x\)</span>) that have two properties in common:</p>
+<ul>
+<li>The total area under the curve is 1 (<span class="math inline">\(\int_{-\infty}^{\infty} f(x)dx = 1\)</span>)</li>
+<li>The values of the function are non-negative (0, or a positive real number) for all real <span class="math inline">\(x\)</span> (<span class="math inline">\(f(x) \geq 0 \forall x \in \mathbb{R}\)</span>)</li>
+</ul>
+<p>For PDFs, the function values (<span class="math inline">\(y\)</span>-axis values) are <em>probability densities</em>, useful for computing likelihoods; probabilities are given by finding <em>areas</em> under the curve.</p>
+</div>
+<div id="discrete-distributions" class="section level3">
+<h3><span class="header-section-number">5.2.2</span> Discrete Distributions</h3>
+<p>We use categorical as well as quantitative variables in our regression models, so it will prove useful to have some discrete probability distributions as well as continuous ones. Discrete distributions associate each possible value of a discrete variable with its probability of occurence.</p>
+<p>A discrete probability distribution is characterized by a <em>probability mass function</em> or PMF for short (this is the discrete equivalent of a PDF).</p>
+<p>A PMF is a function of one <em>discrete</em> variable (we’ll call it <span class="math inline">\(x\)</span>) that have two properties in common:</p>
+<ul>
+<li>The sum of all the function’s values is 1 (<span class="math inline">\(\sum_{x \in S} f(x) =1\)</span>, where <span class="math inline">\(S\)</span> is the set of all possible values <span class="math inline">\(x\)</span> can have)</li>
+<li>All values of the function are between 0 and 1 inclusive (they are probabilities) (<span class="math inline">\(f(x) \in [0,1] \forall x \in S\)</span>)</li>
+</ul>
+</div>
+</div>
+<div id="relevant-features-of-distributions" class="section level2">
+<h2><span class="header-section-number">5.3</span> Relevant Features of Distributions</h2>
+<p>For this course, the most important features to note about each probability distribuiton will be:</p>
+<ul>
+<li>The <strong>type</strong> of distribution: discrete or continuous?</li>
+<li>The <strong>support</strong> of the distribution: what range of possible values can the random variable <span class="math inline">\(X\)</span> take on?</li>
+<li>The <strong>parameters</strong> of the distribution. Changing the parameters tunes the center and shape of the distribution, so these are what we need to estimate to fit a particular kind of distribution to a specific dataset. (For example, the parameters of the normal distribution are the mean <span class="math inline">\(\mu\)</span> and the standard deviation <span class="math inline">\(\sigma\)</span>.)</li>
+<li>The <strong>shape</strong> of the distribution: what shapes can the function take one? (For example, the normal distribution is always unimodal and symmetric.)</li>
+<li>The PDF or PMF of the distribution. What mathematical expression controls the shape of the distribution?</li>
+<li>We will also note a few examples of variables that might be well modelled by each distribution.</li>
+</ul>
+</div>
+<div id="examples-of-continuous-distributions" class="section level2">
+<h2><span class="header-section-number">5.4</span> Examples of Continuous Distributions</h2>
+<div id="normal" class="section level3">
+<h3><span class="header-section-number">5.4.1</span> Normal</h3>
+<div id="type" class="section level5">
+<h5><span class="header-section-number">5.4.1.0.1</span> Type</h5>
+<p>Continuous</p>
+</div>
+<div id="support" class="section level5">
+<h5><span class="header-section-number">5.4.1.0.2</span> Support</h5>
+<p>All real numbers</p>
+</div>
+<div id="parameters" class="section level5">
+<h5><span class="header-section-number">5.4.1.0.3</span> Parameters</h5>
+<ul>
+<li><span class="math inline">\(\mu\)</span>, the mean, which can take on any real value</li>
+<li><span class="math inline">\(\sigma\)</span>, the standard deviation, which can take on any positive real value</li>
+</ul>
+</div>
+<div id="shapes" class="section level5">
+<h5><span class="header-section-number">5.4.1.0.4</span> Shapes</h5>
+<p>The shape is always unimodal and symmetric.</p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+</div>
+<div id="pdf-or-pmf" class="section level5">
+<h5><span class="header-section-number">5.4.1.0.5</span> PDF or PMF</h5>
+<p>The normal distribution has PDF:</p>
+<p><span class="math display">\[ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{\frac{(x-\mu)^2}{2\sigma^2}}\]</span></p>
+</div>
+<div id="examples" class="section level5">
+<h5><span class="header-section-number">5.4.1.0.6</span> Examples</h5>
+<p>A normal distribution might be a good fit for data on childrens’ weights in kg, or for the duration of visits at a zoo, or…</p>
+</div>
+</div>
+<div id="gamma" class="section level3">
+<h3><span class="header-section-number">5.4.2</span> Gamma</h3>
+<div id="type-1" class="section level5">
+<h5><span class="header-section-number">5.4.2.0.1</span> Type</h5>
+<p>Continuous</p>
+</div>
+<div id="support-1" class="section level5">
+<h5><span class="header-section-number">5.4.2.0.2</span> Support</h5>
+<p>positive real numbers</p>
+</div>
+<div id="parameters-1" class="section level5">
+<h5><span class="header-section-number">5.4.2.0.3</span> Parameters</h5>
+<p>There are two alternate but equivalent parameterizations for the gamma distribution.</p>
+<p>The first option: <span class="math inline">\(\alpha\)</span> (shape) and <span class="math inline">\(\beta\)</span> (rate), where <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inline">\(\beta&gt;0\)</span></p>
+<p>The second option: <span class="math inline">\(k\)</span> (shape) and <span class="math inline">\(\theta\)</span> (scale), where <span class="math inline">\(k &gt;0\)</span> and <span class="math inline">\(\theta&gt;0\)</span>.</p>
+<p>Converting between the two parameterizations: <span class="math inline">\(\alpha = k\)</span> and <span class="math inline">\(\beta = \frac{1}{\theta}\)</span>.</p>
+</div>
+<div id="shapes-1" class="section level5">
+<h5><span class="header-section-number">5.4.2.0.4</span> Shapes</h5>
+<p>The gamma distribution can take on a unimodal, symmetric shape or a unimodal shape with any amount of right skew (up to an exponential distribution shape).</p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Note: you don’t need to be familiar with exactly how the different values of parameters influence the shape of the gamma distribution PDF, so the curves here are not labelled with parameter values.</p>
+</div>
+<div id="pdf-or-pmf-1" class="section level5">
+<h5><span class="header-section-number">5.4.2.0.5</span> PDF or PMF</h5>
+<p>The gamma distribution has PDF:</p>
+<p><span class="math display">\[ f(x) = \frac{1}{\Gamma(k) \theta^k}x^{(k-1)}e^{\frac{-x}{\theta}}\]</span>
+Where <span class="math inline">\(\Gamma\)</span> is the Gamma function (look up the definition if you choose),
+or equivalently,</p>
+<p><span class="math display">\[ f(x) = \frac{\beta^{\alpha}}{\Gamma(\alpha)}x^{(\alpha-1)}e^{-\beta x}\]</span></p>
+</div>
+<div id="examples-1" class="section level5">
+<h5><span class="header-section-number">5.4.2.0.6</span> Examples</h5>
+<p>Gamma distributions are often used to model things like wind speed or duration of an event (any quantity that might have right skew and is never negative).</p>
+</div>
+</div>
+<div id="beta" class="section level3">
+<h3><span class="header-section-number">5.4.3</span> Beta</h3>
+<div id="type-2" class="section level5">
+<h5><span class="header-section-number">5.4.3.0.1</span> Type</h5>
+<p>Continuous</p>
+</div>
+<div id="support-2" class="section level5">
+<h5><span class="header-section-number">5.4.3.0.2</span> Support</h5>
+<p>Real numbers between 0 and 1 ([0,1])</p>
+</div>
+<div id="parameters-2" class="section level5">
+<h5><span class="header-section-number">5.4.3.0.3</span> Parameters</h5>
+<p><span class="math inline">\(\alpha\)</span> (shape 1) and <span class="math inline">\(\beta\)</span> (shape 2), both of which must be <span class="math inline">\(&gt;1\)</span>.</p>
+</div>
+<div id="shapes-2" class="section level5">
+<h5><span class="header-section-number">5.4.3.0.4</span> Shapes</h5>
+<p>This distribution can take on almost any shape, for example:</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="dv">5</span>, <span class="dt">shape2=</span><span class="dv">1</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-2" title="2"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="dv">1</span>, <span class="dt">shape2=</span><span class="dv">3</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="dv">2</span>, <span class="dt">shape2=</span><span class="dv">2</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="dv">2</span>, <span class="dt">shape2=</span><span class="dv">5</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="fl">0.5</span>, <span class="dt">shape2=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Possible Values of Variable&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability Density&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb53-7" title="7"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">2.5</span>))</a></code></pre></div>
+<pre><code>## Warning: Removed 796 rows containing missing values (geom_path).</code></pre>
+<pre><code>## Warning: Removed 436 rows containing missing values (geom_path).</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+</div>
+<div id="pdf-or-pmf-2" class="section level5">
+<h5><span class="header-section-number">5.4.3.0.5</span> PDF or PMF</h5>
+<p>The PDF is:</p>
+<p><span class="math display">\[ f(x) = \frac{x^{(\alpha -1)}(1-x)^{(\beta-1)}}{ B(\alpha, \beta)}\]</span>
+Where <span class="math inline">\(B\)</span> is the Beta function (again, feel free to look up the definition if you are interested).</p>
+</div>
+<div id="examples-2" class="section level5">
+<h5><span class="header-section-number">5.4.3.0.6</span> Examples</h5>
+<p>Beta distributions could be used for any variable that takes on values between 0-1, for example, baseball players’ batting averages, or test scores (as proportions).</p>
+</div>
+</div>
+</div>
+<div id="examples-of-discrete-distributions" class="section level2">
+<h2><span class="header-section-number">5.5</span> Examples of Discrete Distributions</h2>
+<div id="binomial" class="section level3">
+<h3><span class="header-section-number">5.5.1</span> Binomial</h3>
+<div id="type-3" class="section level5">
+<h5><span class="header-section-number">5.5.1.0.1</span> Type</h5>
+<p>Discrete</p>
+</div>
+<div id="support-3" class="section level5">
+<h5><span class="header-section-number">5.5.1.0.2</span> Support</h5>
+<p>You can think about the support of this distribution two ways.
+Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</span>: 0 and positive integers, interpreted as the number of “successes” in <span class="math inline">\(n\)</span> binomial trials. Binomial trials are independent observations of a process that has two possible outcomes, “success” or “failure”, with set probabilities of each occurring. (And probabilities of success and failure must sum to 1.)</p>
+<p>So, for each individual binomial trial, the possible outcomes are 0 and 1, often interpreted as TRUE and FALSE or “success” and “failure”.</p>
+<p>For our purposes, this distribution will be useful for modelling response variables that are categorical with two possible values (and the <span class="math inline">\(n\)</span> trials will be the <span class="math inline">\(n\)</span> rows in our dataset).</p>
+</div>
+<div id="parameters-3" class="section level5">
+<h5><span class="header-section-number">5.5.1.0.3</span> Parameters</h5>
+<p>Parameters are <span class="math inline">\(n\)</span>, the number of independent trials, and <span class="math inline">\(p\)</span>, the probability of success in each trial.</p>
+</div>
+<div id="shapes-3" class="section level5">
+<h5><span class="header-section-number">5.5.1.0.4</span> Shapes</h5>
+<p>The figure below shows the shape of binomial distributions with fixed <span class="math inline">\(n=100\)</span> and varying <span class="math inline">\(p\)</span>:</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.1</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb56-2" title="2"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.25</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb56-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb56-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.75</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb56-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.99</span>), <span class="dt">color=</span>colrs[<span class="dv">5</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb56-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k, the Number of Successes in 100 Trials&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p>The <span class="math inline">\(p\)</span> used were 0.1, 0.25, 0.5, 0.75, and 0.99. Can you tell which is which?</p>
+</div>
+<div id="pdf-or-pmf-3" class="section level5">
+<h5><span class="header-section-number">5.5.1.0.5</span> PDF or PMF</h5>
+<p>The PMF for the binomial distribution is:
+<span class="math display">\[ P(X=k \vert n,p) = {n \choose k} p^k (1-p)^{n-k}\]</span></p>
+<p>Where <span class="math inline">\(k\)</span> is the number of successes observed in <span class="math inline">\(n\)</span> trials (you can think of <span class="math inline">\(k\)</span> as our “x-axis variable” for this PMF).</p>
+</div>
+<div id="examples-3" class="section level5">
+<h5><span class="header-section-number">5.5.1.0.6</span> Examples</h5>
+<p>We might use this distribution to model any categorical variable with two possible values, like Age (if possible values are “adult” and “child”) or health status (“has disease” or “does not have disease”). We’ll think of each observation in the dataset as one of the <span class="math inline">\(n\)</span> indpendent trials, with one of two possible outcomes for each trial.</p>
+</div>
+</div>
+<div id="poisson" class="section level3">
+<h3><span class="header-section-number">5.5.2</span> Poisson</h3>
+<div id="type-4" class="section level5">
+<h5><span class="header-section-number">5.5.2.0.1</span> Type</h5>
+<p>Discrete</p>
+</div>
+<div id="support-4" class="section level5">
+<h5><span class="header-section-number">5.5.2.0.2</span> Support</h5>
+<p>The support is 0 and positive integers (i.e., this distribution works well for count data).</p>
+</div>
+<div id="parameters-4" class="section level5">
+<h5><span class="header-section-number">5.5.2.0.3</span> Parameters</h5>
+<p>The Poisson distribution has one parameter, <span class="math inline">\(\lambda\)</span> (the event rate per unit time) which must be greater than 0.</p>
+</div>
+<div id="shapes-4" class="section level5">
+<h5><span class="header-section-number">5.5.2.0.4</span> Shapes</h5>
+<p>The distribution can take on unimodal shapes with varying amounts of right skew (from none, to an exponential shape).</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">colrs &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&#39;Set2&#39;</span>)</a>
+<a class="sourceLine" id="cb57-2" title="2"><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="dv">3</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="dv">6</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="dv">15</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb57-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+</div>
+<div id="pdf-or-pmf-4" class="section level5">
+<h5><span class="header-section-number">5.5.2.0.5</span> PDF or PMF</h5>
+<p>The Poisson PMF is:</p>
+<p><span class="math display">\[P(X=k \vert \lambda) = \frac{\lambda^k e^{-\lambda}}{k!}\]</span></p>
+</div>
+<div id="examples-4" class="section level5">
+<h5><span class="header-section-number">5.5.2.0.6</span> Examples</h5>
+<p>The Poisson distribution might be used to model any response variable that is comprised of counts, for example, the number of birds sighted in a bird survey, or the number of people admitted to an emergency room each hour.</p>
+</div>
+</div>
+<div id="negative-binomial" class="section level3">
+<h3><span class="header-section-number">5.5.3</span> Negative Binomial</h3>
+<p>There are two versions or “types” of this distribution, cleverly known as NB1 (type 1) and NB2 (type 2). NB1 has “constant overdispersion” – the variance of the distribution is greater than the mean according to a constant ratio. NB2 has “variable overdispersion” – the variance is a quadratic function of the mean. The NB2 is the one that corresponds directly to conceptualization in terms of binomial trials (with the PMF giving the probability of observing <span class="math inline">\(y\)</span> failures before the <span class="math inline">\(r\)</span>th success). <a href="https://www.amazon.com/Generalized-Linear-Models-Extensions-Third/dp/1597181056/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1538705158&amp;sr=1-1&amp;keywords=Generalized+Linear+Models+and+Extensions%3A+third+edition">Hardin and Hilbe 2007</a> describe the negative binomial this way: “Instead of counts entering uniformly, we see counts entering with a specific gamma-distributed shape.”</p>
+<div id="type-5" class="section level5">
+<h5><span class="header-section-number">5.5.3.0.1</span> Type</h5>
+<p>Discrete</p>
+</div>
+<div id="support-5" class="section level5">
+<h5><span class="header-section-number">5.5.3.0.2</span> Support</h5>
+<p>The support is 0 and positive integers (i.e., this distribution works well for count data). It also has a derivation in terms of binomial trials, but in our regression models, we will only use it with count data.</p>
+</div>
+<div id="parameters-5" class="section level5">
+<h5><span class="header-section-number">5.5.3.0.3</span> Parameters</h5>
+<p>A common parameterization of the negative binomial (online and in actuarial science) has parameters <span class="math inline">\(p\)</span>, the probability of success on each binomial trial, and <span class="math inline">\(r\)</span>, the number of failures observed. The PMF then gives the probability of observing <span class="math inline">\(k\)</span> failures before the <span class="math inline">\(r\)</span>th success in a series of Bernoulli trials.</p>
+<p>Here, we will use an alternate parameterization. The other common way to parameterize and derive the NB is as a Poisson-gamma mixture – a modified version of a Poisson distribution. In this scheme, the parameters of the distribution are <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\alpha\)</span>.</p>
+</div>
+<div id="shapes-5" class="section level5">
+<h5><span class="header-section-number">5.5.3.0.4</span> Shapes</h5>
+<p>These distributions can take on unimodal shapes with varying amounts of right skew. In NB2 (type 2) distributions the variance (spread) is larger relative to the mean.</p>
+<p>NB1:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1"><span class="kw">require</span>(gamlss.dist)</a></code></pre></div>
+<pre><code>## Loading required package: gamlss.dist</code></pre>
+<pre><code>## Warning: package &#39;gamlss.dist&#39; was built under R version 3.6.1</code></pre>
+<pre><code>## Loading required package: MASS</code></pre>
+<pre><code>## 
+## Attaching package: &#39;MASS&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     select</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1">colrs &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&#39;Set2&#39;</span>)</a>
+<a class="sourceLine" id="cb64-2" title="2"><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">sigma=</span><span class="dv">1</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">15</span>, <span class="dt">sigma=</span><span class="dv">4</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-6" title="6"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-7" title="7"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
+<pre><code>## Warning: Removed 15 rows containing missing values (geom_segment).</code></pre>
+<pre><code>## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 177 rows containing missing values (geom_segment).</code></pre>
+<pre><code>## Warning: Removed 177 rows containing missing values (geom_point).</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p>NB2:</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1">colrs &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&#39;Set2&#39;</span>)</a>
+<a class="sourceLine" id="cb69-2" title="2"><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb69-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb69-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">sigma=</span><span class="dv">1</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb69-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">15</span>, <span class="dt">sigma=</span><span class="dv">4</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb69-6" title="6"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb69-7" title="7"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_segment).</code></pre>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 39 rows containing missing values (geom_segment).</code></pre>
+<pre><code>## Warning: Removed 39 rows containing missing values (geom_point).</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+</div>
+<div id="pdf-or-pmf-5" class="section level5">
+<h5><span class="header-section-number">5.5.3.0.5</span> PDF or PMF</h5>
+<p>Details of the parameterizations and likelihood and fitting of NB1 and NB2 distributions can be found in <a href="https://www.amazon.com/Generalized-Linear-Models-Extensions-Third/dp/1597181056/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1538705158&amp;sr=1-1&amp;keywords=Generalized+Linear+Models+and+Extensions%3A+third+edition">Hardin and Hilbe 2007</a>, if you are interested.</p>
+<p>The PMF for the NB1, where the variance is a constant multiple of the mean, is:</p>
+<p><span class="math display">\[ f(x \vert \mu, \alpha) = \frac{\Gamma(x + \mu)}{\Gamma(\mu)\Gamma(x+1)}(\frac{1}{1+\alpha})^\mu(\frac{\alpha}{1+\alpha})^x \]</span></p>
+<p>Where <span class="math inline">\(\Gamma\)</span> is a Gamma function. Note that if <span class="math inline">\(\alpha\)</span> = 0 this becomes a Poisson distribution, so the Poisson is a special case of the NB1.</p>
+<p>The PMF for the NB2, where the variance is a quadratic function of the mean, is:</p>
+<p><span class="math display">\[ f(x \vert \mu, \alpha) = \frac{\Gamma(x + \frac{1}{\alpha})}{\Gamma(\frac{1}{\alpha})\Gamma(x+1)}(\frac{1}{1+\alpha \mu})^{\frac{1}{\alpha}}(1 - \frac{1}{1+\alpha \mu})^x \]</span></p>
+</div>
+<div id="examples-5" class="section level5">
+<h5><span class="header-section-number">5.5.3.0.6</span> Examples</h5>
+<p>NB distributions are good models for overdispersed count data, where (in the regression context) the residual variance is not equal to the expected (predicted) value. (Note that if you are reading this before learning about regression models for count data, you may not understand this sentence yet…don’t worry, it will make sense when you return later!) Some examples might include sightings data on numbers of animals seen on wildlife surveys, or the number of items bought per order at an online retailer.</p>
+</div>
+</div>
+<div id="a-mixture-distribution-tweedie" class="section level3">
+<h3><span class="header-section-number">5.5.4</span> A Mixture Distribution: Tweedie</h3>
+<p>The Tweedie family of distributions is a very large one - depending on the values of the different parameters, the PMF/PDF can be written in many different ways, and it can take on many different shapes. The description below is a simplified one, geared toward the types of Tweedie distributions we are likely to try to use in regression models in this course – mainly the “compound Poisson-gamma” type.</p>
+<p><em>Some extra resources for which you will not be held responsible in this course:</em></p>
+<ul>
+<li><p>You can find an accessible description and example of this kind of distribution at: <a href="http://www.notenoughthoughts.net/posts/modeling-activity.html">http://www.notenoughthoughts.net/posts/modeling-activity.html</a>.</p></li>
+<li><p>The following site may also be useful in regard to using the Tweedie in regression models: <a href="http://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/viewer.htm#statug_genmod_details28.htm">http://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/viewer.htm#statug_genmod_details28.htm</a></p></li>
+</ul>
+<div id="type-6" class="section level5">
+<h5><span class="header-section-number">5.5.4.0.1</span> Type</h5>
+<p>These distributions are <em>both</em> continuous and discrete - a kind of mix of a Poisson distribution and gamma distribution(s).</p>
+</div>
+<div id="support-6" class="section level5">
+<h5><span class="header-section-number">5.5.4.0.2</span> Support</h5>
+<p>The support is non-negative real numbers (greater than or equal to 0).</p>
+</div>
+<div id="parameters-6" class="section level5">
+<h5><span class="header-section-number">5.5.4.0.3</span> Parameters</h5>
+<p>(Note: there are multiple different ways to parameterize these distributions.) We will use:</p>
+<ul>
+<li><span class="math inline">\(p\)</span>, the index or power parameter, which can be 0 (resulting in a normal distribution), 1 (resulting in a Poisson distribution), <strong><span class="math inline">\(1 &lt; p &lt; 2\)</span> (a compound Poisson-gamma distribution – what we will mainly use)</strong>, 2 (a gamma distribution), 3 (an inverse Gaussian distribution), <span class="math inline">\(&lt;3\)</span> (a positive stable distribution), or <span class="math inline">\(\infty\)</span> (an extreme positive stable distribuiton). For the case where <span class="math inline">\(1 &lt; p &lt; 2\)</span>, and the distribution is a compound of a Poisson and a gamma, then <span class="math inline">\(p = \frac{k+2}{k+1}\)</span> where <span class="math inline">\(k\)</span> is the parameter of the gamma distribution. When <span class="math inline">\(1&lt;p&lt;2\)</span>, <span class="math inline">\(p\)</span> closer to 1 means thant the Poisson distribution (the mass at 0) gets more “weight” in the compound distribution, and values of <span class="math inline">\(p\)</span> closer to 2 mean that the gamma distribution gets more “weight.”</li>
+<li><span class="math inline">\(\mu\)</span>. For the case where <span class="math inline">\(1 &lt; p &lt; 2\)</span>, and the distribution is a compound of a Poisson and a gamma, then <span class="math inline">\(\mu = \lambda k \theta\)</span> where <span class="math inline">\(\lambda\)</span> is the parameter of the Poisson distribution and <span class="math inline">\(k\)</span> and <span class="math inline">\(\theta\)</span> are the parameters of the gamma.</li>
+<li><span class="math inline">\(\phi\)</span> For the case where <span class="math inline">\(1 &lt; p &lt; 2\)</span>, and the distribution is a compound of a Poisson and a gamma, then <span class="math inline">\(\phi = \frac{\lambda^{(1-p)} (k \theta) ^{(2-p)}}{2-p}\)</span> where <span class="math inline">\(\lambda\)</span> is the parameter of the Poisson distribution and <span class="math inline">\(k\)</span> and <span class="math inline">\(\theta\)</span> are the parameters of the gamma.</li>
+</ul>
+</div>
+<div id="shapes-6" class="section level5">
+<h5><span class="header-section-number">5.5.4.0.4</span> Shapes</h5>
+<p>A compound Poisson-gamma Tweedie distribution can take on varying shapes; the main characteristic of interest for us is that it can have a mass at 0, then a unimodal or multimodal distribution with a long right tail (lots of right skew).</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" title="1"><span class="kw">require</span>(tweedie)</a></code></pre></div>
+<pre><code>## Loading required package: tweedie</code></pre>
+<pre><code>## Warning: package &#39;tweedie&#39; was built under R version 3.6.1</code></pre>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1">tex &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">seq</span>(<span class="dt">from=</span><span class="dv">0</span>, <span class="dt">by=</span><span class="fl">0.1</span>, <span class="dt">to=</span><span class="dv">50</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.a =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.1</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="dv">2</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.b =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.3</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="fl">0.5</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.c =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.5</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="fl">0.3</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.d =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.8</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="dv">1</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.e =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.5</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb77-7" title="7">  </a>
+<a class="sourceLine" id="cb77-8" title="8"></a>
+<a class="sourceLine" id="cb77-9" title="9"><span class="kw">gf_line</span>(dens.a <span class="op">~</span><span class="st"> </span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-10" title="10"><span class="st">  </span><span class="kw">gf_line</span>(dens.b <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-11" title="11"><span class="st">  </span><span class="kw">gf_line</span>(dens.c <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-12" title="12"><span class="st">  </span><span class="kw">gf_line</span>(dens.d <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb77-13" title="13"><span class="st">  </span><span class="kw">gf_line</span>(dens.e <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">5</span>])</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+</div>
+<div id="pdf-or-pmf-6" class="section level5">
+<h5><span class="header-section-number">5.5.4.0.5</span> PDF or PMF</h5>
+<p>A Tweedie distribution with <span class="math inline">\(p&gt;1\)</span> has the form:</p>
+<p><span class="math display">\[ f(X \vert \mu, \phi, p) = a(x, \phi)e^{\frac{1}{\phi}(\frac{x\mu^{(1-p)}}{(1-p)} - \kappa(\mu,p))}\]</span></p>
+<p>where <span class="math inline">\(\kappa(\mu,p) = \frac{\mu^{(2-p)}}{(2-p)}\)</span> if <span class="math inline">\(p\neq2\)</span>, and if <span class="math inline">\(p=2\)</span>, <span class="math inline">\(\kappa(\mu,p) = log(\mu)\)</span>; but <span class="math inline">\(a(x,\phi)\)</span> is a function that does not have an analytical expression. This expression is from SAS documentation at <a href="https://support.sas.com/rnd/app/stat/examples/tweedie/tweedie.pdf">https://support.sas.com/rnd/app/stat/examples/tweedie/tweedie.pdf</a>.</p>
+<p>Alternately (and more simply(?)), a Tweedie distribution with <span class="math inline">\(1 &lt; p &lt; 2\)</span> is a compound of a Poisson distribution with parameter <span class="math inline">\(\lambda\)</span> and a gamma distribution with parameters <span class="math inline">\(k\)</span> and <span class="math inline">\(\theta\)</span>. For example:</p>
+<p>“Suppose that airplanes arrive at an airport following a Poisson process, and the number of passengers in each airplane follows a certain <a href="pdfs-and-pmfs.html#gamma">gamma</a> distribution. Then, the number of passengers arriving at the airport follows a compound Poisson <a href="pdfs-and-pmfs.html#gamma">gamma</a> process
+<span class="math display">\[ Y = \sum_{i=1}^{N} D_i\]</span>
+where <span class="math inline">\(N\)</span> is the Poisson process that the airplanes follow, and <span class="math inline">\(D_i\)</span> is the <a href="pdfs-and-pmfs.html#gamma">gamma</a> distribution that the passengers follow.” (Thanks to D. Mao, <a href="http://math.uchicago.edu/~may/REU2013/REUPapers/Mao.pdf">http://math.uchicago.edu/~may/REU2013/REUPapers/Mao.pdf</a> for this example.)</p>
+</div>
+<div id="examples-6" class="section level5">
+<h5><span class="header-section-number">5.5.4.0.6</span> Examples</h5>
+<p>The Tweedie distributions may be useful for “zero-inflated” data, where there is a class of observations for which the observed value of the variable is always zero, and another class for which the variable takes on positive continuous values. For example, this might model the number of birds present per unit area (when the study area includes places of unsuitable habitat where none are ever found), or perhaps the quantity of alcohol consumed per week by different people (some of whom may drink varying amounts, and others of whom may never drink at all).</p>
+
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="likelihood.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/04-pdf-pmf.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

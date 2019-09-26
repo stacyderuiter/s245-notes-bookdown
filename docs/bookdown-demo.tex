@@ -444,7 +444,7 @@ Wait, what? This error is because the \texttt{lm()} function removes rows contai
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{b2 <-}\StringTok{ }\NormalTok{bonobos }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{select}\NormalTok{(fWHR, weight, AssR, Sex, Group) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(fWHR, weight, AssR, Sex, Group) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{na.omit}\NormalTok{() }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{preds =} \KeywordTok{predict}\NormalTok{(mlr3))}
 \end{Highlighting}
@@ -1395,6 +1395,529 @@ We can compute the \textbf{likelihood} (\(L\)) of this set of residuals by findi
 To get the likelihood of the full dataset given the model, we use the fact that the residuals are independent (they better be, because that was one of the conditions of of linear regression model) -- we can multiply the likelihoods of all the individual residuals together to get the joint likelihood of the full set.
 
 \emph{That} is the ``likelihood'' that is used in the AIC and BIC calculations we considered earlier.
+
+\hypertarget{pdfs-and-pmfs}{%
+\chapter{PDFs and PMFs}\label{pdfs-and-pmfs}}
+
+\hypertarget{beyond-normal}{%
+\section{Beyond Normal}\label{beyond-normal}}
+
+In our exploration of likelihoods, we did a little bit of work with the Normal probability density function. Here, we will state some characteristics of the normal distribution slightly more formally, and then we will get familiar with some other probability distributions (a.k.a. ``the normal distribution's wierd friends'').
+
+\hypertarget{types-of-probability-distributions}{%
+\section{Types of probability distributions}\label{types-of-probability-distributions}}
+
+\hypertarget{continuous-distributions}{%
+\subsection{Continuous distributions}\label{continuous-distributions}}
+
+The probability distribution of a continuous variable (one that can take on continuous real values, at least within a certain range) is called a \emph{probability density function} or \textbf{PDF} for short.
+
+PDFs are functions of one continuous variable (we'll call it \(x\)) that have two properties in common:
+
+\begin{itemize}
+\tightlist
+\item
+  The total area under the curve is 1 (\(\int_{-\infty}^{\infty} f(x)dx = 1\))
+\item
+  The values of the function are non-negative (0, or a positive real number) for all real \(x\) (\(f(x) \geq 0 \forall x \in \mathbb{R}\))
+\end{itemize}
+
+For PDFs, the function values (\(y\)-axis values) are \emph{probability densities}, useful for computing likelihoods; probabilities are given by finding \emph{areas} under the curve.
+
+\hypertarget{discrete-distributions}{%
+\subsection{Discrete Distributions}\label{discrete-distributions}}
+
+We use categorical as well as quantitative variables in our regression models, so it will prove useful to have some discrete probability distributions as well as continuous ones. Discrete distributions associate each possible value of a discrete variable with its probability of occurence.
+
+A discrete probability distribution is characterized by a \emph{probability mass function} or PMF for short (this is the discrete equivalent of a PDF).
+
+A PMF is a function of one \emph{discrete} variable (we'll call it \(x\)) that have two properties in common:
+
+\begin{itemize}
+\tightlist
+\item
+  The sum of all the function's values is 1 (\(\sum_{x \in S} f(x) =1\), where \(S\) is the set of all possible values \(x\) can have)
+\item
+  All values of the function are between 0 and 1 inclusive (they are probabilities) (\(f(x) \in [0,1] \forall x \in S\))
+\end{itemize}
+
+\hypertarget{relevant-features-of-distributions}{%
+\section{Relevant Features of Distributions}\label{relevant-features-of-distributions}}
+
+For this course, the most important features to note about each probability distribuiton will be:
+
+\begin{itemize}
+\tightlist
+\item
+  The \textbf{type} of distribution: discrete or continuous?
+\item
+  The \textbf{support} of the distribution: what range of possible values can the random variable \(X\) take on?
+\item
+  The \textbf{parameters} of the distribution. Changing the parameters tunes the center and shape of the distribution, so these are what we need to estimate to fit a particular kind of distribution to a specific dataset. (For example, the parameters of the normal distribution are the mean \(\mu\) and the standard deviation \(\sigma\).)
+\item
+  The \textbf{shape} of the distribution: what shapes can the function take one? (For example, the normal distribution is always unimodal and symmetric.)
+\item
+  The PDF or PMF of the distribution. What mathematical expression controls the shape of the distribution?
+\item
+  We will also note a few examples of variables that might be well modelled by each distribution.
+\end{itemize}
+
+\hypertarget{examples-of-continuous-distributions}{%
+\section{Examples of Continuous Distributions}\label{examples-of-continuous-distributions}}
+
+\hypertarget{normal}{%
+\subsection{Normal}\label{normal}}
+
+\hypertarget{type}{%
+\paragraph{Type}\label{type}}
+
+Continuous
+
+\hypertarget{support}{%
+\paragraph{Support}\label{support}}
+
+All real numbers
+
+\hypertarget{parameters}{%
+\paragraph{Parameters}\label{parameters}}
+
+\begin{itemize}
+\tightlist
+\item
+  \(\mu\), the mean, which can take on any real value
+\item
+  \(\sigma\), the standard deviation, which can take on any positive real value
+\end{itemize}
+
+\hypertarget{shapes}{%
+\paragraph{Shapes}\label{shapes}}
+
+The shape is always unimodal and symmetric.
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-26-1.pdf}
+
+\hypertarget{pdf-or-pmf}{%
+\paragraph{PDF or PMF}\label{pdf-or-pmf}}
+
+The normal distribution has PDF:
+
+\[ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{\frac{(x-\mu)^2}{2\sigma^2}}\]
+
+\hypertarget{examples}{%
+\paragraph{Examples}\label{examples}}
+
+A normal distribution might be a good fit for data on childrens' weights in kg, or for the duration of visits at a zoo, or\ldots{}
+
+\hypertarget{gamma}{%
+\subsection{Gamma}\label{gamma}}
+
+\hypertarget{type-1}{%
+\paragraph{Type}\label{type-1}}
+
+Continuous
+
+\hypertarget{support-1}{%
+\paragraph{Support}\label{support-1}}
+
+positive real numbers
+
+\hypertarget{parameters-1}{%
+\paragraph{Parameters}\label{parameters-1}}
+
+There are two alternate but equivalent parameterizations for the gamma distribution.
+
+The first option: \(\alpha\) (shape) and \(\beta\) (rate), where \(\alpha>0\) and \(\beta>0\)
+
+The second option: \(k\) (shape) and \(\theta\) (scale), where \(k >0\) and \(\theta>0\).
+
+Converting between the two parameterizations: \(\alpha = k\) and \(\beta = \frac{1}{\theta}\).
+
+\hypertarget{shapes-1}{%
+\paragraph{Shapes}\label{shapes-1}}
+
+The gamma distribution can take on a unimodal, symmetric shape or a unimodal shape with any amount of right skew (up to an exponential distribution shape).
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-27-1.pdf}
+
+Note: you don't need to be familiar with exactly how the different values of parameters influence the shape of the gamma distribution PDF, so the curves here are not labelled with parameter values.
+
+\hypertarget{pdf-or-pmf-1}{%
+\paragraph{PDF or PMF}\label{pdf-or-pmf-1}}
+
+The gamma distribution has PDF:
+
+\[ f(x) = \frac{1}{\Gamma(k) \theta^k}x^{(k-1)}e^{\frac{-x}{\theta}}\]
+Where \(\Gamma\) is the Gamma function (look up the definition if you choose),
+or equivalently,
+
+\[ f(x) = \frac{\beta^{\alpha}}{\Gamma(\alpha)}x^{(\alpha-1)}e^{-\beta x}\]
+
+\hypertarget{examples-1}{%
+\paragraph{Examples}\label{examples-1}}
+
+Gamma distributions are often used to model things like wind speed or duration of an event (any quantity that might have right skew and is never negative).
+
+\hypertarget{beta}{%
+\subsection{Beta}\label{beta}}
+
+\hypertarget{type-2}{%
+\paragraph{Type}\label{type-2}}
+
+Continuous
+
+\hypertarget{support-2}{%
+\paragraph{Support}\label{support-2}}
+
+Real numbers between 0 and 1 ({[}0,1{]})
+
+\hypertarget{parameters-2}{%
+\paragraph{Parameters}\label{parameters-2}}
+
+\(\alpha\) (shape 1) and \(\beta\) (shape 2), both of which must be \(>1\).
+
+\hypertarget{shapes-2}{%
+\paragraph{Shapes}\label{shapes-2}}
+
+This distribution can take on almost any shape, for example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'beta'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{shape1=}\DecValTok{5}\NormalTok{, }\DataTypeTok{shape2=}\DecValTok{1}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'beta'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{shape1=}\DecValTok{1}\NormalTok{, }\DataTypeTok{shape2=}\DecValTok{3}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{1}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'beta'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{shape1=}\DecValTok{2}\NormalTok{, }\DataTypeTok{shape2=}\DecValTok{2}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{2}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'beta'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{shape1=}\DecValTok{2}\NormalTok{, }\DataTypeTok{shape2=}\DecValTok{5}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{3}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'beta'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{shape1=}\FloatTok{0.5}\NormalTok{, }\DataTypeTok{shape2=}\FloatTok{0.5}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{4}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{'Possible Values of Variable'}\NormalTok{, }\DataTypeTok{y=}\StringTok{'Probability Density'}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_lims}\NormalTok{(}\DataTypeTok{y=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{2.5}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 796 rows containing missing values (geom_path).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 436 rows containing missing values (geom_path).
+\end{verbatim}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-28-1.pdf}
+
+\hypertarget{pdf-or-pmf-2}{%
+\paragraph{PDF or PMF}\label{pdf-or-pmf-2}}
+
+The PDF is:
+
+\[ f(x) = \frac{x^{(\alpha -1)}(1-x)^{(\beta-1)}}{ B(\alpha, \beta)}\]
+Where \(B\) is the Beta function (again, feel free to look up the definition if you are interested).
+
+\hypertarget{examples-2}{%
+\paragraph{Examples}\label{examples-2}}
+
+Beta distributions could be used for any variable that takes on values between 0-1, for example, baseball players' batting averages, or test scores (as proportions).
+
+\hypertarget{examples-of-discrete-distributions}{%
+\section{Examples of Discrete Distributions}\label{examples-of-discrete-distributions}}
+
+\hypertarget{binomial}{%
+\subsection{Binomial}\label{binomial}}
+
+\hypertarget{type-3}{%
+\paragraph{Type}\label{type-3}}
+
+Discrete
+
+\hypertarget{support-3}{%
+\paragraph{Support}\label{support-3}}
+
+You can think about the support of this distribution two ways.
+Technically, the support is \(k= 0, 1,2,3,\dots\): 0 and positive integers, interpreted as the number of ``successes'' in \(n\) binomial trials. Binomial trials are independent observations of a process that has two possible outcomes, ``success'' or ``failure'', with set probabilities of each occurring. (And probabilities of success and failure must sum to 1.)
+
+So, for each individual binomial trial, the possible outcomes are 0 and 1, often interpreted as TRUE and FALSE or ``success'' and ``failure''.
+
+For our purposes, this distribution will be useful for modelling response variables that are categorical with two possible values (and the \(n\) trials will be the \(n\) rows in our dataset).
+
+\hypertarget{parameters-3}{%
+\paragraph{Parameters}\label{parameters-3}}
+
+Parameters are \(n\), the number of independent trials, and \(p\), the probability of success in each trial.
+
+\hypertarget{shapes-3}{%
+\paragraph{Shapes}\label{shapes-3}}
+
+The figure below shows the shape of binomial distributions with fixed \(n=100\) and varying \(p\):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'binom'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{size=}\DecValTok{100}\NormalTok{, }\DataTypeTok{prob=}\FloatTok{0.1}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{1}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'binom'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{size=}\DecValTok{100}\NormalTok{, }\DataTypeTok{prob=}\FloatTok{0.25}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{2}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'binom'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{size=}\DecValTok{100}\NormalTok{, }\DataTypeTok{prob=}\FloatTok{0.5}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{3}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'binom'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{size=}\DecValTok{100}\NormalTok{, }\DataTypeTok{prob=}\FloatTok{0.75}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{4}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'binom'}\NormalTok{, }\DataTypeTok{params =} \KeywordTok{c}\NormalTok{(}\DataTypeTok{size=}\DecValTok{100}\NormalTok{, }\DataTypeTok{prob=}\FloatTok{0.99}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{5}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{'k, the Number of Successes in 100 Trials'}\NormalTok{, }\DataTypeTok{y=}\StringTok{'Probability'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-29-1.pdf}
+
+The \(p\) used were 0.1, 0.25, 0.5, 0.75, and 0.99. Can you tell which is which?
+
+\hypertarget{pdf-or-pmf-3}{%
+\paragraph{PDF or PMF}\label{pdf-or-pmf-3}}
+
+The PMF for the binomial distribution is:
+\[ P(X=k \vert n,p) = {n \choose k} p^k (1-p)^{n-k}\]
+
+Where \(k\) is the number of successes observed in \(n\) trials (you can think of \(k\) as our ``x-axis variable'' for this PMF).
+
+\hypertarget{examples-3}{%
+\paragraph{Examples}\label{examples-3}}
+
+We might use this distribution to model any categorical variable with two possible values, like Age (if possible values are ``adult'' and ``child'') or health status (``has disease'' or ``does not have disease''). We'll think of each observation in the dataset as one of the \(n\) indpendent trials, with one of two possible outcomes for each trial.
+
+\hypertarget{poisson}{%
+\subsection{Poisson}\label{poisson}}
+
+\hypertarget{type-4}{%
+\paragraph{Type}\label{type-4}}
+
+Discrete
+
+\hypertarget{support-4}{%
+\paragraph{Support}\label{support-4}}
+
+The support is 0 and positive integers (i.e., this distribution works well for count data).
+
+\hypertarget{parameters-4}{%
+\paragraph{Parameters}\label{parameters-4}}
+
+The Poisson distribution has one parameter, \(\lambda\) (the event rate per unit time) which must be greater than 0.
+
+\hypertarget{shapes-4}{%
+\paragraph{Shapes}\label{shapes-4}}
+
+The distribution can take on unimodal shapes with varying amounts of right skew (from none, to an exponential shape).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{colrs <-}\StringTok{ }\NormalTok{RColorBrewer}\OperatorTok{::}\KeywordTok{brewer.pal}\NormalTok{(}\DecValTok{8}\NormalTok{, }\StringTok{'Set2'}\NormalTok{)}
+\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'pois'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{lambda=}\FloatTok{0.5}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{1}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'pois'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{lambda=}\DecValTok{3}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{2}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'pois'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{lambda=}\DecValTok{6}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{3}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'pois'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{lambda=}\DecValTok{15}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{4}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{'k (number of events)'}\NormalTok{, }\DataTypeTok{y=}\StringTok{'Probability'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-30-1.pdf}
+
+\hypertarget{pdf-or-pmf-4}{%
+\paragraph{PDF or PMF}\label{pdf-or-pmf-4}}
+
+The Poisson PMF is:
+
+\[P(X=k \vert \lambda) = \frac{\lambda^k e^{-\lambda}}{k!}\]
+
+\hypertarget{examples-4}{%
+\paragraph{Examples}\label{examples-4}}
+
+The Poisson distribution might be used to model any response variable that is comprised of counts, for example, the number of birds sighted in a bird survey, or the number of people admitted to an emergency room each hour.
+
+\hypertarget{negative-binomial}{%
+\subsection{Negative Binomial}\label{negative-binomial}}
+
+There are two versions or ``types'' of this distribution, cleverly known as NB1 (type 1) and NB2 (type 2). NB1 has ``constant overdispersion'' -- the variance of the distribution is greater than the mean according to a constant ratio. NB2 has ``variable overdispersion'' -- the variance is a quadratic function of the mean. The NB2 is the one that corresponds directly to conceptualization in terms of binomial trials (with the PMF giving the probability of observing \(y\) failures before the \(r\)th success). \href{https://www.amazon.com/Generalized-Linear-Models-Extensions-Third/dp/1597181056/ref=sr_1_1?s=books\&ie=UTF8\&qid=1538705158\&sr=1-1\&keywords=Generalized+Linear+Models+and+Extensions\%3A+third+edition}{Hardin and Hilbe 2007} describe the negative binomial this way: ``Instead of counts entering uniformly, we see counts entering with a specific gamma-distributed shape.''
+
+\hypertarget{type-5}{%
+\paragraph{Type}\label{type-5}}
+
+Discrete
+
+\hypertarget{support-5}{%
+\paragraph{Support}\label{support-5}}
+
+The support is 0 and positive integers (i.e., this distribution works well for count data). It also has a derivation in terms of binomial trials, but in our regression models, we will only use it with count data.
+
+\hypertarget{parameters-5}{%
+\paragraph{Parameters}\label{parameters-5}}
+
+A common parameterization of the negative binomial (online and in actuarial science) has parameters \(p\), the probability of success on each binomial trial, and \(r\), the number of failures observed. The PMF then gives the probability of observing \(k\) failures before the \(r\)th success in a series of Bernoulli trials.
+
+Here, we will use an alternate parameterization. The other common way to parameterize and derive the NB is as a Poisson-gamma mixture -- a modified version of a Poisson distribution. In this scheme, the parameters of the distribution are \(\mu\) and \(\alpha\).
+
+\hypertarget{shapes-5}{%
+\paragraph{Shapes}\label{shapes-5}}
+
+These distributions can take on unimodal shapes with varying amounts of right skew. In NB2 (type 2) distributions the variance (spread) is larger relative to the mean.
+
+NB1:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{require}\NormalTok{(gamlss.dist)}
+\NormalTok{colrs <-}\StringTok{ }\NormalTok{RColorBrewer}\OperatorTok{::}\KeywordTok{brewer.pal}\NormalTok{(}\DecValTok{8}\NormalTok{, }\StringTok{'Set2'}\NormalTok{)}
+\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'NBI'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{1}\NormalTok{, }\DataTypeTok{sigma=}\FloatTok{0.5}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{1}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'NBI'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{1}\NormalTok{, }\DataTypeTok{sigma=}\FloatTok{0.5}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{2}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'NBI'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{4}\NormalTok{, }\DataTypeTok{sigma=}\DecValTok{1}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{3}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'NBI'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{15}\NormalTok{, }\DataTypeTok{sigma=}\DecValTok{4}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{4}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_lims}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{20}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{'k (number of events)'}\NormalTok{, }\DataTypeTok{y=}\StringTok{'Probability'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 15 rows containing missing values (geom_segment).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 15 rows containing missing values (geom_point).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 177 rows containing missing values (geom_segment).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 177 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-31-1.pdf}
+
+NB2:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{colrs <-}\StringTok{ }\NormalTok{RColorBrewer}\OperatorTok{::}\KeywordTok{brewer.pal}\NormalTok{(}\DecValTok{8}\NormalTok{, }\StringTok{'Set2'}\NormalTok{)}
+\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'NBII'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{1}\NormalTok{, }\DataTypeTok{sigma=}\FloatTok{0.5}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{1}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'NBII'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{1}\NormalTok{, }\DataTypeTok{sigma=}\FloatTok{0.5}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{2}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'NBII'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{4}\NormalTok{, }\DataTypeTok{sigma=}\DecValTok{1}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{3}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_dist}\NormalTok{(}\StringTok{'NBII'}\NormalTok{, }\DataTypeTok{params=}\KeywordTok{c}\NormalTok{(}\DataTypeTok{mu=}\DecValTok{15}\NormalTok{, }\DataTypeTok{sigma=}\DecValTok{4}\NormalTok{), }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{4}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_lims}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{20}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_labs}\NormalTok{(}\DataTypeTok{x=}\StringTok{'k (number of events)'}\NormalTok{, }\DataTypeTok{y=}\StringTok{'Probability'}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 1 rows containing missing values (geom_segment).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 1 rows containing missing values (geom_point).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 39 rows containing missing values (geom_segment).
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: Removed 39 rows containing missing values (geom_point).
+\end{verbatim}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-32-1.pdf}
+
+\hypertarget{pdf-or-pmf-5}{%
+\paragraph{PDF or PMF}\label{pdf-or-pmf-5}}
+
+Details of the parameterizations and likelihood and fitting of NB1 and NB2 distributions can be found in \href{https://www.amazon.com/Generalized-Linear-Models-Extensions-Third/dp/1597181056/ref=sr_1_1?s=books\&ie=UTF8\&qid=1538705158\&sr=1-1\&keywords=Generalized+Linear+Models+and+Extensions\%3A+third+edition}{Hardin and Hilbe 2007}, if you are interested.
+
+The PMF for the NB1, where the variance is a constant multiple of the mean, is:
+
+\[ f(x \vert \mu, \alpha) = \frac{\Gamma(x + \mu)}{\Gamma(\mu)\Gamma(x+1)}(\frac{1}{1+\alpha})^\mu(\frac{\alpha}{1+\alpha})^x \]
+
+Where \(\Gamma\) is a Gamma function. Note that if \(\alpha\) = 0 this becomes a Poisson distribution, so the Poisson is a special case of the NB1.
+
+The PMF for the NB2, where the variance is a quadratic function of the mean, is:
+
+\[ f(x \vert \mu, \alpha) = \frac{\Gamma(x + \frac{1}{\alpha})}{\Gamma(\frac{1}{\alpha})\Gamma(x+1)}(\frac{1}{1+\alpha \mu})^{\frac{1}{\alpha}}(1 - \frac{1}{1+\alpha \mu})^x \]
+
+\hypertarget{examples-5}{%
+\paragraph{Examples}\label{examples-5}}
+
+NB distributions are good models for overdispersed count data, where (in the regression context) the residual variance is not equal to the expected (predicted) value. (Note that if you are reading this before learning about regression models for count data, you may not understand this sentence yet\ldots don't worry, it will make sense when you return later!) Some examples might include sightings data on numbers of animals seen on wildlife surveys, or the number of items bought per order at an online retailer.
+
+\hypertarget{a-mixture-distribution-tweedie}{%
+\subsection{A Mixture Distribution: Tweedie}\label{a-mixture-distribution-tweedie}}
+
+The Tweedie family of distributions is a very large one - depending on the values of the different parameters, the PMF/PDF can be written in many different ways, and it can take on many different shapes. The description below is a simplified one, geared toward the types of Tweedie distributions we are likely to try to use in regression models in this course -- mainly the ``compound Poisson-gamma'' type.
+
+\emph{Some extra resources for which you will not be held responsible in this course:}
+
+\begin{itemize}
+\item
+  You can find an accessible description and example of this kind of distribution at: \url{http://www.notenoughthoughts.net/posts/modeling-activity.html}.
+\item
+  The following site may also be useful in regard to using the Tweedie in regression models: \url{http://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/viewer.htm\#statug_genmod_details28.htm}
+\end{itemize}
+
+\hypertarget{type-6}{%
+\paragraph{Type}\label{type-6}}
+
+These distributions are \emph{both} continuous and discrete - a kind of mix of a Poisson distribution and gamma distribution(s).
+
+\hypertarget{support-6}{%
+\paragraph{Support}\label{support-6}}
+
+The support is non-negative real numbers (greater than or equal to 0).
+
+\hypertarget{parameters-6}{%
+\paragraph{Parameters}\label{parameters-6}}
+
+(Note: there are multiple different ways to parameterize these distributions.) We will use:
+
+\begin{itemize}
+\tightlist
+\item
+  \(p\), the index or power parameter, which can be 0 (resulting in a normal distribution), 1 (resulting in a Poisson distribution), \textbf{\(1 < p < 2\) (a compound Poisson-gamma distribution -- what we will mainly use)}, 2 (a gamma distribution), 3 (an inverse Gaussian distribution), \(<3\) (a positive stable distribution), or \(\infty\) (an extreme positive stable distribuiton). For the case where \(1 < p < 2\), and the distribution is a compound of a Poisson and a gamma, then \(p = \frac{k+2}{k+1}\) where \(k\) is the parameter of the gamma distribution. When \(1<p<2\), \(p\) closer to 1 means thant the Poisson distribution (the mass at 0) gets more ``weight'' in the compound distribution, and values of \(p\) closer to 2 mean that the gamma distribution gets more ``weight.''
+\item
+  \(\mu\). For the case where \(1 < p < 2\), and the distribution is a compound of a Poisson and a gamma, then \(\mu = \lambda k \theta\) where \(\lambda\) is the parameter of the Poisson distribution and \(k\) and \(\theta\) are the parameters of the gamma.
+\item
+  \(\phi\) For the case where \(1 < p < 2\), and the distribution is a compound of a Poisson and a gamma, then \(\phi = \frac{\lambda^{(1-p)} (k \theta) ^{(2-p)}}{2-p}\) where \(\lambda\) is the parameter of the Poisson distribution and \(k\) and \(\theta\) are the parameters of the gamma.
+\end{itemize}
+
+\hypertarget{shapes-6}{%
+\paragraph{Shapes}\label{shapes-6}}
+
+A compound Poisson-gamma Tweedie distribution can take on varying shapes; the main characteristic of interest for us is that it can have a mass at 0, then a unimodal or multimodal distribution with a long right tail (lots of right skew).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{require}\NormalTok{(tweedie)}
+\NormalTok{tex <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x=}\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from=}\DecValTok{0}\NormalTok{, }\DataTypeTok{by=}\FloatTok{0.1}\NormalTok{, }\DataTypeTok{to=}\DecValTok{50}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{dens.a =} \KeywordTok{dtweedie}\NormalTok{(x, }\DataTypeTok{xi =} \FloatTok{1.1}\NormalTok{, }\DataTypeTok{mu=}\DecValTok{4}\NormalTok{, }\DataTypeTok{phi=}\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{dens.b =} \KeywordTok{dtweedie}\NormalTok{(x, }\DataTypeTok{xi =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{mu=}\DecValTok{4}\NormalTok{, }\DataTypeTok{phi=}\FloatTok{0.5}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{dens.c =} \KeywordTok{dtweedie}\NormalTok{(x, }\DataTypeTok{xi =} \FloatTok{1.5}\NormalTok{, }\DataTypeTok{mu=}\DecValTok{4}\NormalTok{, }\DataTypeTok{phi=}\FloatTok{0.3}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{dens.d =} \KeywordTok{dtweedie}\NormalTok{(x, }\DataTypeTok{xi =} \FloatTok{1.8}\NormalTok{, }\DataTypeTok{mu=}\DecValTok{4}\NormalTok{, }\DataTypeTok{phi=}\DecValTok{1}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{dens.e =} \KeywordTok{dtweedie}\NormalTok{(x, }\DataTypeTok{xi =} \FloatTok{1.5}\NormalTok{, }\DataTypeTok{mu=}\DecValTok{4}\NormalTok{, }\DataTypeTok{phi=}\DecValTok{5}\NormalTok{))}
+  
+
+\KeywordTok{gf_line}\NormalTok{(dens.a }\OperatorTok{~}\StringTok{ }\NormalTok{x, }\DataTypeTok{data=}\NormalTok{tex, }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{1}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_line}\NormalTok{(dens.b }\OperatorTok{~}\NormalTok{x, }\DataTypeTok{data=}\NormalTok{tex, }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{2}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_line}\NormalTok{(dens.c }\OperatorTok{~}\NormalTok{x, }\DataTypeTok{data=}\NormalTok{tex, }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{3}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_line}\NormalTok{(dens.d }\OperatorTok{~}\NormalTok{x, }\DataTypeTok{data=}\NormalTok{tex, }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{4}\NormalTok{]) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{gf_line}\NormalTok{(dens.e }\OperatorTok{~}\NormalTok{x, }\DataTypeTok{data=}\NormalTok{tex, }\DataTypeTok{color=}\NormalTok{colrs[}\DecValTok{5}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-33-1.pdf}
+
+\hypertarget{pdf-or-pmf-6}{%
+\paragraph{PDF or PMF}\label{pdf-or-pmf-6}}
+
+A Tweedie distribution with \(p>1\) has the form:
+
+\[ f(X \vert \mu, \phi, p) = a(x, \phi)e^{\frac{1}{\phi}(\frac{x\mu^{(1-p)}}{(1-p)} - \kappa(\mu,p))}\]
+
+where \(\kappa(\mu,p) = \frac{\mu^{(2-p)}}{(2-p)}\) if \(p\neq2\), and if \(p=2\), \(\kappa(\mu,p) = log(\mu)\); but \(a(x,\phi)\) is a function that does not have an analytical expression. This expression is from SAS documentation at \url{https://support.sas.com/rnd/app/stat/examples/tweedie/tweedie.pdf}.
+
+Alternately (and more simply(?)), a Tweedie distribution with \(1 < p < 2\) is a compound of a Poisson distribution with parameter \(\lambda\) and a gamma distribution with parameters \(k\) and \(\theta\). For example:
+
+``Suppose that airplanes arrive at an airport following a Poisson process, and the number of passengers in each airplane follows a certain \protect\hyperlink{gamma}{gamma} distribution. Then, the number of passengers arriving at the airport follows a compound Poisson \protect\hyperlink{gamma}{gamma} process
+\[ Y = \sum_{i=1}^{N} D_i\]
+where \(N\) is the Poisson process that the airplanes follow, and \(D_i\) is the \protect\hyperlink{gamma}{gamma} distribution that the passengers follow.'' (Thanks to D. Mao, \url{http://math.uchicago.edu/~may/REU2013/REUPapers/Mao.pdf} for this example.)
+
+\hypertarget{examples-6}{%
+\paragraph{Examples}\label{examples-6}}
+
+The Tweedie distributions may be useful for ``zero-inflated'' data, where there is a class of observations for which the observed value of the variable is always zero, and another class for which the variable takes on positive continuous values. For example, this might model the number of birds present per unit area (when the study area includes places of unsuitable habitat where none are ever found), or perhaps the quantity of alcohol consumed per week by different people (some of whom may drink varying amounts, and others of whom may never drink at all).
 
 \bibliography{book.bib,packages.bib}
 
