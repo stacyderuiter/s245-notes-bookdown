@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-09-26" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="likelihood.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="regression-for-count-data.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -197,6 +197,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -281,7 +301,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="shapes" class="section level5">
 <h5><span class="header-section-number">5.4.1.0.4</span> Shapes</h5>
 <p>The shape is always unimodal and symmetric.</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf" class="section level5">
 <h5><span class="header-section-number">5.4.1.0.5</span> PDF or PMF</h5>
@@ -313,7 +333,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="shapes-1" class="section level5">
 <h5><span class="header-section-number">5.4.2.0.4</span> Shapes</h5>
 <p>The gamma distribution can take on a unimodal, symmetric shape or a unimodal shape with any amount of right skew (up to an exponential distribution shape).</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 <p>Note: you don’t need to be familiar with exactly how the different values of parameters influence the shape of the gamma distribution PDF, so the curves here are not labelled with parameter values.</p>
 </div>
 <div id="pdf-or-pmf-1" class="section level5">
@@ -346,16 +366,7 @@ or equivalently,</p>
 <div id="shapes-2" class="section level5">
 <h5><span class="header-section-number">5.4.3.0.4</span> Shapes</h5>
 <p>This distribution can take on almost any shape, for example:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb53-1" title="1"><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="dv">5</span>, <span class="dt">shape2=</span><span class="dv">1</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb53-2" title="2"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="dv">1</span>, <span class="dt">shape2=</span><span class="dv">3</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb53-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="dv">2</span>, <span class="dt">shape2=</span><span class="dv">2</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb53-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="dv">2</span>, <span class="dt">shape2=</span><span class="dv">5</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb53-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="fl">0.5</span>, <span class="dt">shape2=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb53-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Possible Values of Variable&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability Density&#39;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb53-7" title="7"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">2.5</span>))</a></code></pre></div>
-<pre><code>## Warning: Removed 796 rows containing missing values (geom_path).</code></pre>
-<pre><code>## Warning: Removed 436 rows containing missing values (geom_path).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf-2" class="section level5">
 <h5><span class="header-section-number">5.4.3.0.5</span> PDF or PMF</h5>
@@ -391,13 +402,7 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <div id="shapes-3" class="section level5">
 <h5><span class="header-section-number">5.5.1.0.4</span> Shapes</h5>
 <p>The figure below shows the shape of binomial distributions with fixed <span class="math inline">\(n=100\)</span> and varying <span class="math inline">\(p\)</span>:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb56-1" title="1"><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.1</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-2" title="2"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.25</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.75</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.99</span>), <span class="dt">color=</span>colrs[<span class="dv">5</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb56-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k, the Number of Successes in 100 Trials&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 <p>The <span class="math inline">\(p\)</span> used were 0.1, 0.25, 0.5, 0.75, and 0.99. Can you tell which is which?</p>
 </div>
 <div id="pdf-or-pmf-3" class="section level5">
@@ -428,13 +433,7 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <div id="shapes-4" class="section level5">
 <h5><span class="header-section-number">5.5.2.0.4</span> Shapes</h5>
 <p>The distribution can take on unimodal shapes with varying amounts of right skew (from none, to an exponential shape).</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">colrs &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&#39;Set2&#39;</span>)</a>
-<a class="sourceLine" id="cb57-2" title="2"><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb57-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="dv">3</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb57-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="dv">6</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb57-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="dv">15</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb57-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf-4" class="section level5">
 <h5><span class="header-section-number">5.5.2.0.5</span> PDF or PMF</h5>
@@ -466,40 +465,9 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <h5><span class="header-section-number">5.5.3.0.4</span> Shapes</h5>
 <p>These distributions can take on unimodal shapes with varying amounts of right skew. In NB2 (type 2) distributions the variance (spread) is larger relative to the mean.</p>
 <p>NB1:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" title="1"><span class="kw">require</span>(gamlss.dist)</a></code></pre></div>
-<pre><code>## Loading required package: gamlss.dist</code></pre>
-<pre><code>## Warning: package &#39;gamlss.dist&#39; was built under R version 3.6.1</code></pre>
-<pre><code>## Loading required package: MASS</code></pre>
-<pre><code>## 
-## Attaching package: &#39;MASS&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
-## 
-##     select</code></pre>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1">colrs &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&#39;Set2&#39;</span>)</a>
-<a class="sourceLine" id="cb64-2" title="2"><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">sigma=</span><span class="dv">1</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">15</span>, <span class="dt">sigma=</span><span class="dv">4</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-6" title="6"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb64-7" title="7"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
-<pre><code>## Warning: Removed 15 rows containing missing values (geom_segment).</code></pre>
-<pre><code>## Warning: Removed 15 rows containing missing values (geom_point).</code></pre>
-<pre><code>## Warning: Removed 177 rows containing missing values (geom_segment).</code></pre>
-<pre><code>## Warning: Removed 177 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
 <p>NB2:</p>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1">colrs &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&#39;Set2&#39;</span>)</a>
-<a class="sourceLine" id="cb69-2" title="2"><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb69-3" title="3"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb69-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">sigma=</span><span class="dv">1</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb69-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">15</span>, <span class="dt">sigma=</span><span class="dv">4</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb69-6" title="6"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb69-7" title="7"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_segment).</code></pre>
-<pre><code>## Warning: Removed 1 rows containing missing values (geom_point).</code></pre>
-<pre><code>## Warning: Removed 39 rows containing missing values (geom_segment).</code></pre>
-<pre><code>## Warning: Removed 39 rows containing missing values (geom_point).</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf-5" class="section level5">
 <h5><span class="header-section-number">5.5.3.0.5</span> PDF or PMF</h5>
@@ -543,23 +511,7 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <div id="shapes-6" class="section level5">
 <h5><span class="header-section-number">5.5.4.0.4</span> Shapes</h5>
 <p>A compound Poisson-gamma Tweedie distribution can take on varying shapes; the main characteristic of interest for us is that it can have a mass at 0, then a unimodal or multimodal distribution with a long right tail (lots of right skew).</p>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" title="1"><span class="kw">require</span>(tweedie)</a></code></pre></div>
-<pre><code>## Loading required package: tweedie</code></pre>
-<pre><code>## Warning: package &#39;tweedie&#39; was built under R version 3.6.1</code></pre>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1">tex &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">x=</span><span class="kw">seq</span>(<span class="dt">from=</span><span class="dv">0</span>, <span class="dt">by=</span><span class="fl">0.1</span>, <span class="dt">to=</span><span class="dv">50</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.a =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.1</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="dv">2</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.b =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.3</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="fl">0.5</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.c =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.5</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="fl">0.3</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.d =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.8</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="dv">1</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">dens.e =</span> <span class="kw">dtweedie</span>(x, <span class="dt">xi =</span> <span class="fl">1.5</span>, <span class="dt">mu=</span><span class="dv">4</span>, <span class="dt">phi=</span><span class="dv">5</span>))</a>
-<a class="sourceLine" id="cb77-7" title="7">  </a>
-<a class="sourceLine" id="cb77-8" title="8"></a>
-<a class="sourceLine" id="cb77-9" title="9"><span class="kw">gf_line</span>(dens.a <span class="op">~</span><span class="st"> </span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-10" title="10"><span class="st">  </span><span class="kw">gf_line</span>(dens.b <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-11" title="11"><span class="st">  </span><span class="kw">gf_line</span>(dens.c <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-12" title="12"><span class="st">  </span><span class="kw">gf_line</span>(dens.d <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb77-13" title="13"><span class="st">  </span><span class="kw">gf_line</span>(dens.e <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">5</span>])</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf-6" class="section level5">
 <h5><span class="header-section-number">5.5.4.0.5</span> PDF or PMF</h5>
@@ -585,7 +537,7 @@ where <span class="math inline">\(N\)</span> is the Poisson process that the air
         </div>
       </div>
 <a href="likelihood.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="regression-for-count-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

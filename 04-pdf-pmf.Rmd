@@ -1,3 +1,7 @@
+```{r, setup-pdfs, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
 # PDFs and PMFs
 
 ## Beyond Normal
@@ -246,7 +250,7 @@ These distributions can take on unimodal shapes with varying amounts of right sk
 
 NB1:
 
-```{r}
+```{r, message = FALSE}
 require(gamlss.dist)
 colrs <- RColorBrewer::brewer.pal(8, 'Set2')
 gf_dist('NBI', params=c(mu=1, sigma=0.5), color=colrs[1]) %>%

@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-09-26" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -197,6 +197,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -225,11 +245,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="data-and-model" class="section level2">
 <h2><span class="header-section-number">3.1</span> Data and Model</h2>
 <p>Today we will recreate part of the analysis from <a href="https://doi.org/10.1111/1365-2664.12798"><em>Vertebrate community composition and diversity declines along a defaunation gradient radiating from rural villages in Gabon</em></a>, by Sally Koerner and colleagues. They investigated the relationship between rural villages, hunting, and wildlife in Gabon. They asked how monkey abundance depends on distance from villages, village size, and vegetation characteristics. They shared their data at <a href="https://datadryad.org/stash/dataset/doi:10.5061/dryad.vs97g">Dryad.org</a> and we can read it in and fit a regression model like this:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" title="1">defaun &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;http://sldr.netlify.com/data/koerner_gabon_defaunation.csv&#39;</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">ape_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(RA_Apes <span class="op">~</span><span class="st"> </span>Veg_DBH <span class="op">+</span><span class="st"> </span>Veg_Canopy <span class="op">+</span><span class="st"> </span>Veg_Understory <span class="op">+</span></a>
-<a class="sourceLine" id="cb38-2" title="2"><span class="st">                   </span>Veg_Rich <span class="op">+</span><span class="st"> </span>Veg_Stems <span class="op">+</span><span class="st"> </span>Veg_liana <span class="op">+</span></a>
-<a class="sourceLine" id="cb38-3" title="3"><span class="st">                   </span>LandUse <span class="op">+</span><span class="st"> </span>Distance <span class="op">+</span><span class="st"> </span>NumHouseholds, <span class="dt">data =</span> defaun)</a>
-<a class="sourceLine" id="cb38-4" title="4"><span class="kw">summary</span>(ape_mod)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">ape_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(RA_Apes <span class="op">~</span><span class="st"> </span>Veg_DBH <span class="op">+</span><span class="st"> </span>Veg_Canopy <span class="op">+</span><span class="st"> </span>Veg_Understory <span class="op">+</span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="st">                   </span>Veg_Rich <span class="op">+</span><span class="st"> </span>Veg_Stems <span class="op">+</span><span class="st"> </span>Veg_liana <span class="op">+</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="st">                   </span>LandUse <span class="op">+</span><span class="st"> </span>Distance <span class="op">+</span><span class="st"> </span>NumHouseholds, <span class="dt">data =</span> defaun)</a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="kw">summary</span>(ape_mod)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = RA_Apes ~ Veg_DBH + Veg_Canopy + Veg_Understory + 
@@ -259,7 +278,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residual standard error: 2.725 on 13 degrees of freedom
 ## Multiple R-squared:  0.5439, Adjusted R-squared:  0.1931 
 ## F-statistic: 1.551 on 10 and 13 DF,  p-value: 0.2262</code></pre>
-<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb40-1" title="1"><span class="kw">as.numeric</span>(<span class="kw">logLik</span>(ape_mod))</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">as.numeric</span>(<span class="kw">logLik</span>(ape_mod))</a></code></pre></div>
 <pre><code>## [1] -50.75799</code></pre>
 </div>
 <div id="calculations" class="section level2">
@@ -285,13 +304,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The model we just fitted is our <em>full model</em>, with all predictors of potential interest included. How can we use information criteria to choose the best model from possible models with subsets of the predictors?</p>
 <p>We can use the <code>dredge()</code> function from the <code>MuMIn</code> package to get and display ICs for all these models.</p>
 <p>Before using dredge, we need to make sure our dataset has no missing values, and also set the “na.action” input for our model (can be done in call to <code>lm(..., na.action = 'na.fail')</code> also).</p>
-<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" title="1"><span class="kw">require</span>(MuMIn)</a></code></pre></div>
-<pre><code>## Loading required package: MuMIn</code></pre>
-<pre><code>## Warning: package &#39;MuMIn&#39; was built under R version 3.6.1</code></pre>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1">ape_mod &lt;-<span class="st"> </span>ape_mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">update</span>(<span class="dt">na.action =</span> <span class="st">&#39;na.fail&#39;</span>)</a>
-<a class="sourceLine" id="cb45-2" title="2">ape_dredge &lt;-<span class="st"> </span><span class="kw">dredge</span>(ape_mod, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a></code></pre></div>
-<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb47-1" title="1">pander<span class="op">::</span><span class="kw">pander</span>(<span class="kw">head</span>(ape_dredge, <span class="dv">7</span>))</a></code></pre></div>
 <table>
 <caption>Table continues below</caption>
 <colgroup>

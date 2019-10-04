@@ -20,7 +20,9 @@ require(s245)
 theme_set(theme_bw(base_size=14))
 knitr::opts_chunk$set(
   tidy=FALSE,     # display code as typed
-  size="small")   # slightly smaller font for code
+  size="small",
+  message = FALSE,
+  warning = FALSE)   # slightly smaller font for code
 ```
 
 # Description

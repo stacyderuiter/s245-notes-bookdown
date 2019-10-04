@@ -24,14 +24,14 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-09-26" />
+<meta name="date" content="2019-10-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="pdfs-and-pmfs.html"/>
+<link rel="prev" href="regression-for-count-data.html"/>
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -197,6 +197,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -227,7 +247,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="pdfs-and-pmfs.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regression-for-count-data.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
@@ -258,7 +278,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/06-references.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/07-references.Rmd",
 "text": "Edit"
 },
 "history": {

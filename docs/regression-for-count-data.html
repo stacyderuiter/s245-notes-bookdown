@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Regression for Count Data | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Regression for Count Data | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Regression for Count Data | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-10-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="pdfs-and-pmfs.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT 245 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#why-are-we-doing-this-again"><i class="fa fa-check"></i><b>2.7</b> Why are we doing this again?</a></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#shortcut-method---with-uncertainty"><i class="fa fa-check"></i><b>2.8</b> Shortcut Method - With Uncertainty</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="linear-regression.html"><a href="linear-regression.html#anatomy-of-a-confidence-interval"><i class="fa fa-check"></i><b>2.8.1</b> Anatomy of a Confidence Interval</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#diy-method"><i class="fa fa-check"></i><b>2.9</b> DIY Method</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-a-hypothetical-dataset"><i class="fa fa-check"></i><b>2.9.1</b> Creating a hypothetical dataset</a></li>
+<li class="chapter" data-level="2.9.2" data-path="linear-regression.html"><a href="linear-regression.html#making-the-plot"><i class="fa fa-check"></i><b>2.9.2</b> Making the plot</a></li>
+<li class="chapter" data-level="2.9.3" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors"><i class="fa fa-check"></i><b>2.9.3</b> Categorical predictors</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html"><i class="fa fa-check"></i><b>3</b> Model Selection Using Information Criteria</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#data-and-model"><i class="fa fa-check"></i><b>3.1</b> Data and Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#calculations"><i class="fa fa-check"></i><b>3.2</b> Calculations</a></li>
+<li class="chapter" data-level="3.3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#decisions-with-ics"><i class="fa fa-check"></i><b>3.3</b> Decisions with ICs</a></li>
+<li class="chapter" data-level="3.4" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#all-possible-subsets-selection"><i class="fa fa-check"></i><b>3.4</b> All-possible-subsets Selection</a></li>
+<li class="chapter" data-level="3.5" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#which-ic-should-i-use"><i class="fa fa-check"></i><b>3.5</b> Which IC should I use?</a></li>
+<li class="chapter" data-level="3.6" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#quantities-derived-from-aic"><i class="fa fa-check"></i><b>3.6</b> Quantities derived from AIC</a></li>
+<li class="chapter" data-level="3.7" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#important-caution"><i class="fa fa-check"></i><b>3.7</b> Important Caution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="likelihood.html"><a href="likelihood.html"><i class="fa fa-check"></i><b>4</b> Likelihood</a><ul>
+<li class="chapter" data-level="4.1" data-path="likelihood.html"><a href="likelihood.html#data-1"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="likelihood.html"><a href="likelihood.html#review---the-normal-probability-density-function-pdf"><i class="fa fa-check"></i><b>4.2</b> Review - the Normal probability density function (PDF)</a></li>
+<li class="chapter" data-level="4.3" data-path="likelihood.html"><a href="likelihood.html#a-simple-model"><i class="fa fa-check"></i><b>4.3</b> A simple model</a></li>
+<li class="chapter" data-level="4.4" data-path="likelihood.html"><a href="likelihood.html#using-the-model-to-make-predictions"><i class="fa fa-check"></i><b>4.4</b> Using the Model to Make Predictions</a></li>
+<li class="chapter" data-level="4.5" data-path="likelihood.html"><a href="likelihood.html#likelihood-to-the-rescue"><i class="fa fa-check"></i><b>4.5</b> Likelihood to the Rescue!</a></li>
+<li class="chapter" data-level="4.6" data-path="likelihood.html"><a href="likelihood.html#how-does-this-relate-to-linear-regression"><i class="fa fa-check"></i><b>4.6</b> How does this relate to linear regression?</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="likelihood.html"><a href="likelihood.html#model-equation"><i class="fa fa-check"></i><b>4.6.1</b> Model Equation:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="likelihood.html"><a href="likelihood.html#likelihood-of-a-dataset-given-a-model"><i class="fa fa-check"></i><b>4.7</b> Likelihood of a dataset, given a model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html"><i class="fa fa-check"></i><b>5</b> PDFs and PMFs</a><ul>
+<li class="chapter" data-level="5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beyond-normal"><i class="fa fa-check"></i><b>5.1</b> Beyond Normal</a></li>
+<li class="chapter" data-level="5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#types-of-probability-distributions"><i class="fa fa-check"></i><b>5.2</b> Types of probability distributions</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#continuous-distributions"><i class="fa fa-check"></i><b>5.2.1</b> Continuous distributions</a></li>
+<li class="chapter" data-level="5.2.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#discrete-distributions"><i class="fa fa-check"></i><b>5.2.2</b> Discrete Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#relevant-features-of-distributions"><i class="fa fa-check"></i><b>5.3</b> Relevant Features of Distributions</a></li>
+<li class="chapter" data-level="5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-continuous-distributions"><i class="fa fa-check"></i><b>5.4</b> Examples of Continuous Distributions</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#normal"><i class="fa fa-check"></i><b>5.4.1</b> Normal</a></li>
+<li class="chapter" data-level="5.4.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#gamma"><i class="fa fa-check"></i><b>5.4.2</b> Gamma</a></li>
+<li class="chapter" data-level="5.4.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beta"><i class="fa fa-check"></i><b>5.4.3</b> Beta</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-discrete-distributions"><i class="fa fa-check"></i><b>5.5</b> Examples of Discrete Distributions</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#binomial"><i class="fa fa-check"></i><b>5.5.1</b> Binomial</a></li>
+<li class="chapter" data-level="5.5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#poisson"><i class="fa fa-check"></i><b>5.5.2</b> Poisson</a></li>
+<li class="chapter" data-level="5.5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#negative-binomial"><i class="fa fa-check"></i><b>5.5.3</b> Negative Binomial</a></li>
+<li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regression-for-count-data" class="section level1">
+<h1><span class="header-section-number">Chapter 6</span> Regression for Count Data</h1>
+<p>So far, we have fitted regression models for continuous-valued quantitative response variables. What if our response variable is really <strong>count data</strong> – discrete quantitative values limited to zero and positive integers?</p>
+<div id="data-source" class="section level2">
+<h2><span class="header-section-number">6.1</span> Data Source</h2>
+<p>The dataset used here is <code>beevisits</code>, from:</p>
+<p>Felicity Muth, Jacob S. Francis, and Anne S. Leonard. 2017. Bees use the taste of pollen to determine which flowers to visit. Biology Letters 12(7): DOI: 10.1098/rsbl.2016.0356. <a href="http://rsbl.royalsocietypublishing.org/content/roybiolett/12/7/20160356.full.pdf">http://rsbl.royalsocietypublishing.org/content/roybiolett/12/7/20160356.full.pdf</a>.</p>
+<p><img src="BeeExperiment.png" width="6.5in" /></p>
+</div>
+<div id="a-bad-idea-multiple-linear-regression-model" class="section level2">
+<h2><span class="header-section-number">6.2</span> A bad idea: multiple linear regression model</h2>
+<p><img src="bookdown-demo_files/figure-html/beedata-2-1.png" width="624" /></p>
+<pre><code>##  colony                    beename        treatment  target.colour
+##  W:126   giantbeeYsucroseyellow:  3   Quinine  :90   blue  :138   
+##  X: 66   o51Wsucroseblue       :  3   Cellulose:90   yellow:132   
+##  Y: 78   o54Wquinineblue       :  3   Sucrose  :90                
+##          o58Wcelluloseyellow   :  3                               
+##          o60Wcelluloseblue     :  3                               
+##          o63Wquinineblue       :  3                               
+##          (Other)               :252                               
+##     novisits           flower  
+##  Min.   : 0.000   familiar:90  
+##  1st Qu.: 1.000   novel   :90  
+##  Median : 3.000   target  :90  
+##  Mean   : 4.437                
+##  3rd Qu.: 7.000                
+##  Max.   :21.000                
+## </code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">bee.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb28-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits)</a>
+<a class="sourceLine" id="cb28-3" title="3"><span class="kw">summary</span>(bee.lm)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = novisits ~ flower + treatment + colony, data = beevisits)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6.5668 -2.1113 -0.2847  1.5665 11.5767 
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          2.1113     0.4440   4.755 3.27e-06 ***
+## flowernovel         -1.6778     0.4386  -3.825 0.000163 ***
+## flowertarget         5.4556     0.4386  12.438  &lt; 2e-16 ***
+## treatmentCellulose   2.6883     0.4389   6.124 3.30e-09 ***
+## treatmentSucrose     2.7240     0.4415   6.170 2.56e-09 ***
+## colonyX             -0.8318     0.4491  -1.852 0.065110 .  
+## colonyY             -1.8493     0.4254  -4.347 1.97e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 2.942 on 263 degrees of freedom
+## Multiple R-squared:  0.5763, Adjusted R-squared:  0.5667 
+## F-statistic: 59.63 on 6 and 263 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><img src="bookdown-demo_files/figure-html/assess1-b-1.png" width="336" /></p>
+<p><img src="bookdown-demo_files/figure-html/assess2-b-1.png" width="336" /><img src="bookdown-demo_files/figure-html/assess2-b-2.png" width="336" /></p>
+</div>
+<div id="problems-with-the-linear-model" class="section level2">
+<h2><span class="header-section-number">6.3</span> Problems with the linear model</h2>
+<p>What problems do we have with this model (its appropriateness, or goodness of fit to the data)?</p>
+<ul>
+<li>Non-constant error variance</li>
+<li>Non-normality of residuals</li>
+<li>Some predicted values are less than 0 – it’s impossible that a bee could visit a flower a negative number of times!</li>
+</ul>
+</div>
+<div id="poisson-regression" class="section level2">
+<h2><span class="header-section-number">6.4</span> Poisson Regression</h2>
+<p><em>Detailed notes on the model equation were filled in here in class</em></p>
+<div id="fitting-the-model" class="section level3">
+<h3><span class="header-section-number">6.4.1</span> Fitting the Model</h3>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">prm &lt;-<span class="st"> </span><span class="kw">glm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb30-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
+<a class="sourceLine" id="cb30-3" title="3">           <span class="dt">family=</span><span class="kw">poisson</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>)) </a>
+<a class="sourceLine" id="cb30-4" title="4"><span class="kw">summary</span>(prm)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
+##     data = beevisits)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.9940  -1.3124  -0.3860   0.7794   4.7020  
+## 
+## Coefficients:
+##                    Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         0.79055    0.08695   9.092  &lt; 2e-16 ***
+## flowernovel        -0.75072    0.10442  -7.189 6.51e-13 ***
+## flowertarget        0.99945    0.06916  14.451  &lt; 2e-16 ***
+## treatmentCellulose  0.69817    0.07910   8.827  &lt; 2e-16 ***
+## treatmentSucrose    0.70953    0.07967   8.906  &lt; 2e-16 ***
+## colonyX            -0.17521    0.07175  -2.442   0.0146 *  
+## colonyY            -0.43724    0.07311  -5.981 2.22e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 1236.33  on 269  degrees of freedom
+## Residual deviance:  542.05  on 263  degrees of freedom
+## AIC: 1260.6
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+</div>
+<div id="conditions" class="section level3">
+<h3><span class="header-section-number">6.4.2</span> Conditions</h3>
+<p>What conditions must hold for <em>this</em> model to be appropriate?</p>
+<ul>
+<li>Response variable (y) contains count data</li>
+<li>Linearity: <span class="math inline">\(log(\lambda_{i})\)</span> is a linear function of the covariates <span class="math inline">\(x_1\)</span>, <span class="math inline">\(x_2\)</span>, … <span class="math inline">\(x_n\)</span>. (<em>Later we will consider how to check this when some covariates are quantitative…in brief: plot log(rate) as a function of each covariate and look for (no non-)linear trend.</em>)</li>
+<li><strong>Mean = Variance</strong></li>
+<li>Independence (of residuals)</li>
+<li>There is <em>not</em> a condition specifying a PDF that the residuals should follow.</li>
+</ul>
+</div>
+<div id="model-assessment" class="section level3">
+<h3><span class="header-section-number">6.4.3</span> Model Assessment</h3>
+<p>Which conditions can we check already?</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(prm, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>), <span class="dt">main=</span><span class="st">&#39;bee.lm Residuals&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-41-1.png" width="336" /></p>
+<p>What does <code>type='response'</code> mean?</p>
+<p>This means that the residuals are reported on the same scale as the response variable (that is, in units of counts, rather than log(counts)).</p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-42-1.png" width="336" /></p>
+<p>This trumpet pattern is <em>what we expect!</em> Why?</p>
+<p>If the variance equals the mean, then as the mean (fitted value) goes up, then the variance (spread of residuals) will also be larger.</p>
+<p>But how can we decide if it’s the <em>right amount</em> of increase in variance with increase in fitted value? We can compute <strong>Pearson</strong> residuals, which are scaled by the <em>expected variance</em>. <strong>The Pearson residuals should have approximately constant variance as a function of fitted values, and a standard deviation of about 1.</strong></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-43-1.png" width="336" /></p>
+<p>A more complex solution: we could divide the fitted values into bins (choice of bin size is somewhat arbitrary; generally, you want them as small as possible, but still containing enough observations per bin to get good mean and variance estimates). In each bin, compute the mean and the variance of the residuals. Plot these means vs these variances and see if the slope is 1 (and intercept 0).</p>
+<p>First, split the fitted values into 5 bins:</p>
+<pre><code>##   colony                beename treatment target.colour novisits flower
+## 1      Y giantbeeYsucroseyellow   Sucrose        yellow       12 target
+## 2      W        o51Wsucroseblue   Sucrose          blue        8 target
+## 3      W        o54Wquinineblue   Quinine          blue       13 target
+## 4      W    o58Wcelluloseyellow Cellulose        yellow        9 target
+## 5      W      o60Wcelluloseblue Cellulose          blue       11 target
+## 6      W        o63Wquinineblue   Quinine          blue        5 target
+##    lm.resids lm.fitted  pm.resids pm.fitted pm.pearson.resids fitted.bins
+## 1  3.5585187  8.441481  4.1360526  7.863947         1.4749108 (7.57,9.88]
+## 2 -2.2907806 10.290781 -4.1767222 12.176722        -1.1969345 (9.88,12.2]
+## 3  5.4331935  7.566806  7.0105824  5.989418         2.8645856 (5.27,7.57]
+## 4 -1.2551114 10.255111 -3.0392024 12.039202        -0.8759126 (9.88,12.2]
+## 5  0.7448886 10.255111 -1.0392024 12.039202        -0.2995031 (9.88,12.2]
+## 6 -2.5668065  7.566806 -0.9894176  5.989418        -0.4042847 (5.27,7.57]</code></pre>
+<p>Next, compute the means and variances in each bin, view the result, and plot:</p>
+<pre><code>## # A tibble: 5 x 3
+##   fitted.bins   mean   var
+##   &lt;fct&gt;        &lt;dbl&gt; &lt;dbl&gt;
+## 1 (0.661,2.97]  1.77  3.34
+## 2 (2.97,5.27]   4.28 10.6 
+## 3 (5.27,7.57]   5.99 21.3 
+## 4 (7.57,9.88]   7.83 12.8 
+## 5 (9.88,12.2]  11.5  13.5</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-45-1.png" width="336" /></p>
+<p><strong>That’s a bit of a pain, and still a judgment call at the end.</strong></p>
+<p>How <em>else</em> can we check the Mean = Variance condition?</p>
+</div>
+<div id="checking-for-overdispersion-using-overdispersion-factor" class="section level3">
+<h3><span class="header-section-number">6.4.4</span> Checking for overdispersion using overdispersion factor</h3>
+<p>We can estimate the <strong>overdispersion factor</strong>. This satisfies</p>
+<p><span class="math display">\[ \text{residual variance} = \text{overdispersion factor} * \text{mean}\]</span></p>
+<p>So if it’s a lot larger than 1, we have a problem. The function <code>overdisp_fun()</code> in package <code>s245</code> computes an estimate:</p>
+<pre><code>##        chisq        ratio          rdf            p 
+## 5.383705e+02 2.047036e+00 2.630000e+02 4.288147e-21</code></pre>
+<p>Here, it’s about 2: not too terrible, but still, residual variance is double what it should be according to our model. (Usually if the overdispersion is larger than 2 we will prefer a different model that better accounts for the fact that <span class="math inline">\(\text{mean} \neq \text{variance}\)</span>.)</p>
+</div>
+</div>
+<div id="accounting-for-overdispersion-negative-binomial-models" class="section level2">
+<h2><span class="header-section-number">6.5</span> Accounting for overdispersion: Negative Binomial Models</h2>
+<p>Finally, we could simply fit a model that allows for a more permissive mean-variance relationship (where the variance can be larger or smaller than the mean, by different amounts), and see if it is a better fit to the data according it our IC. The negative binomial distributions (type I and II) do this:</p>
+<pre><code>##  Family: nbinom1  ( log )
+## Formula:          novisits ~ flower + treatment + colony
+## Data: beevisits
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   1182.6   1211.4   -583.3   1166.6      262 
+## 
+## 
+## Overdispersion parameter for nbinom1 family (): 1.07 
+## 
+## Conditional model:
+##                    Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         0.71730    0.12287   5.838 5.28e-09 ***
+## flowernovel        -0.74144    0.14503  -5.112 3.18e-07 ***
+## flowertarget        1.03838    0.09810  10.585  &lt; 2e-16 ***
+## treatmentCellulose  0.71563    0.11167   6.408 1.47e-10 ***
+## treatmentSucrose    0.74317    0.11149   6.666 2.63e-11 ***
+## colonyX            -0.11496    0.09974  -1.153 0.249038    
+## colonyY            -0.38387    0.10155  -3.780 0.000157 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre><code>##  Family: nbinom2  ( log )
+## Formula:          novisits ~ flower + treatment + colony
+## Data: beevisits
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   1207.3   1236.1   -595.6   1191.3      262 
+## 
+## 
+## Overdispersion parameter for nbinom2 family (): 4.69 
+## 
+## Conditional model:
+##                    Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         0.73536    0.11775   6.245 4.24e-10 ***
+## flowernovel        -0.72548    0.12693  -5.716 1.09e-08 ***
+## flowertarget        1.04379    0.09983  10.456  &lt; 2e-16 ***
+## treatmentCellulose  0.76192    0.11229   6.785 1.16e-11 ***
+## treatmentSucrose    0.76936    0.11424   6.734 1.65e-11 ***
+## colonyX            -0.16805    0.10838  -1.551    0.121    
+## colonyY            -0.51527    0.10761  -4.788 1.68e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>We <strong>can</strong> use AIC or BIC-based model selection to decide which model fits best, between Poisson, NB1, and NB2 models.</p>
+</div>
+<div id="accounting-for-overdispersion-quasi-poisson-model" class="section level2">
+<h2><span class="header-section-number">6.6</span> Accounting for overdispersion: quasi-Poisson Model</h2>
+<p>Or yet another option…in our class, we will not use quasi-Poisson models as much, as they are fitted via quasi-likelihood and this complicates model selection.</p>
+<pre><code>## 
+## Call:
+## glm(formula = novisits ~ flower + treatment + colony, family = quasipoisson(link = &quot;log&quot;), 
+##     data = beevisits)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.9940  -1.3124  -0.3860   0.7794   4.7020  
+## 
+## Coefficients:
+##                    Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)         0.79055    0.12440   6.355 9.14e-10 ***
+## flowernovel        -0.75072    0.14940  -5.025 9.32e-07 ***
+## flowertarget        0.99945    0.09896  10.100  &lt; 2e-16 ***
+## treatmentCellulose  0.69817    0.11317   6.169 2.58e-09 ***
+## treatmentSucrose    0.70953    0.11399   6.225 1.90e-09 ***
+## colonyX            -0.17521    0.10266  -1.707   0.0891 .  
+## colonyY            -0.43724    0.10460  -4.180 3.97e-05 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for quasipoisson family taken to be 2.047071)
+## 
+##     Null deviance: 1236.33  on 269  degrees of freedom
+## Residual deviance:  542.05  on 263  degrees of freedom
+## AIC: NA
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>We <strong>should not</strong> compare AIC with QAIC to compare two models, so to decide between Poisson and quasi-Poisson (if you ever use it) you must rely on the model assessment plots and the overdispersion factor to decide which is better.</p>
+</div>
+<div id="model-selection-with-dredge-and-qaic-bic" class="section level2">
+<h2><span class="header-section-number">6.7</span> Model selection with dredge() and (Q)AIC, BIC</h2>
+<p>Poisson and negative binomial models are fitted via maximum likelihood, so AIC or BIC may be used for model selection.</p>
+<p>How can we use model selection criteria in a case where the likelihood can’t be computed exactly?</p>
+<p>The quasi (log) likelihood is an approximation to the likelihood. It has some properties in common with a (log) likelihood, but is not a likelihood; we resort to using it in cases where the (log) likelihood can not even be evaluated.</p>
+<p>With some code/mathematical gymnastics, we can use principles of quasi-likelihood to estimate QAIC (quasi-AIC, or AIC based on quasi-likelihood) in R for model selection.</p>
+<div id="review-all-subsets-selection-with-dredge" class="section level3">
+<h3><span class="header-section-number">6.7.1</span> Review: all subsets selection with dredge()</h3>
+<p>What if, instead of comparing two (or a few) specific models, we want to compare all possible models that contain some combination of a set of candidate covariates? The package <code>MuMIn</code> contains a function, <code>dredge()</code>, that takes as input a “full” model (one containing all the candidate covariates). It then computes AIC (or other model selection criteria) for all possible models containing subsets of the covariate and reports the results in a ranked table. For example, for our Poisson regression model, we could do:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb39-2" title="2"><span class="co">#have to make sure na.action is &#39;na.fail&#39; for input model</span></a>
+<a class="sourceLine" id="cb39-3" title="3">prm &lt;-<span class="st"> </span><span class="kw">update</span>(prm, <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb39-4" title="4"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
+<pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
+##     data = beevisits, na.action = &quot;na.fail&quot;)
+## ---
+## Model selection table 
+##   (Intrc) colny flowr trtmn df   logLik    AIC  delta weight
+## 8  0.7905     +     +     +  7 -623.310 1260.6   0.00      1
+## 7  0.6428           +     +  5 -642.317 1294.6  34.01      0
+## 4  1.3100     +     +        5 -677.205 1364.4 103.79      0
+## 3  1.1560           +        3 -695.120 1396.2 135.62      0
+## 6  1.1240     +           +  5 -898.637 1807.3 546.65      0
+## 5  0.9767                 +  3 -917.644 1841.3 580.67      0
+## 2  1.6440     +              3 -952.532 1911.1 650.44      0
+## 1  1.4900                    1 -970.446 1942.9 682.27      0
+## Models ranked by AIC(x)</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a></code></pre></div>
+<pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
+##     data = beevisits, na.action = &quot;na.fail&quot;)
+## ---
+## Model selection table 
+##   (Intrc) colny flowr trtmn df   logLik    BIC  delta weight
+## 8  0.7905     +     +     +  7 -623.310 1285.8   0.00      1
+## 7  0.6428           +     +  5 -642.317 1312.6  26.82      0
+## 4  1.3100     +     +        5 -677.205 1382.4  96.59      0
+## 3  1.1560           +        3 -695.120 1407.0 121.23      0
+## 6  1.1240     +           +  5 -898.637 1825.3 539.46      0
+## 5  0.9767                 +  3 -917.644 1852.1 566.27      0
+## 2  1.6440     +              3 -952.532 1921.9 636.05      0
+## 1  1.4900                    1 -970.446 1946.5 660.68      0
+## Models ranked by BIC(x)</code></pre>
+</div>
+<div id="review-ic-weights" class="section level3">
+<h3><span class="header-section-number">6.7.2</span> Review: IC “weights”</h3>
+<p>Note the last two columns of the <code>dredge</code> output: the “delta” (or <span class="math inline">\(\delta\)</span>) AIC or BIC values and the “weights”. The <span class="math inline">\(\delta\)</span>s are obtained by simply subtracting the best model’s IC value from that of each other model.</p>
+<p>We already mentioned a rule of thumb: that the <span class="math inline">\(\delta IC\)</span> should be at least 3 or to provide reasonable evidence that one model is really better than the other.
+Another way of measuring the differences between models is to use model <em>weights</em>. Theoretically, these measure the relative likelihoods of different models; you can think of them as giving the probability that a given model is the best-fitting one in the set of models examined, according to the IC being used.</p>
+<p>Model weights are computed simply according to:
+<span class="math display">\[ e^\frac{-\delta IC}{2}\]</span></p>
+<p>And they sum to one for all models in a <code>dredge()</code>.</p>
+</div>
+<div id="extending-dredge-to-quasi-likelihood" class="section level3">
+<h3><span class="header-section-number">6.7.3</span> Extending dredge() to quasi-Likelihood</h3>
+<p>With (rather a lot of) effort to define some custom functions, we can do the same thing for a quasi-Poisson model using quasi-AIC. <em>Note: This idea is based on notes by Ben Bolker provided with the R package <code>bbmle</code>.</em></p>
+<pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = family, 
+##     data = beevisits, na.action = na.action)
+## ---
+## Model selection table 
+##   (Intrc) colny flowr trtmn df   logLik  rank  delta weight
+## 8  0.7905     +     +     +  7 -623.310 625.0   0.00  0.999
+## 7  0.6428           +     +  5 -642.317 639.5  14.57  0.001
+## 4  1.3100     +     +        5 -677.205 673.6  48.66  0.000
+## 3  1.1560           +        3 -695.120 687.1  62.16  0.000
+## 6  1.1240     +           +  5 -898.637 890.0 265.00  0.000
+## 5  0.9767                 +  3 -917.644 904.5 279.57  0.000
+## 2  1.6440     +              3 -952.532 938.6 313.65  0.000
+## 1  1.4900                    1 -970.446 952.1 327.15  0.000
+## Models ranked by rank(x, chat = 2.04707063774377)</code></pre>
+<p>Note: the <code>qdredge()</code> function is also provided for you in the package <code>s245</code>. So if you do want to use this, all you need to do is use <code>s245::qdredge()</code> instead of <code>dredge()</code>.</p>
+</div>
+</div>
+<div id="offsets" class="section level2">
+<h2><span class="header-section-number">6.8</span> Offsets</h2>
+<p>In our model, the response variable was the number of flowers visited by a bee, and each bee was in the same experimental setting for the same amount of time, so there was no need to account for effort or time spent in each case.</p>
+<p>This is not always true: consider, for example:</p>
+<ul>
+<li>Dolphin surveys</li>
+<li>Bird counts</li>
+<li>Consider the schools and crime example from homework as well</li>
+</ul>
+<p>In this case, it would be natural to adjust for effort. The intuitive way to do it would be to use counts per unit effort as the response variable:</p>
+<p><span class="math display">\[ log(\frac{\lambda_i}{effort}) = \beta_0 + \dots \]</span></p>
+<p>But notice that this is equivalent to including <span class="math inline">\(log(effort)\)</span> as an ``offset" on the right hand side of the regression equation:</p>
+<p><span class="math display">\[ log(\lambda_i) = \beta_0 + \dots + log(effort)\]</span></p>
+<p>This is how we specify models with <em>offsets</em> in R:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1">offset.mod &lt;-<span class="st"> </span><span class="kw">glm</span>(counts <span class="op">~</span><span class="st"> </span>predictor1 <span class="op">+</span><span class="st"> </span>predictor2 <span class="op">+</span></a>
+<a class="sourceLine" id="cb44-2" title="2"><span class="st">                    </span><span class="kw">offset</span>(<span class="kw">log</span>(effort)), <span class="dt">family=</span>poisson)</a></code></pre></div>
+<p><strong>Note: if you use dredge() with a model with an offset, be sure to specify the offset as a “fixed” term, i.e. a term that must be included in <em>all</em> models:</strong></p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="kw">dredge</span>(offset.mod, <span class="dt">fixed =</span> <span class="st">&#39;offset(log(effort))&#39;</span>)</a></code></pre></div>
+</div>
+<div id="prediction-plots" class="section level2">
+<h2><span class="header-section-number">6.9</span> Prediction Plots</h2>
+<p>Once you have a “best” model, how do you interpret it?</p>
+<p>When we went to great lengths to make prediction plots for a linear regression model so we could “see” the slope of the predicted relationship, you may have wondered: <em>why bother?</em> I can just look at the slope estimate and get the same insight!</p>
+<p>Now, with a more complicated model equation with a link function, it’s not so easy. Now, we will really appreciate those prediction plots!</p>
+<p>With the link function and the Poisson distribution, it is more challenging to interpret the coefficients of the model directly. The easiest way to understand the effects of different predictors is to look at plots of model predictions. However, as always we don’t want to plot <code>fitted(model)</code> as a function of each predictor in a model with more than one predictor; predictors other than the one we are interested in will influence the predictions, introducing extra variation. Instead, we will construct a new (fake) dataset to make predictions for, in which all predictors but the one we are interested in are held constant. For example, using our quasi-Poisson model and looking at the effect of colony (predicted values with 95% CIs):</p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-53-1.png" width="336" /></p>
+<p>If we had a quantitative predictor instead, the process would be similar, except when we define <code>newdata</code>, we would have to choose a range and granularity for which to make predictions. For example, imagine if bee length in mm was one of our predictors, and we wanted predictions for lengths between 0.5 and 3 mm (with a value every 0.05mm). We might begin:</p>
+<pre><code>##   bee.length colony   flower target.colour treatment
+## 1       0.05      W familiar          blue Cellulose
+## 2       0.10      W familiar          blue Cellulose
+## 3       0.15      W familiar          blue Cellulose
+## 4       0.20      W familiar          blue Cellulose
+## 5       0.25      W familiar          blue Cellulose
+## 6       0.30      W familiar          blue Cellulose</code></pre>
+<p>Then, when we make the plot, we would need to use <code>gf\_ribbon()</code> instead of <code>gf\_errorbar()</code> to show the CI.</p>
+<p>We can also use <code>pred_plot(fitted_model, 'variable_name')</code> to make these plots with a lot less code (and if you need to know the values at which other predictors are fixed, use <code>get_fixed(dataset)</code>).</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="pdfs-and-pmfs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/06-count-data-regression.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
