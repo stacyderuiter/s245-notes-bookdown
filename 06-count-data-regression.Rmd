@@ -6,6 +6,7 @@ require(ggformula)
 # Some customization.  You can alter or delete as desired (if you know what you are doing).
 theme_set(theme_bw(base_size=18))
 knitr::opts_chunk$set(
+  echo = TRUE,
   tidy=FALSE,     # display code as typed
   size="footnotesize",   # slightly smaller font for code
   fig.width=3.5, fig.height=2, fig.show='hold')
@@ -168,7 +169,7 @@ Here, it's about 2: not too terrible, but still, residual variance is double wha
 ## Accounting for overdispersion: Negative Binomial Models
 Finally, we could simply fit a model that allows for a more permissive mean-variance relationship (where the variance can be larger or smaller than the mean, by different amounts), and see if it is a better fit to the data according it our IC. The negative binomial distributions (type I and II) do this:
 
-```{r}
+```{r, echo = TRUE}
 require(glmmTMB)
 nbm1 <- glmmTMB(novisits ~ flower + treatment +
                colony, data=beevisits,
