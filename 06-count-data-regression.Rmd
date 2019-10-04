@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   echo = TRUE,
   tidy=FALSE,     # display code as typed
   size="footnotesize",   # slightly smaller font for code
-  fig.width=3.5, fig.height=2, fig.show='hold')
+  fig.width=6.5, fig.height=4, fig.show='hold')
 ```
 # Regression for Count Data
 So far, we have fitted regression models for continuous-valued quantitative response variables.  What if our response variable is really **count data** -- discrete quantitative values limited to zero and positive integers?
