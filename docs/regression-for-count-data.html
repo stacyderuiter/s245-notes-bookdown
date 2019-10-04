@@ -245,7 +245,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">6.1</span> Data Source</h2>
 <p>The dataset used here is <code>beevisits</code>, from:</p>
 <p>Felicity Muth, Jacob S. Francis, and Anne S. Leonard. 2017. Bees use the taste of pollen to determine which flowers to visit. Biology Letters 12(7): DOI: 10.1098/rsbl.2016.0356. <a href="http://rsbl.royalsocietypublishing.org/content/roybiolett/12/7/20160356.full.pdf">http://rsbl.royalsocietypublishing.org/content/roybiolett/12/7/20160356.full.pdf</a>.</p>
-<p><img src="BeeExperiment.png" width="6.5in" /></p>
+<p><img src="images/BeeExperiment.png" width="6.5in" /></p>
 </div>
 <div id="a-bad-idea-multiple-linear-regression-model" class="section level2">
 <h2><span class="header-section-number">6.2</span> A bad idea: multiple linear regression model</h2>
@@ -266,9 +266,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  3rd Qu.: 7.000                
 ##  Max.   :21.000                
 ## </code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">bee.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
-<a class="sourceLine" id="cb28-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits)</a>
-<a class="sourceLine" id="cb28-3" title="3"><span class="kw">summary</span>(bee.lm)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">bee.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="kw">summary</span>(bee.lm)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = novisits ~ flower + treatment + colony, data = beevisits)
@@ -309,10 +309,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><em>Detailed notes on the model equation were filled in here in class</em></p>
 <div id="fitting-the-model" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Fitting the Model</h3>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">prm &lt;-<span class="st"> </span><span class="kw">glm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
-<a class="sourceLine" id="cb30-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
-<a class="sourceLine" id="cb30-3" title="3">           <span class="dt">family=</span><span class="kw">poisson</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>)) </a>
-<a class="sourceLine" id="cb30-4" title="4"><span class="kw">summary</span>(prm)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">prm &lt;-<span class="st"> </span><span class="kw">glm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
+<a class="sourceLine" id="cb4-3" title="3">           <span class="dt">family=</span><span class="kw">poisson</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>)) </a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="kw">summary</span>(prm)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
@@ -356,15 +356,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="model-assessment" class="section level3">
 <h3><span class="header-section-number">6.4.3</span> Model Assessment</h3>
 <p>Which conditions can we check already?</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(prm, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>), <span class="dt">main=</span><span class="st">&#39;bee.lm Residuals&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-41-1.png" width="336" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(prm, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>), <span class="dt">main=</span><span class="st">&#39;bee.lm Residuals&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-4-1.png" width="336" /></p>
 <p>What does <code>type='response'</code> mean?</p>
 <p>This means that the residuals are reported on the same scale as the response variable (that is, in units of counts, rather than log(counts)).</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-42-1.png" width="336" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-5-1.png" width="336" /></p>
 <p>This trumpet pattern is <em>what we expect!</em> Why?</p>
 <p>If the variance equals the mean, then as the mean (fitted value) goes up, then the variance (spread of residuals) will also be larger.</p>
 <p>But how can we decide if it’s the <em>right amount</em> of increase in variance with increase in fitted value? We can compute <strong>Pearson</strong> residuals, which are scaled by the <em>expected variance</em>. <strong>The Pearson residuals should have approximately constant variance as a function of fitted values, and a standard deviation of about 1.</strong></p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-43-1.png" width="336" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-6-1.png" width="336" /></p>
 <p>A more complex solution: we could divide the fitted values into bins (choice of bin size is somewhat arbitrary; generally, you want them as small as possible, but still containing enough observations per bin to get good mean and variance estimates). In each bin, compute the mean and the variance of the residuals. Plot these means vs these variances and see if the slope is 1 (and intercept 0).</p>
 <p>First, split the fitted values into 5 bins:</p>
 <pre><code>##   colony                beename treatment target.colour novisits flower
@@ -390,7 +390,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 3 (5.27,7.57]   5.99 21.3 
 ## 4 (7.57,9.88]   7.83 12.8 
 ## 5 (9.88,12.2]  11.5  13.5</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-45-1.png" width="336" /></p>
+<pre><code>## Warning in (function (mapping = NULL, data = NULL, ..., slope, intercept, : Using `intercept` and/or `slope` with `mapping` may not have the desired result as mapping is overwritten if either of these is specified</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-8-1.png" width="336" /></p>
 <p><strong>That’s a bit of a pain, and still a judgment call at the end.</strong></p>
 <p>How <em>else</em> can we check the Mean = Variance condition?</p>
 </div>
@@ -493,10 +494,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="review-all-subsets-selection-with-dredge" class="section level3">
 <h3><span class="header-section-number">6.7.1</span> Review: all subsets selection with dredge()</h3>
 <p>What if, instead of comparing two (or a few) specific models, we want to compare all possible models that contain some combination of a set of candidate covariates? The package <code>MuMIn</code> contains a function, <code>dredge()</code>, that takes as input a “full” model (one containing all the candidate covariates). It then computes AIC (or other model selection criteria) for all possible models containing subsets of the covariate and reports the results in a ranked table. For example, for our Poisson regression model, we could do:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" title="1"><span class="kw">require</span>(MuMIn)</a>
-<a class="sourceLine" id="cb39-2" title="2"><span class="co">#have to make sure na.action is &#39;na.fail&#39; for input model</span></a>
-<a class="sourceLine" id="cb39-3" title="3">prm &lt;-<span class="st"> </span><span class="kw">update</span>(prm, <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
-<a class="sourceLine" id="cb39-4" title="4"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="co">#have to make sure na.action is &#39;na.fail&#39; for input model</span></a>
+<a class="sourceLine" id="cb14-3" title="3">prm &lt;-<span class="st"> </span><span class="kw">update</span>(prm, <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
 <pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
 ##     data = beevisits, na.action = &quot;na.fail&quot;)
 ## ---
@@ -511,7 +513,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 2  1.6440     +              3 -952.532 1911.1 650.44      0
 ## 1  1.4900                    1 -970.446 1942.9 682.27      0
 ## Models ranked by AIC(x)</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" title="1"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a></code></pre></div>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
 <pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
 ##     data = beevisits, na.action = &quot;na.fail&quot;)
 ## ---
@@ -539,6 +542,7 @@ Another way of measuring the differences between models is to use model <em>weig
 <div id="extending-dredge-to-quasi-likelihood" class="section level3">
 <h3><span class="header-section-number">6.7.3</span> Extending dredge() to quasi-Likelihood</h3>
 <p>With (rather a lot of) effort to define some custom functions, we can do the same thing for a quasi-Poisson model using quasi-AIC. <em>Note: This idea is based on notes by Ben Bolker provided with the R package <code>bbmle</code>.</em></p>
+<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
 <pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = family, 
 ##     data = beevisits, na.action = na.action)
 ## ---
@@ -570,10 +574,10 @@ Another way of measuring the differences between models is to use model <em>weig
 <p>But notice that this is equivalent to including <span class="math inline">\(log(effort)\)</span> as an ``offset" on the right hand side of the regression equation:</p>
 <p><span class="math display">\[ log(\lambda_i) = \beta_0 + \dots + log(effort)\]</span></p>
 <p>This is how we specify models with <em>offsets</em> in R:</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" title="1">offset.mod &lt;-<span class="st"> </span><span class="kw">glm</span>(counts <span class="op">~</span><span class="st"> </span>predictor1 <span class="op">+</span><span class="st"> </span>predictor2 <span class="op">+</span></a>
-<a class="sourceLine" id="cb44-2" title="2"><span class="st">                    </span><span class="kw">offset</span>(<span class="kw">log</span>(effort)), <span class="dt">family=</span>poisson)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">offset.mod &lt;-<span class="st"> </span><span class="kw">glm</span>(counts <span class="op">~</span><span class="st"> </span>predictor1 <span class="op">+</span><span class="st"> </span>predictor2 <span class="op">+</span></a>
+<a class="sourceLine" id="cb22-2" title="2"><span class="st">                    </span><span class="kw">offset</span>(<span class="kw">log</span>(effort)), <span class="dt">family=</span>poisson)</a></code></pre></div>
 <p><strong>Note: if you use dredge() with a model with an offset, be sure to specify the offset as a “fixed” term, i.e. a term that must be included in <em>all</em> models:</strong></p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb45-1" title="1"><span class="kw">dredge</span>(offset.mod, <span class="dt">fixed =</span> <span class="st">&#39;offset(log(effort))&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">dredge</span>(offset.mod, <span class="dt">fixed =</span> <span class="st">&#39;offset(log(effort))&#39;</span>)</a></code></pre></div>
 </div>
 <div id="prediction-plots" class="section level2">
 <h2><span class="header-section-number">6.9</span> Prediction Plots</h2>
@@ -581,7 +585,7 @@ Another way of measuring the differences between models is to use model <em>weig
 <p>When we went to great lengths to make prediction plots for a linear regression model so we could “see” the slope of the predicted relationship, you may have wondered: <em>why bother?</em> I can just look at the slope estimate and get the same insight!</p>
 <p>Now, with a more complicated model equation with a link function, it’s not so easy. Now, we will really appreciate those prediction plots!</p>
 <p>With the link function and the Poisson distribution, it is more challenging to interpret the coefficients of the model directly. The easiest way to understand the effects of different predictors is to look at plots of model predictions. However, as always we don’t want to plot <code>fitted(model)</code> as a function of each predictor in a model with more than one predictor; predictors other than the one we are interested in will influence the predictions, introducing extra variation. Instead, we will construct a new (fake) dataset to make predictions for, in which all predictors but the one we are interested in are held constant. For example, using our quasi-Poisson model and looking at the effect of colony (predicted values with 95% CIs):</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-53-1.png" width="336" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-16-1.png" width="336" /></p>
 <p>If we had a quantitative predictor instead, the process would be similar, except when we define <code>newdata</code>, we would have to choose a range and granularity for which to make predictions. For example, imagine if bee length in mm was one of our predictors, and we wanted predictions for lengths between 0.5 and 3 mm (with a value every 0.05mm). We might begin:</p>
 <pre><code>##   bee.length colony   flower target.colour treatment
 ## 1       0.05      W familiar          blue Cellulose

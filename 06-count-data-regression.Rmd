@@ -20,7 +20,7 @@ Felicity Muth, Jacob S. Francis, and Anne S. Leonard. 2017. Bees use the taste o
 
 
 ```{r, out.width='6.5in'}
-knitr::include_graphics('BeeExperiment.png')
+knitr::include_graphics('images/BeeExperiment.png')
 ```
 
 ## A bad idea: multiple linear regression model
