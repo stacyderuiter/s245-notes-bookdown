@@ -185,6 +185,13 @@ summary(nbm2)
 
 We **can** use AIC or BIC-based model selection to decide which model fits best, between Poisson, NB1, and NB2 models.
 
+
+```{r}
+AIC(prm, nbm1, nbm2)
+```
+
+We have a clear winner: NB1!
+
 ## Accounting for overdispersion: quasi-Poisson Model
 Or yet another option...in our class, we will not use quasi-Poisson models as much, as they are fitted via quasi-likelihood and this complicates model selection.
 
