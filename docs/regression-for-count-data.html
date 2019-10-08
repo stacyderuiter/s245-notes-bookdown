@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-10-04" />
+<meta name="date" content="2019-10-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="pdfs-and-pmfs.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="model-averaging.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -217,6 +217,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
 <li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="model-averaging.html"><a href="model-averaging.html"><i class="fa fa-check"></i><b>7</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.1" data-path="model-averaging.html"><a href="model-averaging.html#data-school-survey-on-crime-and-safety"><i class="fa fa-check"></i><b>7.1</b> Data: School Survey on Crime and Safety</a></li>
+<li class="chapter" data-level="7.2" data-path="model-averaging.html"><a href="model-averaging.html#modelling-number-of-violent-incidents-per-school"><i class="fa fa-check"></i><b>7.2</b> Modelling number of violent incidents per school</a></li>
+<li class="chapter" data-level="7.3" data-path="model-averaging.html"><a href="model-averaging.html#model-averaging-1"><i class="fa fa-check"></i><b>7.3</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="model-averaging.html"><a href="model-averaging.html#getting-the-averaged-model"><i class="fa fa-check"></i><b>7.3.1</b> Getting the Averaged Model</a></li>
+<li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -245,11 +253,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">6.1</span> Data Source</h2>
 <p>The dataset used here is <code>beevisits</code>, from:</p>
 <p>Felicity Muth, Jacob S. Francis, and Anne S. Leonard. 2017. Bees use the taste of pollen to determine which flowers to visit. Biology Letters 12(7): DOI: 10.1098/rsbl.2016.0356. <a href="http://rsbl.royalsocietypublishing.org/content/roybiolett/12/7/20160356.full.pdf">http://rsbl.royalsocietypublishing.org/content/roybiolett/12/7/20160356.full.pdf</a>.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">knitr<span class="op">::</span><span class="kw">include_graphics</span>(<span class="st">&#39;images/BeeExperiment.png&#39;</span>)</a></code></pre></div>
 <p><img src="images/BeeExperiment.png" width="6.5in" /></p>
 </div>
 <div id="a-bad-idea-multiple-linear-regression-model" class="section level2">
 <h2><span class="header-section-number">6.2</span> A bad idea: multiple linear regression model</h2>
 <p><img src="bookdown-demo_files/figure-html/beedata-2-1.png" width="624" /></p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1"><span class="kw">summary</span>(beevisits)</a></code></pre></div>
 <pre><code>##  colony                    beename        treatment  target.colour
 ##  W:126   giantbeeYsucroseyellow:  3   Quinine  :90   blue  :138   
 ##  X: 66   o51Wsucroseblue       :  3   Cellulose:90   yellow:132   
@@ -266,9 +276,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  3rd Qu.: 7.000                
 ##  Max.   :21.000                
 ## </code></pre>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">bee.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits)</a>
-<a class="sourceLine" id="cb2-3" title="3"><span class="kw">summary</span>(bee.lm)</a></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb57-1" title="1">bee.lm &lt;-<span class="st"> </span><span class="kw">lm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb57-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits)</a>
+<a class="sourceLine" id="cb57-3" title="3"><span class="kw">summary</span>(bee.lm)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = novisits ~ flower + treatment + colony, data = beevisits)
@@ -292,8 +302,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residual standard error: 2.942 on 263 degrees of freedom
 ## Multiple R-squared:  0.5763, Adjusted R-squared:  0.5667 
 ## F-statistic: 59.63 on 6 and 263 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p><img src="bookdown-demo_files/figure-html/assess1-b-1.png" width="672" /></p>
-<p><img src="bookdown-demo_files/figure-html/assess2-b-1.png" width="672" /><img src="bookdown-demo_files/figure-html/assess2-b-2.png" width="672" /></p>
+<p><img src="bookdown-demo_files/figure-html/assess1-b-1.png" width="624" /></p>
+<p><img src="bookdown-demo_files/figure-html/assess2-b-1.png" width="624" /><img src="bookdown-demo_files/figure-html/assess2-b-2.png" width="624" /></p>
 </div>
 <div id="problems-with-the-linear-model" class="section level2">
 <h2><span class="header-section-number">6.3</span> Problems with the linear model</h2>
@@ -309,10 +319,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><em>Detailed notes on the model equation were filled in here in class</em></p>
 <div id="fitting-the-model" class="section level3">
 <h3><span class="header-section-number">6.4.1</span> Fitting the Model</h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">prm &lt;-<span class="st"> </span><span class="kw">glm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
-<a class="sourceLine" id="cb4-3" title="3">           <span class="dt">family=</span><span class="kw">poisson</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>)) </a>
-<a class="sourceLine" id="cb4-4" title="4"><span class="kw">summary</span>(prm)</a></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" title="1">prm &lt;-<span class="st"> </span><span class="kw">glm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb59-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
+<a class="sourceLine" id="cb59-3" title="3">           <span class="dt">family=</span><span class="kw">poisson</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>)) </a>
+<a class="sourceLine" id="cb59-4" title="4"><span class="kw">summary</span>(prm)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
@@ -356,17 +366,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="model-assessment" class="section level3">
 <h3><span class="header-section-number">6.4.3</span> Model Assessment</h3>
 <p>Which conditions can we check already?</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(prm, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>), <span class="dt">main=</span><span class="st">&#39;bee.lm Residuals&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(prm, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>), <span class="dt">main=</span><span class="st">&#39;bee.lm Residuals&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-37-1.png" width="624" /></p>
 <p>What does <code>type='response'</code> mean?</p>
 <p>This means that the residuals are reported on the same scale as the response variable (that is, in units of counts, rather than log(counts)).</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1">beevisits &lt;-<span class="st"> </span>beevisits <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb62-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pm.resids =</span> <span class="kw">resid</span>(prm, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>),</a>
+<a class="sourceLine" id="cb62-3" title="3">         <span class="dt">pm.fitted =</span> <span class="kw">fitted</span>(prm))</a>
+<a class="sourceLine" id="cb62-4" title="4"></a>
+<a class="sourceLine" id="cb62-5" title="5"><span class="kw">gf_point</span>(pm.resids <span class="op">~</span><span class="st"> </span>pm.fitted, <span class="dt">data=</span>beevisits) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb62-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Residuals&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-38-1.png" width="624" /></p>
 <p>This trumpet pattern is <em>what we expect!</em> Why?</p>
 <p>If the variance equals the mean, then as the mean (fitted value) goes up, then the variance (spread of residuals) will also be larger.</p>
 <p>But how can we decide if it’s the <em>right amount</em> of increase in variance with increase in fitted value? We can compute <strong>Pearson</strong> residuals, which are scaled by the <em>expected variance</em>. <strong>The Pearson residuals should have approximately constant variance as a function of fitted values, and a standard deviation of about 1.</strong></p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb63-1" title="1">beevisits &lt;-<span class="st"> </span>beevisits <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pm.pearson.resids =</span> <span class="kw">resid</span>(prm, <span class="dt">type=</span><span class="st">&#39;pearson&#39;</span>))</a>
+<a class="sourceLine" id="cb63-3" title="3"></a>
+<a class="sourceLine" id="cb63-4" title="4"><span class="kw">gf_point</span>( pm.pearson.resids <span class="op">~</span><span class="st"> </span>pm.fitted, <span class="dt">data=</span>beevisits) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb63-5" title="5"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Pearson Residuals&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-39-1.png" width="624" /></p>
 <p>A more complex solution: we could divide the fitted values into bins (choice of bin size is somewhat arbitrary; generally, you want them as small as possible, but still containing enough observations per bin to get good mean and variance estimates). In each bin, compute the mean and the variance of the residuals. Plot these means vs these variances and see if the slope is 1 (and intercept 0).</p>
 <p>First, split the fitted values into 5 bins:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1">beevisits &lt;-<span class="st"> </span>beevisits <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb64-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">fitted.bins =</span> <span class="kw">cut</span>(<span class="kw">fitted</span>(prm), <span class="dt">breaks=</span><span class="dv">5</span>))</a>
+<a class="sourceLine" id="cb64-3" title="3"></a>
+<a class="sourceLine" id="cb64-4" title="4"><span class="kw">head</span>(beevisits)</a></code></pre></div>
 <pre><code>##   colony                beename treatment target.colour novisits flower
 ## 1      Y giantbeeYsucroseyellow   Sucrose        yellow       12 target
 ## 2      W        o51Wsucroseblue   Sucrose          blue        8 target
@@ -382,6 +407,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 5  0.7448886 10.255111 -1.0392024 12.039202        -0.2995031 (9.88,12.2]
 ## 6 -2.5668065  7.566806 -0.9894176  5.989418        -0.4042847 (5.27,7.57]</code></pre>
 <p>Next, compute the means and variances in each bin, view the result, and plot:</p>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" title="1">binned.bees &lt;-<span class="st"> </span>beevisits <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(fitted.bins) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb66-3" title="3"><span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(pm.fitted, <span class="dt">na.rm=</span><span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb66-4" title="4">            <span class="dt">var =</span> <span class="kw">var</span>(pm.resids))</a>
+<a class="sourceLine" id="cb66-5" title="5"></a>
+<a class="sourceLine" id="cb66-6" title="6">binned.bees</a></code></pre></div>
 <pre><code>## # A tibble: 5 x 3
 ##   fitted.bins   mean   var
 ##   &lt;fct&gt;        &lt;dbl&gt; &lt;dbl&gt;
@@ -390,8 +421,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 3 (5.27,7.57]   5.99 21.3 
 ## 4 (7.57,9.88]   7.83 12.8 
 ## 5 (9.88,12.2]  11.5  13.5</code></pre>
-<pre><code>## Warning in (function (mapping = NULL, data = NULL, ..., slope, intercept, : Using `intercept` and/or `slope` with `mapping` may not have the desired result as mapping is overwritten if either of these is specified</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" title="1"><span class="kw">gf_point</span>(var <span class="op">~</span><span class="st"> </span>mean, <span class="dt">data=</span>binned.bees) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb68-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Mean Fitted Value&#39;</span>, </a>
+<a class="sourceLine" id="cb68-3" title="3">          <span class="dt">y=</span><span class="st">&#39;Variance of Residuals&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb68-4" title="4"><span class="st">   </span><span class="kw">gf_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-41-1.png" width="624" /></p>
 <p><strong>That’s a bit of a pain, and still a judgment call at the end.</strong></p>
 <p>How <em>else</em> can we check the Mean = Variance condition?</p>
 </div>
@@ -400,24 +434,25 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We can estimate the <strong>overdispersion factor</strong>. This satisfies</p>
 <p><span class="math display">\[ \text{residual variance} = \text{overdispersion factor} * \text{mean}\]</span></p>
 <p>So if it’s a lot larger than 1, we have a problem. The function <code>overdisp_fun()</code> in package <code>s245</code> computes an estimate:</p>
-<pre><code>##        chisq        ratio          rdf            p 
-## 5.383705e+02 2.047036e+00 2.630000e+02 4.288147e-21</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1"><span class="kw">require</span>(s245)</a>
+<a class="sourceLine" id="cb69-2" title="2"><span class="kw">overdisp_fun</span>(prm)</a></code></pre></div>
+<pre><code>## [1] 2.047036</code></pre>
 <p>Here, it’s about 2: not too terrible, but still, residual variance is double what it should be according to our model. (Usually if the overdispersion is larger than 2 we will prefer a different model that better accounts for the fact that <span class="math inline">\(\text{mean} \neq \text{variance}\)</span>.)</p>
 </div>
 </div>
 <div id="accounting-for-overdispersion-negative-binomial-models" class="section level2">
 <h2><span class="header-section-number">6.5</span> Accounting for overdispersion: Negative Binomial Models</h2>
 <p>Finally, we could simply fit a model that allows for a more permissive mean-variance relationship (where the variance can be larger or smaller than the mean, by different amounts), and see if it is a better fit to the data according it our IC. The negative binomial distributions (type I and II) do this:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">require</span>(glmmTMB)</a>
-<a class="sourceLine" id="cb11-2" title="2">nbm1 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-3" title="3"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
-<a class="sourceLine" id="cb11-4" title="4">           <span class="dt">family=</span><span class="kw">nbinom1</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
-<a class="sourceLine" id="cb11-5" title="5"></a>
-<a class="sourceLine" id="cb11-6" title="6">nbm2 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-7" title="7"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
-<a class="sourceLine" id="cb11-8" title="8">           <span class="dt">family=</span><span class="kw">nbinom2</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
-<a class="sourceLine" id="cb11-9" title="9"></a>
-<a class="sourceLine" id="cb11-10" title="10"><span class="kw">summary</span>(nbm1)</a></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" title="1"><span class="kw">require</span>(glmmTMB)</a>
+<a class="sourceLine" id="cb71-2" title="2">nbm1 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb71-3" title="3"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
+<a class="sourceLine" id="cb71-4" title="4">           <span class="dt">family=</span><span class="kw">nbinom1</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb71-5" title="5"></a>
+<a class="sourceLine" id="cb71-6" title="6">nbm2 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb71-7" title="7"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
+<a class="sourceLine" id="cb71-8" title="8">           <span class="dt">family=</span><span class="kw">nbinom2</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb71-9" title="9"></a>
+<a class="sourceLine" id="cb71-10" title="10"><span class="kw">summary</span>(nbm1)</a></code></pre></div>
 <pre><code>##  Family: nbinom1  ( log )
 ## Formula:          novisits ~ flower + treatment + colony
 ## Data: beevisits
@@ -439,7 +474,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## colonyY            -0.38387    0.10155  -3.780 0.000157 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">summary</span>(nbm2)</a></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb73-1" title="1"><span class="kw">summary</span>(nbm2)</a></code></pre></div>
 <pre><code>##  Family: nbinom2  ( log )
 ## Formula:          novisits ~ flower + treatment + colony
 ## Data: beevisits
@@ -462,6 +497,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>We <strong>can</strong> use AIC or BIC-based model selection to decide which model fits best, between Poisson, NB1, and NB2 models.</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb75-1" title="1"><span class="kw">AIC</span>(prm, nbm1, nbm2)</a></code></pre></div>
 <pre><code>##      df      AIC
 ## prm   7 1260.621
 ## nbm1  8 1182.575
@@ -471,6 +507,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="accounting-for-overdispersion-quasi-poisson-model" class="section level2">
 <h2><span class="header-section-number">6.6</span> Accounting for overdispersion: quasi-Poisson Model</h2>
 <p>Or yet another option…in our class, we will not use quasi-Poisson models as much, as they are fitted via quasi-likelihood and this complicates model selection.</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" title="1">qprm &lt;-<span class="st"> </span><span class="kw">glm</span>(novisits <span class="op">~</span><span class="st"> </span>flower <span class="op">+</span><span class="st"> </span>treatment <span class="op">+</span></a>
+<a class="sourceLine" id="cb77-2" title="2"><span class="st">               </span>colony, <span class="dt">data=</span>beevisits,</a>
+<a class="sourceLine" id="cb77-3" title="3">           <span class="dt">family=</span><span class="kw">quasipoisson</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb77-4" title="4"><span class="kw">summary</span>(qprm)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## glm(formula = novisits ~ flower + treatment + colony, family = quasipoisson(link = &quot;log&quot;), 
@@ -510,11 +550,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="review-all-subsets-selection-with-dredge" class="section level3">
 <h3><span class="header-section-number">6.7.1</span> Review: all subsets selection with dredge()</h3>
 <p>What if, instead of comparing two (or a few) specific models, we want to compare all possible models that contain some combination of a set of candidate covariates? The package <code>MuMIn</code> contains a function, <code>dredge()</code>, that takes as input a “full” model (one containing all the candidate covariates). It then computes AIC (or other model selection criteria) for all possible models containing subsets of the covariate and reports the results in a ranked table. For example, for our Poisson regression model, we could do:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">require</span>(MuMIn)</a>
-<a class="sourceLine" id="cb17-2" title="2"><span class="co">#have to make sure na.action is &#39;na.fail&#39; for input model</span></a>
-<a class="sourceLine" id="cb17-3" title="3">prm &lt;-<span class="st"> </span><span class="kw">update</span>(prm, <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
-<a class="sourceLine" id="cb17-4" title="4"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
-<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb79-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb79-2" title="2"><span class="co">#have to make sure na.action is &#39;na.fail&#39; for input model</span></a>
+<a class="sourceLine" id="cb79-3" title="3">prm &lt;-<span class="st"> </span><span class="kw">update</span>(prm, <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb79-4" title="4"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
 <pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
 ##     data = beevisits, na.action = &quot;na.fail&quot;)
 ## ---
@@ -529,8 +568,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 2  1.6440     +              3 -952.532 1911.1 650.44      0
 ## 1  1.4900                    1 -970.446 1942.9 682.27      0
 ## Models ranked by AIC(x)</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a></code></pre></div>
-<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" title="1"><span class="kw">dredge</span>(prm, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a></code></pre></div>
 <pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = poisson(link = &quot;log&quot;), 
 ##     data = beevisits, na.action = &quot;na.fail&quot;)
 ## ---
@@ -558,7 +596,32 @@ Another way of measuring the differences between models is to use model <em>weig
 <div id="extending-dredge-to-quasi-likelihood" class="section level3">
 <h3><span class="header-section-number">6.7.3</span> Extending dredge() to quasi-Likelihood</h3>
 <p>With (rather a lot of) effort to define some custom functions, we can do the same thing for a quasi-Poisson model using quasi-AIC. <em>Note: This idea is based on notes by Ben Bolker provided with the R package <code>bbmle</code>.</em></p>
-<pre><code>## Fixed term is &quot;(Intercept)&quot;</code></pre>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb83-2" title="2"></a>
+<a class="sourceLine" id="cb83-3" title="3"><span class="co"># modify a glm() output object so that</span></a>
+<a class="sourceLine" id="cb83-4" title="4"><span class="co"># it contains a quasipoisson fit but the </span></a>
+<a class="sourceLine" id="cb83-5" title="5"><span class="co"># AIC (likelihood) from the equivalent regular Poisson model</span></a>
+<a class="sourceLine" id="cb83-6" title="6">x.quasipoisson &lt;-<span class="st"> </span><span class="cf">function</span>(...) {</a>
+<a class="sourceLine" id="cb83-7" title="7">res &lt;-<span class="st"> </span><span class="kw">quasipoisson</span>(...)</a>
+<a class="sourceLine" id="cb83-8" title="8">res<span class="op">$</span>aic &lt;-<span class="st"> </span><span class="kw">poisson</span>(...)<span class="op">$</span>aic</a>
+<a class="sourceLine" id="cb83-9" title="9">res</a>
+<a class="sourceLine" id="cb83-10" title="10">}</a>
+<a class="sourceLine" id="cb83-11" title="11"></a>
+<a class="sourceLine" id="cb83-12" title="12"><span class="co"># function to extract the overdispersion parameter</span></a>
+<a class="sourceLine" id="cb83-13" title="13"><span class="co"># from a quasi model</span></a>
+<a class="sourceLine" id="cb83-14" title="14">dfun &lt;-<span class="st"> </span><span class="cf">function</span>(object) {</a>
+<a class="sourceLine" id="cb83-15" title="15"><span class="kw">with</span>(object,<span class="kw">sum</span>((weights <span class="op">*</span><span class="st"> </span>residuals<span class="op">^</span><span class="dv">2</span>)[weights <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>])<span class="op">/</span>df.residual)</a>
+<a class="sourceLine" id="cb83-16" title="16">}</a>
+<a class="sourceLine" id="cb83-17" title="17"></a>
+<a class="sourceLine" id="cb83-18" title="18"><span class="co"># function that modifies MuMIn::dredge() </span></a>
+<a class="sourceLine" id="cb83-19" title="19"><span class="co"># for use with quasi GLM</span></a>
+<a class="sourceLine" id="cb83-20" title="20">qdredge &lt;-<span class="st"> </span><span class="cf">function</span>(model, <span class="dt">family=</span><span class="st">&#39;x.quasipoisson&#39;</span>, <span class="dt">na.action=</span>na.fail, <span class="dt">chat =</span> <span class="kw">dfun</span>(model), <span class="dt">rank=</span><span class="st">&#39;QAIC&#39;</span>, ...){</a>
+<a class="sourceLine" id="cb83-21" title="21">  model2 &lt;-<span class="st"> </span><span class="kw">update</span>(model, <span class="dt">family=</span>family, <span class="dt">na.action=</span>na.action)</a>
+<a class="sourceLine" id="cb83-22" title="22">  (dt &lt;-<span class="st"> </span><span class="kw">dredge</span>(model2, <span class="dt">rank=</span>rank, <span class="dt">chat=</span>chat, ...))</a>
+<a class="sourceLine" id="cb83-23" title="23">}</a>
+<a class="sourceLine" id="cb83-24" title="24"></a>
+<a class="sourceLine" id="cb83-25" title="25"><span class="co">#do &quot;dredge&quot; for model selection</span></a>
+<a class="sourceLine" id="cb83-26" title="26"><span class="kw">qdredge</span>(qprm)</a></code></pre></div>
 <pre><code>## Global model call: glm(formula = novisits ~ flower + treatment + colony, family = family, 
 ##     data = beevisits, na.action = na.action)
 ## ---
@@ -590,10 +653,10 @@ Another way of measuring the differences between models is to use model <em>weig
 <p>But notice that this is equivalent to including <span class="math inline">\(log(effort)\)</span> as an ``offset" on the right hand side of the regression equation:</p>
 <p><span class="math display">\[ log(\lambda_i) = \beta_0 + \dots + log(effort)\]</span></p>
 <p>This is how we specify models with <em>offsets</em> in R:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">offset.mod &lt;-<span class="st"> </span><span class="kw">glm</span>(counts <span class="op">~</span><span class="st"> </span>predictor1 <span class="op">+</span><span class="st"> </span>predictor2 <span class="op">+</span></a>
-<a class="sourceLine" id="cb25-2" title="2"><span class="st">                    </span><span class="kw">offset</span>(<span class="kw">log</span>(effort)), <span class="dt">family=</span>poisson)</a></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb85-1" title="1">offset.mod &lt;-<span class="st"> </span><span class="kw">glm</span>(counts <span class="op">~</span><span class="st"> </span>predictor1 <span class="op">+</span><span class="st"> </span>predictor2 <span class="op">+</span></a>
+<a class="sourceLine" id="cb85-2" title="2"><span class="st">                    </span><span class="kw">offset</span>(<span class="kw">log</span>(effort)), <span class="dt">family=</span>poisson)</a></code></pre></div>
 <p><strong>Note: if you use dredge() with a model with an offset, be sure to specify the offset as a “fixed” term, i.e. a term that must be included in <em>all</em> models:</strong></p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">dredge</span>(offset.mod, <span class="dt">fixed =</span> <span class="st">&#39;offset(log(effort))&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb86-1" title="1"><span class="kw">dredge</span>(offset.mod, <span class="dt">fixed =</span> <span class="st">&#39;offset(log(effort))&#39;</span>)</a></code></pre></div>
 </div>
 <div id="prediction-plots" class="section level2">
 <h2><span class="header-section-number">6.9</span> Prediction Plots</h2>
@@ -601,8 +664,31 @@ Another way of measuring the differences between models is to use model <em>weig
 <p>When we went to great lengths to make prediction plots for a linear regression model so we could “see” the slope of the predicted relationship, you may have wondered: <em>why bother?</em> I can just look at the slope estimate and get the same insight!</p>
 <p>Now, with a more complicated model equation with a link function, it’s not so easy. Now, we will really appreciate those prediction plots!</p>
 <p>With the link function and the Poisson distribution, it is more challenging to interpret the coefficients of the model directly. The easiest way to understand the effects of different predictors is to look at plots of model predictions. However, as always we don’t want to plot <code>fitted(model)</code> as a function of each predictor in a model with more than one predictor; predictors other than the one we are interested in will influence the predictions, introducing extra variation. Instead, we will construct a new (fake) dataset to make predictions for, in which all predictors but the one we are interested in are held constant. For example, using our quasi-Poisson model and looking at the effect of colony (predicted values with 95% CIs):</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" title="1">newdata &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">colony=</span><span class="kw">c</span>(<span class="st">&#39;W&#39;</span>, <span class="st">&#39;X&#39;</span>, <span class="st">&#39;Y&#39;</span>),</a>
+<a class="sourceLine" id="cb87-2" title="2">                      <span class="dt">flower=</span><span class="st">&#39;familiar&#39;</span>,</a>
+<a class="sourceLine" id="cb87-3" title="3">                      <span class="dt">target.colour=</span><span class="st">&#39;blue&#39;</span>,</a>
+<a class="sourceLine" id="cb87-4" title="4">                      <span class="dt">treatment=</span><span class="st">&#39;Cellulose&#39;</span>)</a>
+<a class="sourceLine" id="cb87-5" title="5"></a>
+<a class="sourceLine" id="cb87-6" title="6">pred =<span class="st"> </span><span class="kw">predict</span>(qprm, <span class="dt">newdata=</span>newdata,</a>
+<a class="sourceLine" id="cb87-7" title="7">                 <span class="dt">type=</span><span class="st">&#39;response&#39;</span>,</a>
+<a class="sourceLine" id="cb87-8" title="8">                 <span class="dt">se.fit=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb87-9" title="9"></a>
+<a class="sourceLine" id="cb87-10" title="10">newdata &lt;-<span class="st"> </span>newdata <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb87-11" title="11"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> pred<span class="op">$</span>fit,</a>
+<a class="sourceLine" id="cb87-12" title="12">         <span class="dt">CIlow =</span> pred<span class="op">$</span>fit <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>pred<span class="op">$</span>se.fit,</a>
+<a class="sourceLine" id="cb87-13" title="13">         <span class="dt">CIup =</span> pred<span class="op">$</span>fit <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>pred<span class="op">$</span>se.fit)</a>
+<a class="sourceLine" id="cb87-14" title="14"></a>
+<a class="sourceLine" id="cb87-15" title="15"><span class="kw">gf_point</span>(preds <span class="op">~</span><span class="st"> </span>colony, <span class="dt">data=</span>newdata) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb87-16" title="16"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Colony&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">N. Visits&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb87-17" title="17"><span class="st">  </span><span class="kw">gf_errorbar</span>(CIlow <span class="op">+</span><span class="st"> </span>CIup <span class="op">~</span><span class="st"> </span>colony, <span class="dt">data=</span>newdata)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-50-1.png" width="624" /></p>
 <p>If we had a quantitative predictor instead, the process would be similar, except when we define <code>newdata</code>, we would have to choose a range and granularity for which to make predictions. For example, imagine if bee length in mm was one of our predictors, and we wanted predictions for lengths between 0.5 and 3 mm (with a value every 0.05mm). We might begin:</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" title="1">newdata &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">bee.length =</span> <span class="kw">seq</span>(<span class="dt">from=</span><span class="fl">0.05</span>, <span class="dt">by=</span><span class="fl">0.05</span>, <span class="dt">to=</span><span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb88-2" title="2">                       <span class="dt">colony=</span><span class="kw">c</span>(<span class="st">&#39;W&#39;</span>),</a>
+<a class="sourceLine" id="cb88-3" title="3">                       <span class="dt">flower=</span><span class="st">&#39;familiar&#39;</span>,</a>
+<a class="sourceLine" id="cb88-4" title="4">                      <span class="dt">target.colour=</span><span class="st">&#39;blue&#39;</span>,</a>
+<a class="sourceLine" id="cb88-5" title="5">                      <span class="dt">treatment=</span><span class="st">&#39;Cellulose&#39;</span>)</a>
+<a class="sourceLine" id="cb88-6" title="6"><span class="kw">head</span>(newdata)</a></code></pre></div>
 <pre><code>##   bee.length colony   flower target.colour treatment
 ## 1       0.05      W familiar          blue Cellulose
 ## 2       0.10      W familiar          blue Cellulose
@@ -621,7 +707,7 @@ Another way of measuring the differences between models is to use model <em>weig
         </div>
       </div>
 <a href="pdfs-and-pmfs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="model-averaging.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

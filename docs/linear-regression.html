@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-10-04" />
+<meta name="date" content="2019-10-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -217,6 +217,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
 <li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
 </ul></li>
+<li class="chapter" data-level="7" data-path="model-averaging.html"><a href="model-averaging.html"><i class="fa fa-check"></i><b>7</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.1" data-path="model-averaging.html"><a href="model-averaging.html#data-school-survey-on-crime-and-safety"><i class="fa fa-check"></i><b>7.1</b> Data: School Survey on Crime and Safety</a></li>
+<li class="chapter" data-level="7.2" data-path="model-averaging.html"><a href="model-averaging.html#modelling-number-of-violent-incidents-per-school"><i class="fa fa-check"></i><b>7.2</b> Modelling number of violent incidents per school</a></li>
+<li class="chapter" data-level="7.3" data-path="model-averaging.html"><a href="model-averaging.html#model-averaging-1"><i class="fa fa-check"></i><b>7.3</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="model-averaging.html"><a href="model-averaging.html#getting-the-averaged-model"><i class="fa fa-check"></i><b>7.3.1</b> Getting the Averaged Model</a></li>
+<li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -247,14 +255,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Notes: variable <code>fWHR</code> is the facial width-height ratio and <code>AssR</code> is the Assertiveness score of affiliative dominance. <code>normDS</code> is another dominance score. A few figures of the data are below - we will do some more exploration together.</p>
 <pre><code>## Observations: 117
 ## Variables: 8
-## $ Name   [3m[38;5;246m&lt;fct&gt;[39m[23m Zuani, Zuani, Zorba, Zorba, Zorba, Zomi, Zomi, Zamba, Z...
-## $ Group  [3m[38;5;246m&lt;fct&gt;[39m[23m Apenheul, Apenheul, Wilhelma, Wilhelma, Wilhelma, Frank...
-## $ Sex    [3m[38;5;246m&lt;fct&gt;[39m[23m Female, Female, Male, Male, Male, Female, Female, Male,...
-## $ Age    [3m[38;5;246m&lt;int&gt;[39m[23m 22, 22, 34, 34, 34, 15, 15, 14, 14, 14, 18, 18, 18, 18,...
-## $ fWHR   [3m[38;5;246m&lt;dbl&gt;[39m[23m 1.475052, 1.321814, 1.581446, 1.479237, 1.390086, 1.340...
-## $ AssR   [3m[38;5;246m&lt;dbl&gt;[39m[23m 5.36, 5.36, 2.36, 2.36, 2.36, 3.92, 3.92, 4.74, 4.74, 4...
-## $ normDS [3m[38;5;246m&lt;dbl&gt;[39m[23m 1.430, 1.430, 2.341, 2.341, 2.341, 3.087, 3.087, 3.035,...
-## $ weight [3m[38;5;246m&lt;dbl&gt;[39m[23m 24.0, 24.0, NA, NA, NA, NA, NA, 41.6, 41.6, 41.6, 38.0,...</code></pre>
+## $ Name   &lt;fct&gt; Zuani, Zuani, Zorba, Zorba, Zorba, Zomi, Zomi, Zamba, Z...
+## $ Group  &lt;fct&gt; Apenheul, Apenheul, Wilhelma, Wilhelma, Wilhelma, Frank...
+## $ Sex    &lt;fct&gt; Female, Female, Male, Male, Male, Female, Female, Male,...
+## $ Age    &lt;int&gt; 22, 22, 34, 34, 34, 15, 15, 14, 14, 14, 18, 18, 18, 18,...
+## $ fWHR   &lt;dbl&gt; 1.475052, 1.321814, 1.581446, 1.479237, 1.390086, 1.340...
+## $ AssR   &lt;dbl&gt; 5.36, 5.36, 2.36, 2.36, 2.36, 3.92, 3.92, 4.74, 4.74, 4...
+## $ normDS &lt;dbl&gt; 1.430, 1.430, 2.341, 2.341, 2.341, 3.087, 3.087, 3.035,...
+## $ weight &lt;dbl&gt; 24.0, 24.0, NA, NA, NA, NA, NA, 41.6, 41.6, 41.6, 38.0,...</code></pre>
 <p><img src="bookdown-demo_files/figure-html/view-data-1.png" width="336" /><img src="bookdown-demo_files/figure-html/view-data-2.png" width="336" /></p>
 </div>
 <div id="simple-linear-regression-residuals-least-squares" class="section level2">
@@ -267,8 +275,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##  1.30685287  0.02918242</code></pre>
 <p>Add the regression line to the plot:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">gf_point</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>bonobos) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">gf_lm</span>()</a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="kw">summary</span>(slr)</a></code></pre></div>
+<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">gf_lm</span>()</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/lm-scatter-with-line-1.png" width="624" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">summary</span>(slr)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = fWHR ~ AssR, data = bonobos)
@@ -287,7 +296,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residual standard error: 0.1689 on 115 degrees of freedom
 ## Multiple R-squared:  0.03542,    Adjusted R-squared:  0.02704 
 ## F-statistic: 4.223 on 1 and 115 DF,  p-value: 0.04213</code></pre>
-<p><img src="bookdown-demo_files/figure-html/lm-scatter-with-line-1.png" width="624" /></p>
 <div id="using-lm-to-fit-a-linear-regression-in-r" class="section level3">
 <h3><span class="header-section-number">2.2.1</span> Using <code>lm()</code> to fit a linear regression in R</h3>
 <p><br>
@@ -306,6 +314,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="multiple-regression" class="section level2">
 <h2><span class="header-section-number">2.3</span> Multiple regression</h2>
 <p>Rarely does our response variable <strong>really</strong> depend on only one predictor. Can we improve the model by adding more predictors?</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">mlr &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight, <span class="dt">data=</span>bonobos)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">coef</span>(mlr)</a></code></pre></div>
 <pre><code>## (Intercept)        AssR      weight 
 ## 0.944790930 0.039888045 0.008644299</code></pre>
 <p><img src="bookdown-demo_files/figure-html/mult-reg-plots-1.png" width="312" /><img src="bookdown-demo_files/figure-html/mult-reg-plots-2.png" width="312" /></p>
@@ -336,7 +346,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="predictors-with-two-categories" class="section level2">
 <h2><span class="header-section-number">2.4</span> Predictors with two categories</h2>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-6-1.png" width="624" /></p>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">mlr2 &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight <span class="op">+</span><span class="st"> </span>Sex, <span class="dt">data =</span> bonobos)</a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="kw">coef</span>(mlr2)</a></code></pre></div>
 <pre><code>## (Intercept)        AssR      weight     SexMale 
 ## 1.065420976 0.058435841 0.002257142 0.128484275</code></pre>
 <p>How does the model incorporate this covariate mathematically?</p>
@@ -346,13 +358,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <br></p>
 <div id="predictors-with-more-categories" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Predictors with more categories</h3>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">gf_boxplot</span>(fWHR <span class="op">~</span><span class="st"> </span>Group, <span class="dt">data =</span> bonobos)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">mlr3 &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>Group, <span class="dt">data =</span> bonobos)</a>
+<a class="sourceLine" id="cb14-2" title="2"><span class="kw">coef</span>(mlr3)</a></code></pre></div>
 <pre><code>##       (Intercept)              AssR            weight           SexMale 
 ##       1.007734691       0.064361973       0.003458979       0.124854271 
 ##    GroupFrankfurt GroupPlanckendael     GroupTwycross     GroupWilhelma 
 ##       0.037426358      -0.008464572      -0.112907589       0.011186724 
 ##    GroupWuppertal 
 ##      -0.004364826</code></pre>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-8-1.png" width="624" /></p>
 <p>How does the model incorporate <strong>this</strong> covariate mathematically?</p>
 <p><br>
 <br>
@@ -375,6 +390,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <br>
 <br>
 <br></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">mlr3 &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>Group, <span class="dt">data =</span> bonobos)</a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="kw">summary</span>(mlr3)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = fWHR ~ AssR + weight + Sex + Group, data = bonobos)
@@ -438,23 +455,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="prediction-plots-in-r" class="section level3">
 <h3><span class="header-section-number">2.6.2</span> Prediction Plots in R</h3>
 <p>We can ask R to compute predictions for <strong>all</strong> the data points in the real dataset.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">bonobos &lt;-<span class="st"> </span>bonobos <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3))</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">bonobos &lt;-<span class="st"> </span>bonobos <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3))</a></code></pre></div>
 <pre><code>## Error: Column `preds` must be length 117 (the number of rows) or one, not 68</code></pre>
 <p>Wait, what? This error is because the <code>lm()</code> function removes rows containing missing values from the dataset, so it computes only 68 residuals (for the complete cases in the data). This doesn’t match the 117 rows in the original data. We can solve the problem by omitting rows with missing values first. To be safe, we first select only the variables we need, so we don’t omit rows based on missing values in unused variables.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">b2 &lt;-<span class="st"> </span>bonobos <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-2" title="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(fWHR, weight, AssR, Sex, Group) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="st">  </span><span class="kw">na.omit</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3))</a></code></pre></div>
 <p><em>We have a full set of predictions!</em></p>
 <p>But if we plot these predictions on a scatter plot of <code>fWHR</code> as a function of <code>AssR</code>, we <em>do not</em> get a straight line, because the predictions are also impacted by varying values of <code>weight</code>, <code>Sex</code>, and <code>Group</code>:</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-12-1.png" width="576" /></p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">gf_point</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data =</span> b2) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="st">  </span><span class="kw">gf_line</span>(preds <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>b2)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
 <p><em>But…we would really like a straight line that helps us visualize the meaning of the <span class="math inline">\(\beta\)</span> (slope coefficient) for <code>AssR</code>.</em> We can make predictions for a <strong>hypothetical</strong> dataset, in which <code>AssR</code> varies over a reasonable range, but the other predictors stay constant. This lets us see how <code>AssR</code> (and only <code>AssR</code>) affects the response, without contributions from other predictors. In choosing the values to include in hypothetical dataset, we often choose to hold variables constant at their most common or median values, but not blindly: also, avoid impossible or implausible variable combinations (for example, specifying that a person lives in the state of Michigan but the city of Chicago, or that they are a 5-year-old person with 4 children). <em>In this case, to match the figures in the published paper, we are also going to vary the <code>Sex</code> - but generally you’d only allow one predictor to vary.</em></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">fake_data &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">AssR =</span> <span class="kw">seq</span>(<span class="dt">from=</span><span class="fl">1.8</span>, <span class="dt">to=</span><span class="fl">5.7</span>, <span class="dt">by=</span><span class="fl">0.05</span>),</a>
-<a class="sourceLine" id="cb14-2" title="2">                         <span class="dt">weight =</span> <span class="fl">38.5</span>,</a>
-<a class="sourceLine" id="cb14-3" title="3">                         <span class="dt">Sex =</span> <span class="kw">c</span>(<span class="st">&#39;Female&#39;</span>, <span class="st">&#39;Male&#39;</span>),</a>
-<a class="sourceLine" id="cb14-4" title="4">                         <span class="dt">Group =</span> <span class="st">&#39;Wuppertal&#39;</span>)</a>
-<a class="sourceLine" id="cb14-5" title="5"></a>
-<a class="sourceLine" id="cb14-6" title="6">fake_data &lt;-<span class="st"> </span>fake_data <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb14-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3, <span class="dt">newdata =</span> fake_data))</a>
-<a class="sourceLine" id="cb14-8" title="8"><span class="kw">gf_line</span>(preds <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">color =</span> <span class="op">~</span>Sex, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-13-1.png" width="576" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">fake_data &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">AssR =</span> <span class="kw">seq</span>(<span class="dt">from=</span><span class="fl">1.8</span>, <span class="dt">to=</span><span class="fl">5.7</span>, <span class="dt">by=</span><span class="fl">0.05</span>),</a>
+<a class="sourceLine" id="cb22-2" title="2">                         <span class="dt">weight =</span> <span class="fl">38.5</span>,</a>
+<a class="sourceLine" id="cb22-3" title="3">                         <span class="dt">Sex =</span> <span class="kw">c</span>(<span class="st">&#39;Female&#39;</span>, <span class="st">&#39;Male&#39;</span>),</a>
+<a class="sourceLine" id="cb22-4" title="4">                         <span class="dt">Group =</span> <span class="st">&#39;Wuppertal&#39;</span>)</a>
+<a class="sourceLine" id="cb22-5" title="5"></a>
+<a class="sourceLine" id="cb22-6" title="6">fake_data &lt;-<span class="st"> </span>fake_data <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb22-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3, <span class="dt">newdata =</span> fake_data))</a>
+<a class="sourceLine" id="cb22-8" title="8"><span class="kw">gf_line</span>(preds <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">color =</span> <span class="op">~</span>Sex, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
 <div id="comprehension-checks" class="section level4">
 <h4><span class="header-section-number">2.6.2.1</span> Comprehension checks:</h4>
 <ul>
@@ -465,7 +488,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="shortcut" class="section level4">
 <h4><span class="header-section-number">2.6.2.2</span> Shortcut</h4>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-14-1.png" width="624" /></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">require</span>(s245)</a>
+<a class="sourceLine" id="cb23-2" title="2"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;AssR&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
 </div>
 </div>
 </div>
@@ -476,14 +501,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="shortcut-method---with-uncertainty" class="section level2">
 <h2><span class="header-section-number">2.8</span> Shortcut Method - With Uncertainty</h2>
 <p>We saw before that <code>pred_plot()</code> makes it very easy for us to generate prediction plots showing what a (multiple regression) model says about the relationship between the response and <em>one</em> of the predictors:</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-15-1.png" width="624" /></p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">require</span>(s245)</a>
+<a class="sourceLine" id="cb24-2" title="2"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;AssR&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb24-3" title="3"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y =</span> <span class="st">&#39;Predicted fWHR&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-11-1.png" width="624" /></p>
 <p><em>Note the custom axis label - otherwise you get a long, unwieldy default “Predictions from fitted model”</em></p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-16-1.png" width="624" /></p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">require</span>(s245)</a>
+<a class="sourceLine" id="cb25-2" title="2"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;Group&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y =</span> <span class="st">&#39;Predicted fWHR&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
 <p>They look nice! But they should raise two questions:</p>
 <ul>
 <li><p>Uncertainty:</p></li>
 <li><p>Fixed values:</p></li>
 </ul>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">get_fixed</span>(bonobos)  <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="st">  </span>pander<span class="op">::</span><span class="kw">pander</span>()</a></code></pre></div>
 <table>
 <colgroup>
 <col width="8%" />
@@ -528,7 +561,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </table>
 <div id="anatomy-of-a-confidence-interval" class="section level3">
 <h3><span class="header-section-number">2.8.1</span> Anatomy of a Confidence Interval</h3>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-18-1.png" width="288" /></p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;Sex&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y =</span> <span class="st">&#39;Predicted fWHR&#39;</span>)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-14-1.png" width="288" /></p>
 </div>
 </div>
 <div id="diy-method" class="section level2">
@@ -536,45 +571,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="creating-a-hypothetical-dataset" class="section level3">
 <h3><span class="header-section-number">2.9.1</span> Creating a hypothetical dataset</h3>
 <p>We would like to create a hypothetical dataset where one predictor variable varies, and all the rest stay fixed. Let’s choose <code>AssR</code>. We use <code>expand.grid()</code>:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1">fake_data &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">AssR =</span> <span class="kw">seq</span>(<span class="dt">from=</span><span class="fl">1.8</span>, <span class="dt">to=</span><span class="fl">5.7</span>, <span class="dt">by=</span><span class="fl">0.05</span>),</a>
+<a class="sourceLine" id="cb28-2" title="2">                         <span class="dt">weight =</span> <span class="dv">40</span>,</a>
+<a class="sourceLine" id="cb28-3" title="3">                         <span class="dt">Sex =</span> <span class="st">&#39;Female&#39;</span>,</a>
+<a class="sourceLine" id="cb28-4" title="4">                         <span class="dt">Group =</span> <span class="st">&#39;Twycross&#39;</span>)</a>
+<a class="sourceLine" id="cb28-5" title="5"><span class="kw">glimpse</span>(fake_data)</a></code></pre></div>
 <pre><code>## Observations: 79
 ## Variables: 4
-## $ AssR   [3m[38;5;246m&lt;dbl&gt;[39m[23m 1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20, 2...
-## $ weight [3m[38;5;246m&lt;dbl&gt;[39m[23m 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,...
-## $ Sex    [3m[38;5;246m&lt;fct&gt;[39m[23m Female, Female, Female, Female, Female, Female, Female,...
-## $ Group  [3m[38;5;246m&lt;fct&gt;[39m[23m Twycross, Twycross, Twycross, Twycross, Twycross, Twycr...</code></pre>
+## $ AssR   &lt;dbl&gt; 1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20, 2...
+## $ weight &lt;dbl&gt; 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,...
+## $ Sex    &lt;fct&gt; Female, Female, Female, Female, Female, Female, Female,...
+## $ Group  &lt;fct&gt; Twycross, Twycross, Twycross, Twycross, Twycross, Twycr...</code></pre>
 <p>Now, make predictions for our fake data.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(mlr3, <span class="dt">newdata =</span> fake_data, <span class="dt">se.fit =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb30-2" title="2">fake_data &lt;-<span class="st"> </span>fake_data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">fitted =</span> preds<span class="op">$</span>fit,</a>
+<a class="sourceLine" id="cb30-4" title="4">         <span class="dt">se.fit =</span> preds<span class="op">$</span>se.fit)</a>
+<a class="sourceLine" id="cb30-5" title="5"><span class="kw">glimpse</span>(fake_data)</a></code></pre></div>
 <pre><code>## Observations: 79
 ## Variables: 6
-## $ AssR   [3m[38;5;246m&lt;dbl&gt;[39m[23m 1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20, 2...
-## $ weight [3m[38;5;246m&lt;dbl&gt;[39m[23m 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,...
-## $ Sex    [3m[38;5;246m&lt;fct&gt;[39m[23m Female, Female, Female, Female, Female, Female, Female,...
-## $ Group  [3m[38;5;246m&lt;fct&gt;[39m[23m Twycross, Twycross, Twycross, Twycross, Twycross, Twycr...
-## $ fitted [3m[38;5;246m&lt;dbl&gt;[39m[23m 1.149038, 1.152256, 1.155474, 1.158692, 1.161910, 1.165...
-## $ se.fit [3m[38;5;246m&lt;dbl&gt;[39m[23m 0.08347207, 0.08267088, 0.08187552, 0.08108616, 0.08030...</code></pre>
+## $ AssR   &lt;dbl&gt; 1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20, 2...
+## $ weight &lt;dbl&gt; 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40,...
+## $ Sex    &lt;fct&gt; Female, Female, Female, Female, Female, Female, Female,...
+## $ Group  &lt;fct&gt; Twycross, Twycross, Twycross, Twycross, Twycross, Twycr...
+## $ fitted &lt;dbl&gt; 1.149038, 1.152256, 1.155474, 1.158692, 1.161910, 1.165...
+## $ se.fit &lt;dbl&gt; 0.08347207, 0.08267088, 0.08187552, 0.08108616, 0.08030...</code></pre>
 <p>How do we go from <em>standard errors</em> to <em>confidence intervals</em>? We can either do this before plotting, or while plotting. To do it before and add the results to the hypothetical dataset:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1">fake_data &lt;-<span class="st"> </span>fake_data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb32-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">CI_lower =</span> fitted <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit,</a>
+<a class="sourceLine" id="cb32-3" title="3">         <span class="dt">CI_upper =</span> fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit)</a>
+<a class="sourceLine" id="cb32-4" title="4"><span class="kw">glimpse</span>(fake_data)</a></code></pre></div>
 <pre><code>## Observations: 79
 ## Variables: 8
-## $ AssR     [3m[38;5;246m&lt;dbl&gt;[39m[23m 1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20,...
-## $ weight   [3m[38;5;246m&lt;dbl&gt;[39m[23m 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 4...
-## $ Sex      [3m[38;5;246m&lt;fct&gt;[39m[23m Female, Female, Female, Female, Female, Female, Femal...
-## $ Group    [3m[38;5;246m&lt;fct&gt;[39m[23m Twycross, Twycross, Twycross, Twycross, Twycross, Twy...
-## $ fitted   [3m[38;5;246m&lt;dbl&gt;[39m[23m 1.149038, 1.152256, 1.155474, 1.158692, 1.161910, 1.1...
-## $ se.fit   [3m[38;5;246m&lt;dbl&gt;[39m[23m 0.08347207, 0.08267088, 0.08187552, 0.08108616, 0.080...
-## $ CI_lower [3m[38;5;246m&lt;dbl&gt;[39m[23m 0.9854326, 0.9902210, 0.9949980, 0.9997632, 1.0045164...
-## $ CI_upper [3m[38;5;246m&lt;dbl&gt;[39m[23m 1.312643, 1.314291, 1.315950, 1.317621, 1.319304, 1.3...</code></pre>
+## $ AssR     &lt;dbl&gt; 1.80, 1.85, 1.90, 1.95, 2.00, 2.05, 2.10, 2.15, 2.20,...
+## $ weight   &lt;dbl&gt; 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 4...
+## $ Sex      &lt;fct&gt; Female, Female, Female, Female, Female, Female, Femal...
+## $ Group    &lt;fct&gt; Twycross, Twycross, Twycross, Twycross, Twycross, Twy...
+## $ fitted   &lt;dbl&gt; 1.149038, 1.152256, 1.155474, 1.158692, 1.161910, 1.1...
+## $ se.fit   &lt;dbl&gt; 0.08347207, 0.08267088, 0.08187552, 0.08108616, 0.080...
+## $ CI_lower &lt;dbl&gt; 0.9854326, 0.9902210, 0.9949980, 0.9997632, 1.0045164...
+## $ CI_upper &lt;dbl&gt; 1.312643, 1.314291, 1.315950, 1.317621, 1.319304, 1.3...</code></pre>
 </div>
 <div id="making-the-plot" class="section level3">
 <h3><span class="header-section-number">2.9.2</span> Making the plot</h3>
 <p>Now, we just need to plot!</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">gf_line</span>(fitted <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb18-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb18-3" title="3"><span class="st">  </span><span class="kw">gf_ribbon</span>(CI_lower <span class="op">+</span><span class="st"> </span>CI_upper <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data =</span> fake_data)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-22-1.png" width="576" /></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">gf_line</span>(fitted <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb34-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-3" title="3"><span class="st">  </span><span class="kw">gf_ribbon</span>(CI_lower <span class="op">+</span><span class="st"> </span>CI_upper <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data =</span> fake_data)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-18-1.png" width="576" /></p>
 <p>If we wanted to figure out the CI bounds <em>while</em> plotting, we could calculate them on the fly like this:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">gf_line</span>(fitted <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb19-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb19-3" title="3"><span class="st">  </span><span class="kw">gf_ribbon</span>((fitted <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit ) <span class="op">+</span><span class="st"> </span>(fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit) <span class="op">~</span><span class="st"> </span>AssR,</a>
-<a class="sourceLine" id="cb19-4" title="4">            <span class="dt">data =</span> fake_data)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw">gf_line</span>(fitted <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-3" title="3"><span class="st">  </span><span class="kw">gf_ribbon</span>((fitted <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit ) <span class="op">+</span><span class="st"> </span>(fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit) <span class="op">~</span><span class="st"> </span>AssR,</a>
+<a class="sourceLine" id="cb35-4" title="4">            <span class="dt">data =</span> fake_data)</a></code></pre></div>
 <p>(which will look just the same).</p>
 </div>
 <div id="categorical-predictors" class="section level3">
@@ -584,7 +633,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>hypothetical data:</p></li>
 <li><p>plot:</p></li>
 </ul>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-24-1.png" width="336" /></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">fake_sex_data &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">AssR =</span> <span class="fl">4.51</span>,</a>
+<a class="sourceLine" id="cb36-2" title="2">                         <span class="dt">weight =</span> <span class="dv">40</span>,</a>
+<a class="sourceLine" id="cb36-3" title="3">                         <span class="dt">Sex =</span> <span class="kw">c</span>(<span class="st">&#39;Male&#39;</span>, <span class="st">&#39;Female&#39;</span>),</a>
+<a class="sourceLine" id="cb36-4" title="4">                         <span class="dt">Group =</span> <span class="st">&#39;Twycross&#39;</span>)</a>
+<a class="sourceLine" id="cb36-5" title="5">preds &lt;-<span class="st"> </span><span class="kw">predict</span>(mlr3, <span class="dt">newdata =</span> fake_sex_data, <span class="dt">se.fit =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb36-6" title="6">fake_sex_data &lt;-<span class="st"> </span>fake_sex_data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">fitted =</span> preds<span class="op">$</span>fit,</a>
+<a class="sourceLine" id="cb36-8" title="8">         <span class="dt">se.fit =</span> preds<span class="op">$</span>se.fit)</a>
+<a class="sourceLine" id="cb36-9" title="9"><span class="kw">gf_point</span>(fitted <span class="op">~</span><span class="st"> </span>Sex, <span class="dt">data=</span>fake_sex_data) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb36-10" title="10"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted fWHR&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-11" title="11"><span class="st">  </span><span class="kw">gf_errorbar</span>((fitted <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit ) <span class="op">+</span><span class="st"> </span>(fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit) <span class="op">~</span><span class="st"> </span>Sex, </a>
+<a class="sourceLine" id="cb36-12" title="12">            <span class="dt">data =</span> fake_sex_data)</a></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-20-1.png" width="336" /></p>
 
 </div>
 </div>
