@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-10-08" />
+<meta name="date" content="2019-10-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,6 +225,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="binary-regression.html"><a href="binary-regression.html"><i class="fa fa-check"></i><b>8</b> Binary Regression</a><ul>
+<li class="chapter" data-level="8.1" data-path="binary-regression.html"><a href="binary-regression.html#data-source-1"><i class="fa fa-check"></i><b>8.1</b> Data Source</a></li>
+<li class="chapter" data-level="8.2" data-path="binary-regression.html"><a href="binary-regression.html#logistic-regression"><i class="fa fa-check"></i><b>8.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="8.3" data-path="binary-regression.html"><a href="binary-regression.html#checking-the-data-setup"><i class="fa fa-check"></i><b>8.3</b> Checking the data setup</a></li>
+<li class="chapter" data-level="8.4" data-path="binary-regression.html"><a href="binary-regression.html#fitting-a-saturated-model"><i class="fa fa-check"></i><b>8.4</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="8.5" data-path="binary-regression.html"><a href="binary-regression.html#link-functions"><i class="fa fa-check"></i><b>8.5</b> Link Functions</a></li>
+<li class="chapter" data-level="8.6" data-path="binary-regression.html"><a href="binary-regression.html#conditions-1"><i class="fa fa-check"></i><b>8.6</b> Conditions</a></li>
+<li class="chapter" data-level="8.7" data-path="binary-regression.html"><a href="binary-regression.html#model-assessment-plots"><i class="fa fa-check"></i><b>8.7</b> Model Assessment Plots</a></li>
+<li class="chapter" data-level="8.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>8.8</b> Odds Ratios</a></li>
+<li class="chapter" data-level="8.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>8.9</b> Model Selection</a></li>
+<li class="chapter" data-level="8.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>8.10</b> Prediction Plots</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -263,7 +275,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## $ AssR   &lt;dbl&gt; 5.36, 5.36, 2.36, 2.36, 2.36, 3.92, 3.92, 4.74, 4.74, 4...
 ## $ normDS &lt;dbl&gt; 1.430, 1.430, 2.341, 2.341, 2.341, 3.087, 3.087, 3.035,...
 ## $ weight &lt;dbl&gt; 24.0, 24.0, NA, NA, NA, NA, NA, 41.6, 41.6, 41.6, 38.0,...</code></pre>
-<p><img src="bookdown-demo_files/figure-html/view-data-1.png" width="336" /><img src="bookdown-demo_files/figure-html/view-data-2.png" width="336" /></p>
+<p><img src="s245-notes_files/figure-html/view-data-1.png" width="336" /><img src="s245-notes_files/figure-html/view-data-2.png" width="336" /></p>
 </div>
 <div id="simple-linear-regression-residuals-least-squares" class="section level2">
 <h2><span class="header-section-number">2.2</span> Simple linear regression, Residuals &amp; Least squares</h2>
@@ -276,7 +288,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Add the regression line to the plot:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">gf_point</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>bonobos) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">gf_lm</span>()</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/lm-scatter-with-line-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/lm-scatter-with-line-1.png" width="624" /></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">summary</span>(slr)</a></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -318,7 +330,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb8-2" title="2"><span class="kw">coef</span>(mlr)</a></code></pre></div>
 <pre><code>## (Intercept)        AssR      weight 
 ## 0.944790930 0.039888045 0.008644299</code></pre>
-<p><img src="bookdown-demo_files/figure-html/mult-reg-plots-1.png" width="312" /><img src="bookdown-demo_files/figure-html/mult-reg-plots-2.png" width="312" /></p>
+<p><img src="s245-notes_files/figure-html/mult-reg-plots-1.png" width="312" /><img src="s245-notes_files/figure-html/mult-reg-plots-2.png" width="312" /></p>
 <div id="is-it-really-better" class="section level3">
 <h3><span class="header-section-number">2.3.1</span> Is it really better?</h3>
 <p>How do we know if the model with more predictors is “better”? (For a more detailed answer, wait about a week…) But before we can define a “beter” model: how did R find the “best” intercept and slopes?</p>
@@ -346,7 +358,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="predictors-with-two-categories" class="section level2">
 <h2><span class="header-section-number">2.4</span> Predictors with two categories</h2>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-2-1.png" width="624" /></p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">mlr2 &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight <span class="op">+</span><span class="st"> </span>Sex, <span class="dt">data =</span> bonobos)</a>
 <a class="sourceLine" id="cb11-2" title="2"><span class="kw">coef</span>(mlr2)</a></code></pre></div>
 <pre><code>## (Intercept)        AssR      weight     SexMale 
@@ -359,7 +371,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="predictors-with-more-categories" class="section level3">
 <h3><span class="header-section-number">2.4.1</span> Predictors with more categories</h3>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">gf_boxplot</span>(fWHR <span class="op">~</span><span class="st"> </span>Group, <span class="dt">data =</span> bonobos)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-4-1.png" width="624" /></p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">mlr3 &lt;-<span class="st"> </span><span class="kw">lm</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR <span class="op">+</span><span class="st"> </span>weight <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>Group, <span class="dt">data =</span> bonobos)</a>
 <a class="sourceLine" id="cb14-2" title="2"><span class="kw">coef</span>(mlr3)</a></code></pre></div>
 <pre><code>##       (Intercept)              AssR            weight           SexMale 
@@ -467,7 +479,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>But if we plot these predictions on a scatter plot of <code>fWHR</code> as a function of <code>AssR</code>, we <em>do not</em> get a straight line, because the predictions are also impacted by varying values of <code>weight</code>, <code>Sex</code>, and <code>Group</code>:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1"><span class="kw">gf_point</span>(fWHR <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data =</span> b2) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb21-2" title="2"><span class="st">  </span><span class="kw">gf_line</span>(preds <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>b2)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
 <p><em>But…we would really like a straight line that helps us visualize the meaning of the <span class="math inline">\(\beta\)</span> (slope coefficient) for <code>AssR</code>.</em> We can make predictions for a <strong>hypothetical</strong> dataset, in which <code>AssR</code> varies over a reasonable range, but the other predictors stay constant. This lets us see how <code>AssR</code> (and only <code>AssR</code>) affects the response, without contributions from other predictors. In choosing the values to include in hypothetical dataset, we often choose to hold variables constant at their most common or median values, but not blindly: also, avoid impossible or implausible variable combinations (for example, specifying that a person lives in the state of Michigan but the city of Chicago, or that they are a 5-year-old person with 4 children). <em>In this case, to match the figures in the published paper, we are also going to vary the <code>Sex</code> - but generally you’d only allow one predictor to vary.</em></p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">fake_data &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">AssR =</span> <span class="kw">seq</span>(<span class="dt">from=</span><span class="fl">1.8</span>, <span class="dt">to=</span><span class="fl">5.7</span>, <span class="dt">by=</span><span class="fl">0.05</span>),</a>
 <a class="sourceLine" id="cb22-2" title="2">                         <span class="dt">weight =</span> <span class="fl">38.5</span>,</a>
@@ -477,7 +489,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb22-6" title="6">fake_data &lt;-<span class="st"> </span>fake_data <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb22-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">preds =</span> <span class="kw">predict</span>(mlr3, <span class="dt">newdata =</span> fake_data))</a>
 <a class="sourceLine" id="cb22-8" title="8"><span class="kw">gf_line</span>(preds <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">color =</span> <span class="op">~</span>Sex, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
 <div id="comprehension-checks" class="section level4">
 <h4><span class="header-section-number">2.6.2.1</span> Comprehension checks:</h4>
 <ul>
@@ -490,7 +502,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4><span class="header-section-number">2.6.2.2</span> Shortcut</h4>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1"><span class="kw">require</span>(s245)</a>
 <a class="sourceLine" id="cb23-2" title="2"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;AssR&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-10-1.png" width="624" /></p>
 </div>
 </div>
 </div>
@@ -504,12 +516,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">require</span>(s245)</a>
 <a class="sourceLine" id="cb24-2" title="2"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;AssR&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb24-3" title="3"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y =</span> <span class="st">&#39;Predicted fWHR&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-11-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-11-1.png" width="624" /></p>
 <p><em>Note the custom axis label - otherwise you get a long, unwieldy default “Predictions from fitted model”</em></p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1"><span class="kw">require</span>(s245)</a>
 <a class="sourceLine" id="cb25-2" title="2"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;Group&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb25-3" title="3"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y =</span> <span class="st">&#39;Predicted fWHR&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-12-1.png" width="624" /></p>
 <p>They look nice! But they should raise two questions:</p>
 <ul>
 <li><p>Uncertainty:</p></li>
@@ -563,7 +575,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">2.8.1</span> Anatomy of a Confidence Interval</h3>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1"><span class="kw">pred_plot</span>(mlr3, <span class="st">&#39;Sex&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb27-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y =</span> <span class="st">&#39;Predicted fWHR&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-14-1.png" width="288" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-14-1.png" width="288" /></p>
 </div>
 </div>
 <div id="diy-method" class="section level2">
@@ -618,7 +630,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">gf_line</span>(fitted <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb34-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb34-3" title="3"><span class="st">  </span><span class="kw">gf_ribbon</span>(CI_lower <span class="op">+</span><span class="st"> </span>CI_upper <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data =</span> fake_data)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-18-1.png" width="576" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-18-1.png" width="576" /></p>
 <p>If we wanted to figure out the CI bounds <em>while</em> plotting, we could calculate them on the fly like this:</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw">gf_line</span>(fitted <span class="op">~</span><span class="st"> </span>AssR, <span class="dt">data=</span>fake_data) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb35-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">fWHR&#39;</span>) <span class="op">%&gt;%</span></a>
@@ -645,7 +657,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb36-10" title="10"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;Predicted fWHR&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb36-11" title="11"><span class="st">  </span><span class="kw">gf_errorbar</span>((fitted <span class="op">-</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit ) <span class="op">+</span><span class="st"> </span>(fitted <span class="op">+</span><span class="st"> </span><span class="fl">1.96</span><span class="op">*</span>se.fit) <span class="op">~</span><span class="st"> </span>Sex, </a>
 <a class="sourceLine" id="cb36-12" title="12">            <span class="dt">data =</span> fake_sex_data)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-20-1.png" width="336" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-20-1.png" width="336" /></p>
 
 </div>
 </div>
@@ -693,7 +705,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["s245-notes.pdf", "s245-notes.epub"],
 "toc": {
 "collapse": "subsection"
 }

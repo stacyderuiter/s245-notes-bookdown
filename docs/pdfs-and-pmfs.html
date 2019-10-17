@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-10-08" />
+<meta name="date" content="2019-10-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,6 +225,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="binary-regression.html"><a href="binary-regression.html"><i class="fa fa-check"></i><b>8</b> Binary Regression</a><ul>
+<li class="chapter" data-level="8.1" data-path="binary-regression.html"><a href="binary-regression.html#data-source-1"><i class="fa fa-check"></i><b>8.1</b> Data Source</a></li>
+<li class="chapter" data-level="8.2" data-path="binary-regression.html"><a href="binary-regression.html#logistic-regression"><i class="fa fa-check"></i><b>8.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="8.3" data-path="binary-regression.html"><a href="binary-regression.html#checking-the-data-setup"><i class="fa fa-check"></i><b>8.3</b> Checking the data setup</a></li>
+<li class="chapter" data-level="8.4" data-path="binary-regression.html"><a href="binary-regression.html#fitting-a-saturated-model"><i class="fa fa-check"></i><b>8.4</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="8.5" data-path="binary-regression.html"><a href="binary-regression.html#link-functions"><i class="fa fa-check"></i><b>8.5</b> Link Functions</a></li>
+<li class="chapter" data-level="8.6" data-path="binary-regression.html"><a href="binary-regression.html#conditions-1"><i class="fa fa-check"></i><b>8.6</b> Conditions</a></li>
+<li class="chapter" data-level="8.7" data-path="binary-regression.html"><a href="binary-regression.html#model-assessment-plots"><i class="fa fa-check"></i><b>8.7</b> Model Assessment Plots</a></li>
+<li class="chapter" data-level="8.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>8.8</b> Odds Ratios</a></li>
+<li class="chapter" data-level="8.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>8.9</b> Model Selection</a></li>
+<li class="chapter" data-level="8.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>8.10</b> Prediction Plots</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -309,7 +321,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="shapes" class="section level5">
 <h5><span class="header-section-number">5.4.1.0.4</span> Shapes</h5>
 <p>The shape is always unimodal and symmetric.</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf" class="section level5">
 <h5><span class="header-section-number">5.4.1.0.5</span> PDF or PMF</h5>
@@ -341,7 +353,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="shapes-1" class="section level5">
 <h5><span class="header-section-number">5.4.2.0.4</span> Shapes</h5>
 <p>The gamma distribution can take on a unimodal, symmetric shape or a unimodal shape with any amount of right skew (up to an exponential distribution shape).</p>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>Note: you don’t need to be familiar with exactly how the different values of parameters influence the shape of the gamma distribution PDF, so the curves here are not labelled with parameter values.</p>
 </div>
 <div id="pdf-or-pmf-1" class="section level5">
@@ -381,7 +393,7 @@ or equivalently,</p>
 <a class="sourceLine" id="cb48-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;beta&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">shape1=</span><span class="fl">0.5</span>, <span class="dt">shape2=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Possible Values of Variable&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability Density&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb48-7" title="7"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">y=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="fl">2.5</span>))</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf-2" class="section level5">
 <h5><span class="header-section-number">5.4.3.0.5</span> PDF or PMF</h5>
@@ -423,7 +435,7 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <a class="sourceLine" id="cb49-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.75</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb49-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;binom&#39;</span>, <span class="dt">params =</span> <span class="kw">c</span>(<span class="dt">size=</span><span class="dv">100</span>, <span class="dt">prob=</span><span class="fl">0.99</span>), <span class="dt">color=</span>colrs[<span class="dv">5</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb49-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k, the Number of Successes in 100 Trials&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
 <p>The <span class="math inline">\(p\)</span> used were 0.1, 0.25, 0.5, 0.75, and 0.99. Can you tell which is which?</p>
 </div>
 <div id="pdf-or-pmf-3" class="section level5">
@@ -460,7 +472,7 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <a class="sourceLine" id="cb50-4" title="4"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="dv">6</span>), <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb50-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;pois&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">lambda=</span><span class="dv">15</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb50-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf-4" class="section level5">
 <h5><span class="header-section-number">5.5.2.0.5</span> PDF or PMF</h5>
@@ -500,7 +512,7 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <a class="sourceLine" id="cb51-6" title="6"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBI&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">15</span>, <span class="dt">sigma=</span><span class="dv">4</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb51-7" title="7"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb51-8" title="8"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
 <p>NB2:</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">colrs &lt;-<span class="st"> </span>RColorBrewer<span class="op">::</span><span class="kw">brewer.pal</span>(<span class="dv">8</span>, <span class="st">&#39;Set2&#39;</span>)</a>
 <a class="sourceLine" id="cb52-2" title="2"><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">1</span>, <span class="dt">sigma=</span><span class="fl">0.5</span>), <span class="dt">color=</span>colrs[<span class="dv">1</span>]) <span class="op">%&gt;%</span></a>
@@ -509,7 +521,7 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <a class="sourceLine" id="cb52-5" title="5"><span class="st">  </span><span class="kw">gf_dist</span>(<span class="st">&#39;NBII&#39;</span>, <span class="dt">params=</span><span class="kw">c</span>(<span class="dt">mu=</span><span class="dv">15</span>, <span class="dt">sigma=</span><span class="dv">4</span>), <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb52-6" title="6"><span class="st">  </span><span class="kw">gf_lims</span>(<span class="dt">x=</span><span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">20</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb52-7" title="7"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;k (number of events)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Probability&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf-5" class="section level5">
 <h5><span class="header-section-number">5.5.3.0.5</span> PDF or PMF</h5>
@@ -567,7 +579,7 @@ Technically, the support is <span class="math inline">\(k= 0, 1,2,3,\dots\)</spa
 <a class="sourceLine" id="cb53-12" title="12"><span class="st">  </span><span class="kw">gf_line</span>(dens.c <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">3</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb53-13" title="13"><span class="st">  </span><span class="kw">gf_line</span>(dens.d <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">4</span>]) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb53-14" title="14"><span class="st">  </span><span class="kw">gf_line</span>(dens.e <span class="op">~</span>x, <span class="dt">data=</span>tex, <span class="dt">color=</span>colrs[<span class="dv">5</span>])</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
 </div>
 <div id="pdf-or-pmf-6" class="section level5">
 <h5><span class="header-section-number">5.5.4.0.5</span> PDF or PMF</h5>
@@ -630,7 +642,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["s245-notes.pdf", "s245-notes.epub"],
 "toc": {
 "collapse": "subsection"
 }

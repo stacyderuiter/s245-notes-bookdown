@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Binary Regression | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Binary Regression | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Binary Regression | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-10-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="model-averaging.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT 245 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#why-are-we-doing-this-again"><i class="fa fa-check"></i><b>2.7</b> Why are we doing this again?</a></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#shortcut-method---with-uncertainty"><i class="fa fa-check"></i><b>2.8</b> Shortcut Method - With Uncertainty</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="linear-regression.html"><a href="linear-regression.html#anatomy-of-a-confidence-interval"><i class="fa fa-check"></i><b>2.8.1</b> Anatomy of a Confidence Interval</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#diy-method"><i class="fa fa-check"></i><b>2.9</b> DIY Method</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-a-hypothetical-dataset"><i class="fa fa-check"></i><b>2.9.1</b> Creating a hypothetical dataset</a></li>
+<li class="chapter" data-level="2.9.2" data-path="linear-regression.html"><a href="linear-regression.html#making-the-plot"><i class="fa fa-check"></i><b>2.9.2</b> Making the plot</a></li>
+<li class="chapter" data-level="2.9.3" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors"><i class="fa fa-check"></i><b>2.9.3</b> Categorical predictors</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html"><i class="fa fa-check"></i><b>3</b> Model Selection Using Information Criteria</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#data-and-model"><i class="fa fa-check"></i><b>3.1</b> Data and Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#calculations"><i class="fa fa-check"></i><b>3.2</b> Calculations</a></li>
+<li class="chapter" data-level="3.3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#decisions-with-ics"><i class="fa fa-check"></i><b>3.3</b> Decisions with ICs</a></li>
+<li class="chapter" data-level="3.4" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#all-possible-subsets-selection"><i class="fa fa-check"></i><b>3.4</b> All-possible-subsets Selection</a></li>
+<li class="chapter" data-level="3.5" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#which-ic-should-i-use"><i class="fa fa-check"></i><b>3.5</b> Which IC should I use?</a></li>
+<li class="chapter" data-level="3.6" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#quantities-derived-from-aic"><i class="fa fa-check"></i><b>3.6</b> Quantities derived from AIC</a></li>
+<li class="chapter" data-level="3.7" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#important-caution"><i class="fa fa-check"></i><b>3.7</b> Important Caution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="likelihood.html"><a href="likelihood.html"><i class="fa fa-check"></i><b>4</b> Likelihood</a><ul>
+<li class="chapter" data-level="4.1" data-path="likelihood.html"><a href="likelihood.html#data-1"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="likelihood.html"><a href="likelihood.html#review---the-normal-probability-density-function-pdf"><i class="fa fa-check"></i><b>4.2</b> Review - the Normal probability density function (PDF)</a></li>
+<li class="chapter" data-level="4.3" data-path="likelihood.html"><a href="likelihood.html#a-simple-model"><i class="fa fa-check"></i><b>4.3</b> A simple model</a></li>
+<li class="chapter" data-level="4.4" data-path="likelihood.html"><a href="likelihood.html#using-the-model-to-make-predictions"><i class="fa fa-check"></i><b>4.4</b> Using the Model to Make Predictions</a></li>
+<li class="chapter" data-level="4.5" data-path="likelihood.html"><a href="likelihood.html#likelihood-to-the-rescue"><i class="fa fa-check"></i><b>4.5</b> Likelihood to the Rescue!</a></li>
+<li class="chapter" data-level="4.6" data-path="likelihood.html"><a href="likelihood.html#how-does-this-relate-to-linear-regression"><i class="fa fa-check"></i><b>4.6</b> How does this relate to linear regression?</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="likelihood.html"><a href="likelihood.html#model-equation"><i class="fa fa-check"></i><b>4.6.1</b> Model Equation:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="likelihood.html"><a href="likelihood.html#likelihood-of-a-dataset-given-a-model"><i class="fa fa-check"></i><b>4.7</b> Likelihood of a dataset, given a model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html"><i class="fa fa-check"></i><b>5</b> PDFs and PMFs</a><ul>
+<li class="chapter" data-level="5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beyond-normal"><i class="fa fa-check"></i><b>5.1</b> Beyond Normal</a></li>
+<li class="chapter" data-level="5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#types-of-probability-distributions"><i class="fa fa-check"></i><b>5.2</b> Types of probability distributions</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#continuous-distributions"><i class="fa fa-check"></i><b>5.2.1</b> Continuous distributions</a></li>
+<li class="chapter" data-level="5.2.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#discrete-distributions"><i class="fa fa-check"></i><b>5.2.2</b> Discrete Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#relevant-features-of-distributions"><i class="fa fa-check"></i><b>5.3</b> Relevant Features of Distributions</a></li>
+<li class="chapter" data-level="5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-continuous-distributions"><i class="fa fa-check"></i><b>5.4</b> Examples of Continuous Distributions</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#normal"><i class="fa fa-check"></i><b>5.4.1</b> Normal</a></li>
+<li class="chapter" data-level="5.4.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#gamma"><i class="fa fa-check"></i><b>5.4.2</b> Gamma</a></li>
+<li class="chapter" data-level="5.4.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beta"><i class="fa fa-check"></i><b>5.4.3</b> Beta</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-discrete-distributions"><i class="fa fa-check"></i><b>5.5</b> Examples of Discrete Distributions</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#binomial"><i class="fa fa-check"></i><b>5.5.1</b> Binomial</a></li>
+<li class="chapter" data-level="5.5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#poisson"><i class="fa fa-check"></i><b>5.5.2</b> Poisson</a></li>
+<li class="chapter" data-level="5.5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#negative-binomial"><i class="fa fa-check"></i><b>5.5.3</b> Negative Binomial</a></li>
+<li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-averaging.html"><a href="model-averaging.html"><i class="fa fa-check"></i><b>7</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.1" data-path="model-averaging.html"><a href="model-averaging.html#data-school-survey-on-crime-and-safety"><i class="fa fa-check"></i><b>7.1</b> Data: School Survey on Crime and Safety</a></li>
+<li class="chapter" data-level="7.2" data-path="model-averaging.html"><a href="model-averaging.html#modelling-number-of-violent-incidents-per-school"><i class="fa fa-check"></i><b>7.2</b> Modelling number of violent incidents per school</a></li>
+<li class="chapter" data-level="7.3" data-path="model-averaging.html"><a href="model-averaging.html#model-averaging-1"><i class="fa fa-check"></i><b>7.3</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="model-averaging.html"><a href="model-averaging.html#getting-the-averaged-model"><i class="fa fa-check"></i><b>7.3.1</b> Getting the Averaged Model</a></li>
+<li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="binary-regression.html"><a href="binary-regression.html"><i class="fa fa-check"></i><b>8</b> Binary Regression</a><ul>
+<li class="chapter" data-level="8.1" data-path="binary-regression.html"><a href="binary-regression.html#data-source-1"><i class="fa fa-check"></i><b>8.1</b> Data Source</a></li>
+<li class="chapter" data-level="8.2" data-path="binary-regression.html"><a href="binary-regression.html#logistic-regression"><i class="fa fa-check"></i><b>8.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="8.3" data-path="binary-regression.html"><a href="binary-regression.html#checking-the-data-setup"><i class="fa fa-check"></i><b>8.3</b> Checking the data setup</a></li>
+<li class="chapter" data-level="8.4" data-path="binary-regression.html"><a href="binary-regression.html#fitting-a-saturated-model"><i class="fa fa-check"></i><b>8.4</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="8.5" data-path="binary-regression.html"><a href="binary-regression.html#link-functions"><i class="fa fa-check"></i><b>8.5</b> Link Functions</a></li>
+<li class="chapter" data-level="8.6" data-path="binary-regression.html"><a href="binary-regression.html#conditions-1"><i class="fa fa-check"></i><b>8.6</b> Conditions</a></li>
+<li class="chapter" data-level="8.7" data-path="binary-regression.html"><a href="binary-regression.html#model-assessment-plots"><i class="fa fa-check"></i><b>8.7</b> Model Assessment Plots</a></li>
+<li class="chapter" data-level="8.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>8.8</b> Odds Ratios</a></li>
+<li class="chapter" data-level="8.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>8.9</b> Model Selection</a></li>
+<li class="chapter" data-level="8.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>8.10</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="binary-regression" class="section level1">
+<h1><span class="header-section-number">Chapter 8</span> Binary Regression</h1>
+<p>Our next goal: establish a framework for doing regression modelling when the response variable is a categorical one, with two categories.</p>
+<div id="data-source-1" class="section level2">
+<h2><span class="header-section-number">8.1</span> Data Source</h2>
+<p>The dataset used here is on Alaskan wood frogs, detailing some physical characteristics, habitat characteristics, and the number of developmental and other abnormalities found in the frogs. It was originally obtained from:[<a href="http://datadryad.org/resource/doi:10.5061/dryad.sq72d" class="uri">http://datadryad.org/resource/doi:10.5061/dryad.sq72d</a>].</p>
+<p>The data file can be accessed online at: [<a href="http://sldr.netlify.com/data/FrogAbnormalities.csv" class="uri">http://sldr.netlify.com/data/FrogAbnormalities.csv</a>]</p>
+<pre><code>##   FrogID TotalLength TailLength    Stage Year RoadDistance RoadType
+## 1     25    19.19701 31.8285559 Stage 43 2011           22   Gravel
+## 2     29    20.99035  0.1151022 Stage 46 2012          387   Gravel
+## 3     29    20.50364  0.1055217 Stage 46 2011          781    Paved
+##   Abnormal SkeletalAbnormality EyeAbnormality orig.id
+## 1       No                  No             No    3450
+## 2       No                  No             No    2276
+## 3       No                  No             No     158</code></pre>
+</div>
+<div id="logistic-regression" class="section level2">
+<h2><span class="header-section-number">8.2</span> Logistic Regression</h2>
+<p>Recall, for linear regression we fitted a model for continuous (numeric) response variable <span class="math inline">\(y\)</span> according to:</p>
+<p><span class="math display">\[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon \]</span></p>
+<p>where <span class="math inline">\(x\)</span>s are the <span class="math inline">\(k\)</span> predictor variables, <span class="math inline">\(\beta\)</span>s are the parameters to be estimated by the model, and <span class="math inline">\(\epsilon \sim N(0,\sigma)\)</span> are the model residuals.</p>
+<p>When our response variable was a <em>count</em> variable, we modified our equation to:</p>
+<p><span class="math display">\[log(\lambda_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon_{link} \]</span></p>
+<p>positing that <span class="math inline">\(y_i \sim Pois(\lambda_i)\)</span> for Poisson regression; similarly for quasiPoisson or negative binomial regression, we just replaced that Poisson distribution with a quasiPoisson or a negative binomial distribution.</p>
+<p>What if our response variable is <em>logical</em> – a categorical variable with just two possible values? We will designate one of the two values a “success,” and then we want to predict the probability of success as a function of some set of predictors. What will our model equation look like in this case?</p>
+<p><span class="math display">\[ logit(p_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon_{link}\]</span></p>
+<p>where the <code>logit</code> function is <span class="math inline">\(logit(x) = log(\frac{x}{1-x})\)</span>. This function maps probabilities to positive and negative real numbers, effectively “spreading them out” from the range 0-1 to the full range of real numbers. How does this equation relate back to our desired response variable? Well, <span class="math inline">\(i\)</span>th observation of the response variable is assumed to follow a binomial distribution with probability <span class="math inline">\(p_i\)</span> (<span class="math inline">\(y_i \sim Binom(n_i, p_i)\)</span>). (<span class="math inline">\(n_i\)</span> depends on the setup of the data – often n=1 for each row of the dataset, as here where each row is one frog. We can think of each frog as one binomial trial, with success/failure meaning abnormality/normality of the frog.)</p>
+</div>
+<div id="checking-the-data-setup" class="section level2">
+<h2><span class="header-section-number">8.3</span> Checking the data setup</h2>
+<p>We would like to model the proportion frogs with abnormalities as a function of a set of covariates. The variable <code>Abnormal</code> has values “Yes” and “No”. In R, if we use this (factor) variable as our response, how will R determine which level (value of the variable) is a “success”?</p>
+<p>R uses the FIRST variable value as “failure” and the second as “success” – this makes sense if you imagine coding 0 for failure and 1 for success (and then sorting in numeric/alphabetical order). If you have a categorical variable with informative values, you will need to make sure that the “base” (first) level is the one you want to equate with “failure”.</p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" title="1"><span class="kw">levels</span>(frogs<span class="op">$</span>Abnormal)</a></code></pre></div>
+<pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
+<p>If you do need to rearrange the levels, one way to do it is to use the <code>forcats::fct_relevel()</code> function. Example:</p>
+<div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" title="1"><span class="co">#ref will be the FIRST level after releveling</span></a>
+<a class="sourceLine" id="cb101-2" title="2">frogs &lt;-<span class="st"> </span>frogs <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb101-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Abnormal =</span> forcats<span class="op">::</span><span class="kw">fct_relevel</span>(Abnormal, <span class="dt">ref=</span><span class="st">&#39;No&#39;</span>))</a>
+<a class="sourceLine" id="cb101-4" title="4">frogs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(Abnormal) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">levels</span>()</a></code></pre></div>
+<pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
+</div>
+<div id="fitting-a-saturated-model" class="section level2">
+<h2><span class="header-section-number">8.4</span> Fitting a saturated model</h2>
+<p>Let’s try fitting a model for Abnormalities as a function of Stage, Year, RoadType, and RoadDistance. Why do you think these variables and not others were chosen?</p>
+<p>Perhaps it makes sense that type and distance to road are proxies for urbanization, and frogs may do better in more pristine habitats. It also seems likely that there would be differences over time. There may also be differences by Stage, if frogs with severe abnormalities have trouble even surviving to the later/older stages.</p>
+<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb103-1" title="1">frog.logr &lt;-<span class="st"> </span><span class="kw">glm</span>(Abnormal <span class="op">~</span><span class="st"> </span>Stage <span class="op">+</span><span class="st"> </span><span class="kw">factor</span>(Year) <span class="op">+</span><span class="st"> </span>RoadType <span class="op">+</span><span class="st"> </span>RoadDistance,</a>
+<a class="sourceLine" id="cb103-2" title="2">                 <span class="dt">data=</span>frogs, <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>))</a>
+<a class="sourceLine" id="cb103-3" title="3"><span class="kw">summary</span>(frog.logr)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = Abnormal ~ Stage + factor(Year) + RoadType + RoadDistance, 
+##     family = binomial(link = &quot;logit&quot;), data = frogs)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -0.8904  -0.6398  -0.5574  -0.4788   2.2886  
+## 
+## Coefficients:
+##                    Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)      -0.3509350  0.4198798  -0.836 0.403268    
+## StageStage 43     0.1129785  0.1136966   0.994 0.320376    
+## StageStage 44    -0.0987133  0.1290558  -0.765 0.444338    
+## StageStage 45    -0.4616044  0.1301337  -3.547 0.000389 ***
+## StageStage 46    -0.5954533  0.1451580  -4.102 4.09e-05 ***
+## factor(Year)2001 -1.4231818  0.8393630  -1.696 0.089971 .  
+## factor(Year)2002 -1.3820162  1.1210725  -1.233 0.217664    
+## factor(Year)2003 -0.9744573  0.5216890  -1.868 0.061778 .  
+## factor(Year)2004 -1.4345710  0.4272057  -3.358 0.000785 ***
+## factor(Year)2005 -1.1185067  0.4214799  -2.654 0.007960 ** 
+## factor(Year)2006 -1.1232649  0.4229028  -2.656 0.007905 ** 
+## factor(Year)2010 -0.4985424  0.4299638  -1.159 0.246253    
+## factor(Year)2011 -1.1674055  0.4163277  -2.804 0.005046 ** 
+## factor(Year)2012 -1.0488208  0.4157733  -2.523 0.011650 *  
+## RoadTypePaved    -0.1689634  0.0842935  -2.004 0.045020 *  
+## RoadDistance      0.0005653  0.0002471   2.287 0.022176 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 4787.5  on 5370  degrees of freedom
+## Residual deviance: 4701.4  on 5355  degrees of freedom
+## AIC: 4733.4
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+<div id="link-functions" class="section level2">
+<h2><span class="header-section-number">8.5</span> Link Functions</h2>
+<p>Here, we have used the logit link function, which is the most common. However, there are other functions that translate proportions to real numbers, and are sometimes used in regression for binary data. Two common options are:</p>
+<ul>
+<li>Probit regression: link=‘probit’</li>
+<li>Complementary log-log regression: link=‘cloglog’</li>
+</ul>
+<p>There are not closed-form expressions for the the probit and complementary log-log functions that are easy to write down, so that is why the exact functions are not given here. As shown below, the shapes of these three functions are very similar. So it may come as no big surprise that frequently they provide similar goodness of fit to data (according to IC). If that is the case, choose logit (which makes some of the interpretation of results easier).</p>
+<p><img src="binary-regression-links.png" width="3in" /></p>
+<p>Note: figure is from [<a href="http://data.princeton.edu/wws509/notes" class="uri">http://data.princeton.edu/wws509/notes</a>].</p>
+</div>
+<div id="conditions-1" class="section level2">
+<h2><span class="header-section-number">8.6</span> Conditions</h2>
+<p>Under what conditions is a logistic regression model appropriate?</p>
+<ul>
+<li>Response variable is logical – you can characterize it as the outcome of a binomial trial (or a set of independent binomial trials). Some response variables can be expressed as proportions, but can <em>not</em> be well modelled with binomial regression. For example, you might take one-minute recordings in the woods and measure the proportion of each minute during which bird song was audible. The data will look like proportions, but you can’t think of them as binomial trials and should not model them with binomial regression (what is a “trial” here, and what is a “success”? Make sure you can answer those questions before using binomial regression.)</li>
+<li>Linearity: logit(p) should have a linear relationship with each predictor variable. (A bit hard to check - see solutions to HW8 for an example of how it can be done.)</li>
+<li>Independence: Same as usual.</li>
+<li>Mean-variance relationship: The Pearson or Deviance residuals will decrease as a function of fitted value, and should have approximately constant variance as a function of fitted value. But a residuals vs fitted plot is of almost no use to us – the examples later on show how you can expect it to look, and if it deviates from the expected appearance, try to figure out why and what is going on; but if it looks as expected, you can say “there is no evidence in this figure of a violation of the conditions of binary regression.”</li>
+<li>NO distributional assumptions about residuals.</li>
+</ul>
+</div>
+<div id="model-assessment-plots" class="section level2">
+<h2><span class="header-section-number">8.7</span> Model Assessment Plots</h2>
+<p><img src="s245-notes_files/figure-html/frog-assess1-1.png" width="336" /></p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" title="1"><span class="kw">gf_point</span>(<span class="kw">resid</span>(frog.logr, <span class="dt">type=</span><span class="st">&#39;pearson&#39;</span>) <span class="op">~</span><span class="st"> </span><span class="kw">fitted</span>(frog.logr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb105-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">title=</span><span class="st">&#39;frog.logr&#39;</span>, </a>
+<a class="sourceLine" id="cb105-3" title="3">          <span class="dt">y=</span><span class="st">&#39; Pearson</span><span class="ch">\n</span><span class="st">Residuals&#39;</span>,<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>)</a>
+<a class="sourceLine" id="cb105-4" title="4"></a>
+<a class="sourceLine" id="cb105-5" title="5"><span class="kw">gf_point</span>(<span class="kw">resid</span>(frog.logr, <span class="dt">type=</span><span class="st">&#39;deviance&#39;</span>) <span class="op">~</span><span class="st"> </span><span class="kw">fitted</span>(frog.logr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb105-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">title=</span><span class="st">&#39;frog.logr&#39;</span>, </a>
+<a class="sourceLine" id="cb105-7" title="7">          <span class="dt">y=</span><span class="st">&#39; Deviance</span><span class="ch">\n</span><span class="st">Residuals&#39;</span>,<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>)</a>
+<a class="sourceLine" id="cb105-8" title="8"></a>
+<a class="sourceLine" id="cb105-9" title="9"><span class="kw">gf_point</span>(<span class="kw">resid</span>(frog.logr, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>) <span class="op">~</span><span class="st"> </span><span class="kw">fitted</span>(frog.logr)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb105-10" title="10"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">title=</span><span class="st">&#39;frog.logr&#39;</span>, </a>
+<a class="sourceLine" id="cb105-11" title="11">          <span class="dt">y=</span><span class="st">&#39; Raw Response</span><span class="ch">\n</span><span class="st">Residuals&#39;</span>,<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>)</a>
+<a class="sourceLine" id="cb105-12" title="12"></a>
+<a class="sourceLine" id="cb105-13" title="13"><span class="kw">gf_histogram</span>(<span class="op">~</span><span class="kw">resid</span>(frog.logr, <span class="dt">type=</span><span class="st">&#39;pearson&#39;</span>), <span class="dt">bins=</span><span class="dv">15</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb105-14" title="14"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">title=</span><span class="st">&#39;frog.logr&#39;</span>, </a>
+<a class="sourceLine" id="cb105-15" title="15">          <span class="dt">x=</span><span class="st">&#39;Residuals&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Count&#39;</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/frog-assess2-1.png" width="336" /><img src="s245-notes_files/figure-html/frog-assess2-2.png" width="336" /><img src="s245-notes_files/figure-html/frog-assess2-3.png" width="336" /><img src="s245-notes_files/figure-html/frog-assess2-4.png" width="336" /></p>
+<p>The two “lines” in the residuals vs fitted plots correspond with the two possible values of the response variable in the data.</p>
+<p>And remember - there is not a strict distributional assumption about the residuals (in other words, they don’t have to follow, say, a normal distribution), so we don’t really have to make a histogram of them. The one here is shown just to help you remember that you don’t <em>have</em> to check it, and if you do, it will look “strange” (bimodal like this) yet it is nothing to worry about.</p>
+</div>
+<div id="odds-ratios" class="section level2">
+<h2><span class="header-section-number">8.8</span> Odds Ratios</h2>
+<p>The <strong>odds</strong> (or <em>odds ratio</em>) is <span class="math inline">\(\frac{p}{1-p}\)</span> – the ratio of success to failure. So if P(success) = 0.75, then the odds will be <span class="math inline">\(\frac{0.75}{0.25}\)</span> = 3 or “three to one” – you will usually succeed three times for every failure.</p>
+<p>Remember, the logit function was <span class="math inline">\(logit(x) = log(\frac{p}{1-p})\)</span>? In other words, the logit is the log of the odds ratio. This means that the coefficients of a binary regression model with logit link function have special interpretations in terms of odds ratios.</p>
+<p>Let’s consider a simplified version of our model (just to make it easier to write out the model equation):</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" title="1">simple &lt;-<span class="st"> </span><span class="kw">glm</span>(Abnormal <span class="op">~</span><span class="st"> </span>Stage, <span class="dt">data =</span> frogs, <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>))</a>
+<a class="sourceLine" id="cb106-2" title="2"><span class="kw">coef</span>(simple)</a></code></pre></div>
+<pre><code>##   (Intercept) StageStage 43 StageStage 44 StageStage 45 StageStage 46 
+##    -1.4618893     0.1001146    -0.1094112    -0.4527238    -0.5119712</code></pre>
+<p>So our model equation is:</p>
+<p><span class="math display">\[ logit(p_i) = -1.46 + 0.10I_{s43} - 0.11I_{s44} - 0.45I_{s45} - 0.51I_{s46}\]</span></p>
+<p>According to this model, the log-odds (logit(p)) for a Stage 42 frog is -1.46, so the odds of being Abnormal for a Stage 42 frog are <span class="math inline">\(e^{-1.46} = 0.23\)</span>.</p>
+<p>The log-odds for a Stage 46 frog are -1.46 - 0.51 = -1.97, so the odds of it being Abnormal are <span class="math inline">\(e^{-1.97} = 0.14\)</span>.</p>
+<p>The <em>change</em> in odds going from Stage 42 to 46 is then <span class="math inline">\(\frac{0.14}{0.23} = 0.61\)</span> – the odds of a Stage 42 frog being abnormal are nearly double those of a Stage 46 frog.</p>
+<p>Notice – we didn’t actually have to compute all that to find the 0.6 value!</p>
+<p>We know that for Stage 46</p>
+<p><span class="math display">\[ log(\frac{p}{1-p}) = -1.46 -0.51\]</span>
+so</p>
+<p><span class="math display">\[ \frac{p}{1-p} = e^{-1.46 - 0.51} = e^{-1.46}e^{-0.51}\]</span></p>
+<p>And <span class="math inline">\(e^{-1.46}\)</span> is the odds for Stage 42…aha! So, <span class="math inline">\(e^{-0.51} = 0.60\)</span> is the <em>multiplier</em> on the odds ratio to go from stage 42 to 46. And in general, <span class="math inline">\(e^{\beta}\)</span> is the multiplier on the odds ratio for a one-unit change in the predictor variable for which <span class="math inline">\(\beta\)</span> is the model coefficient.</p>
+</div>
+<div id="model-selection" class="section level2">
+<h2><span class="header-section-number">8.9</span> Model Selection</h2>
+<p>As usual:</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb108-2" title="2">frog.logr &lt;-<span class="st"> </span><span class="kw">update</span>(frog.logr, <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb108-3" title="3">mod.sel &lt;-<span class="st"> </span><span class="kw">dredge</span>(frog.logr, <span class="dt">rank=</span><span class="st">&#39;AIC&#39;</span>)</a>
+<a class="sourceLine" id="cb108-4" title="4"><span class="kw">head</span>(mod.sel,<span class="dv">5</span>)</a></code></pre></div>
+<pre><code>## Global model call: glm(formula = Abnormal ~ Stage + factor(Year) + RoadType + RoadDistance, 
+##     family = binomial(link = &quot;logit&quot;), data = frogs, na.action = &quot;na.fail&quot;)
+## ---
+## Model selection table 
+##      (Int) fct(Yer)       RdD RdT Stg df    logLik    AIC delta weight
+## 16 -0.3509        + 0.0005653   +   + 16 -2350.719 4733.4  0.00  0.590
+## 12 -0.3426        + 0.0005161       + 15 -2352.740 4735.5  2.04  0.213
+## 14 -0.3749        +             +   + 15 -2353.232 4736.5  3.03  0.130
+## 10 -0.3653        +                 + 14 -2354.889 4737.8  4.34  0.067
+## 15 -1.4510          0.0004694   +   +  7 -2368.278 4750.6 17.12  0.000
+## Models ranked by AIC(x)</code></pre>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" title="1">afm &lt;-<span class="st"> </span><span class="kw">model.avg</span>(mod.sel, <span class="dt">fit=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb110-2" title="2"><span class="kw">coef</span>(afm)</a></code></pre></div>
+<pre><code>##      (Intercept) factor(Year)2001 factor(Year)2002 factor(Year)2003 
+##    -0.3535582013    -1.4237089763    -1.3808976121    -0.9748675931 
+## factor(Year)2004 factor(Year)2005 factor(Year)2006 factor(Year)2010 
+##    -1.4331851168    -1.1210426509    -1.1258664109    -0.5125316516 
+## factor(Year)2011 factor(Year)2012     RoadDistance    RoadTypePaved 
+##    -1.1735417137    -1.0548360421     0.0005522245    -0.1658639112 
+##    StageStage 43    StageStage 44    StageStage 45    StageStage 46 
+##     0.1093083878    -0.1003833764    -0.4577677670    -0.5886749698</code></pre>
+</div>
+<div id="prediction-plots-1" class="section level2">
+<h2><span class="header-section-number">8.10</span> Prediction Plots</h2>
+<p>Shown here are example prediction plots for Stage and RoadDistance. First, check out a summary table for the variables in the model to help determine fixed values.</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">frogs<span class="op">$</span>Year &lt;-<span class="st"> </span><span class="kw">factor</span>(frogs<span class="op">$</span>Year)</a>
+<a class="sourceLine" id="cb112-2" title="2"><span class="kw">summary</span>(frogs[,<span class="kw">c</span>(<span class="st">&#39;RoadDistance&#39;</span>, <span class="st">&#39;RoadType&#39;</span>, <span class="st">&#39;Stage&#39;</span>,</a>
+<a class="sourceLine" id="cb112-3" title="3">                 <span class="st">&#39;Year&#39;</span>)])</a></code></pre></div>
+<pre><code>##   RoadDistance      RoadType         Stage           Year     
+##  Min.   :  3.00   Gravel:3293   Stage 42: 829   2012   :1561  
+##  1st Qu.: 15.00   Paved :2078   Stage 43:1417   2011   :1433  
+##  Median : 31.00                 Stage 44: 901   2005   : 683  
+##  Mean   : 99.38                 Stage 45:1191   2006   : 647  
+##  3rd Qu.: 83.00                 Stage 46:1033   2004   : 605  
+##  Max.   :781.00                                 2010   : 300  
+##                                                 (Other): 142</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1"><span class="kw">require</span>(s245)</a>
+<a class="sourceLine" id="cb114-2" title="2"><span class="kw">pred_plot</span>(afm, <span class="st">&#39;Stage&#39;</span>, <span class="dt">data =</span> frogs)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-63-1.png" width="624" /></p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" title="1"><span class="kw">pred_plot</span>(afm, <span class="st">&#39;RoadDistance&#39;</span>, <span class="dt">data =</span> frogs)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-64-1.png" width="624" /></p>
+<p>How does this compare to the raw data?</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1"><span class="kw">tally</span>(<span class="op">~</span>Abnormal<span class="op">|</span>Stage, <span class="dt">data=</span>frogs, <span class="dt">format=</span><span class="st">&#39;prop&#39;</span>)</a></code></pre></div>
+<pre><code>##         Stage
+## Abnormal  Stage 42  Stage 43  Stage 44  Stage 45  Stage 46
+##      No  0.8118215 0.7960480 0.8279689 0.8715365 0.8780252
+##      Yes 0.1881785 0.2039520 0.1720311 0.1284635 0.1219748</code></pre>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" title="1">bins &lt;-<span class="st"> </span><span class="kw">cut</span>(frogs<span class="op">$</span>RoadDistance,<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">250</span>,<span class="dv">800</span>))</a>
+<a class="sourceLine" id="cb118-2" title="2"><span class="kw">prop</span>(<span class="op">~</span>Abnormal<span class="op">==</span><span class="st">&#39;Yes&#39;</span><span class="op">|</span>bins, <span class="dt">data=</span>frogs)</a></code></pre></div>
+<pre><code>##    prop_TRUE.(0,25]   prop_TRUE.(25,50]  prop_TRUE.(50,100] 
+##           0.1516080           0.1925424           0.1379747 
+## prop_TRUE.(100,250] prop_TRUE.(250,800] 
+##           0.1694215           0.1613876</code></pre>
+<p>But…remember, in the raw data, other predictors may also be influencing the patterns that you see in the data. In addition, we can look at the width of the confidence bands on the model estimates, and look at the model selection results to get an idea of whether this predictor is really important in the model or not. This is just an example to get you thinking about what prediction plots are showing you and what you can do with them!</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="model-averaging.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/09-BinaryRegression1.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["s245-notes.pdf", "s245-notes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

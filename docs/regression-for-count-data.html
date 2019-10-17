@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-10-08" />
+<meta name="date" content="2019-10-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -225,6 +225,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="8" data-path="binary-regression.html"><a href="binary-regression.html"><i class="fa fa-check"></i><b>8</b> Binary Regression</a><ul>
+<li class="chapter" data-level="8.1" data-path="binary-regression.html"><a href="binary-regression.html#data-source-1"><i class="fa fa-check"></i><b>8.1</b> Data Source</a></li>
+<li class="chapter" data-level="8.2" data-path="binary-regression.html"><a href="binary-regression.html#logistic-regression"><i class="fa fa-check"></i><b>8.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="8.3" data-path="binary-regression.html"><a href="binary-regression.html#checking-the-data-setup"><i class="fa fa-check"></i><b>8.3</b> Checking the data setup</a></li>
+<li class="chapter" data-level="8.4" data-path="binary-regression.html"><a href="binary-regression.html#fitting-a-saturated-model"><i class="fa fa-check"></i><b>8.4</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="8.5" data-path="binary-regression.html"><a href="binary-regression.html#link-functions"><i class="fa fa-check"></i><b>8.5</b> Link Functions</a></li>
+<li class="chapter" data-level="8.6" data-path="binary-regression.html"><a href="binary-regression.html#conditions-1"><i class="fa fa-check"></i><b>8.6</b> Conditions</a></li>
+<li class="chapter" data-level="8.7" data-path="binary-regression.html"><a href="binary-regression.html#model-assessment-plots"><i class="fa fa-check"></i><b>8.7</b> Model Assessment Plots</a></li>
+<li class="chapter" data-level="8.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>8.8</b> Odds Ratios</a></li>
+<li class="chapter" data-level="8.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>8.9</b> Model Selection</a></li>
+<li class="chapter" data-level="8.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>8.10</b> Prediction Plots</a></li>
+</ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -258,7 +270,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div id="a-bad-idea-multiple-linear-regression-model" class="section level2">
 <h2><span class="header-section-number">6.2</span> A bad idea: multiple linear regression model</h2>
-<p><img src="bookdown-demo_files/figure-html/beedata-2-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/beedata-2-1.png" width="624" /></p>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" title="1"><span class="kw">summary</span>(beevisits)</a></code></pre></div>
 <pre><code>##  colony                    beename        treatment  target.colour
 ##  W:126   giantbeeYsucroseyellow:  3   Quinine  :90   blue  :138   
@@ -302,8 +314,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## Residual standard error: 2.942 on 263 degrees of freedom
 ## Multiple R-squared:  0.5763, Adjusted R-squared:  0.5667 
 ## F-statistic: 59.63 on 6 and 263 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p><img src="bookdown-demo_files/figure-html/assess1-b-1.png" width="624" /></p>
-<p><img src="bookdown-demo_files/figure-html/assess2-b-1.png" width="624" /><img src="bookdown-demo_files/figure-html/assess2-b-2.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/assess1-b-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/assess2-b-1.png" width="624" /><img src="s245-notes_files/figure-html/assess2-b-2.png" width="624" /></p>
 </div>
 <div id="problems-with-the-linear-model" class="section level2">
 <h2><span class="header-section-number">6.3</span> Problems with the linear model</h2>
@@ -367,7 +379,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3><span class="header-section-number">6.4.3</span> Model Assessment</h3>
 <p>Which conditions can we check already?</p>
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(prm, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>), <span class="dt">main=</span><span class="st">&#39;bee.lm Residuals&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-37-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-37-1.png" width="624" /></p>
 <p>What does <code>type='response'</code> mean?</p>
 <p>This means that the residuals are reported on the same scale as the response variable (that is, in units of counts, rather than log(counts)).</p>
 <div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb62-1" title="1">beevisits &lt;-<span class="st"> </span>beevisits <span class="op">%&gt;%</span></a>
@@ -376,7 +388,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb62-4" title="4"></a>
 <a class="sourceLine" id="cb62-5" title="5"><span class="kw">gf_point</span>(pm.resids <span class="op">~</span><span class="st"> </span>pm.fitted, <span class="dt">data=</span>beevisits) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb62-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Residuals&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-38-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-38-1.png" width="624" /></p>
 <p>This trumpet pattern is <em>what we expect!</em> Why?</p>
 <p>If the variance equals the mean, then as the mean (fitted value) goes up, then the variance (spread of residuals) will also be larger.</p>
 <p>But how can we decide if it’s the <em>right amount</em> of increase in variance with increase in fitted value? We can compute <strong>Pearson</strong> residuals, which are scaled by the <em>expected variance</em>. <strong>The Pearson residuals should have approximately constant variance as a function of fitted values, and a standard deviation of about 1.</strong></p>
@@ -385,7 +397,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb63-3" title="3"></a>
 <a class="sourceLine" id="cb63-4" title="4"><span class="kw">gf_point</span>( pm.pearson.resids <span class="op">~</span><span class="st"> </span>pm.fitted, <span class="dt">data=</span>beevisits) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb63-5" title="5"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Pearson Residuals&#39;</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-39-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-39-1.png" width="624" /></p>
 <p>A more complex solution: we could divide the fitted values into bins (choice of bin size is somewhat arbitrary; generally, you want them as small as possible, but still containing enough observations per bin to get good mean and variance estimates). In each bin, compute the mean and the variance of the residuals. Plot these means vs these variances and see if the slope is 1 (and intercept 0).</p>
 <p>First, split the fitted values into 5 bins:</p>
 <div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb64-1" title="1">beevisits &lt;-<span class="st"> </span>beevisits <span class="op">%&gt;%</span></a>
@@ -425,7 +437,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb68-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Mean Fitted Value&#39;</span>, </a>
 <a class="sourceLine" id="cb68-3" title="3">          <span class="dt">y=</span><span class="st">&#39;Variance of Residuals&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb68-4" title="4"><span class="st">   </span><span class="kw">gf_abline</span>(<span class="dt">slope=</span><span class="dv">1</span>, <span class="dt">intercept=</span><span class="dv">0</span>)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-41-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-41-1.png" width="624" /></p>
 <p><strong>That’s a bit of a pain, and still a judgment call at the end.</strong></p>
 <p>How <em>else</em> can we check the Mean = Variance condition?</p>
 </div>
@@ -681,7 +693,7 @@ Another way of measuring the differences between models is to use model <em>weig
 <a class="sourceLine" id="cb87-15" title="15"><span class="kw">gf_point</span>(preds <span class="op">~</span><span class="st"> </span>colony, <span class="dt">data=</span>newdata) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb87-16" title="16"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Colony&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Predicted</span><span class="ch">\n</span><span class="st">N. Visits&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb87-17" title="17"><span class="st">  </span><span class="kw">gf_errorbar</span>(CIlow <span class="op">+</span><span class="st"> </span>CIup <span class="op">~</span><span class="st"> </span>colony, <span class="dt">data=</span>newdata)</a></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-50-1.png" width="624" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-50-1.png" width="624" /></p>
 <p>If we had a quantitative predictor instead, the process would be similar, except when we define <code>newdata</code>, we would have to choose a range and granularity for which to make predictions. For example, imagine if bee length in mm was one of our predictors, and we wanted predictions for lengths between 0.5 and 3 mm (with a value every 0.05mm). We might begin:</p>
 <div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" title="1">newdata &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(<span class="dt">bee.length =</span> <span class="kw">seq</span>(<span class="dt">from=</span><span class="fl">0.05</span>, <span class="dt">by=</span><span class="fl">0.05</span>, <span class="dt">to=</span><span class="dv">3</span>),</a>
 <a class="sourceLine" id="cb88-2" title="2">                       <span class="dt">colony=</span><span class="kw">c</span>(<span class="st">&#39;W&#39;</span>),</a>
@@ -744,7 +756,7 @@ gitbook.start({
 "link": null,
 "text": null
 },
-"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"download": ["s245-notes.pdf", "s245-notes.epub"],
 "toc": {
 "collapse": "subsection"
 }
