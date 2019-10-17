@@ -271,15 +271,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Predictors can interact in <em>any</em> type of regression model (so this chapter could really be placed almost anywhere).</p>
 <div id="example-quantitative-categorical-interaction" class="section level2">
 <h2><span class="header-section-number">8.1</span> Example: Quantitative-Categorical Interaction</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">gf_point</span>(eval <span class="op">~</span><span class="st"> </span>beauty, <span class="dt">color =</span> <span class="op">~</span>female, <span class="dt">shape =</span> <span class="op">~</span>female, <span class="dt">data =</span> teach_beauty) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="st">  </span><span class="kw">gf_lm</span>()</a></code></pre></div>
-<p><img src="s245-notes_files/figure-html/unnamed-chunk-1-1.png" width="624" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" title="1"><span class="kw">gf_point</span>(eval <span class="op">~</span><span class="st"> </span>beauty, <span class="dt">color =</span> <span class="op">~</span>female, <span class="dt">shape =</span> <span class="op">~</span>female, <span class="dt">data =</span> teach_beauty) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb98-2" title="2"><span class="st">  </span><span class="kw">gf_lm</span>()</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-57-1.png" width="624" style="display: block; margin: auto;" /></p>
 <p><code>Eval</code> may go up as <code>beauty</code> increases, but the <em>slope</em> of the relationship is <em>different</em> for females and non-females. This is an <strong>interaction</strong> between <code>beauty</code> and <code>female</code>.</p>
 </div>
 <div id="categorical-categorical-interaction-example" class="section level2">
 <h2><span class="header-section-number">8.2</span> Categorical-Categorical Interaction Example</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">gf_boxplot</span>(eval <span class="op">~</span><span class="st"> </span>formal <span class="op">|</span><span class="st"> </span>female, <span class="dt">data =</span> teach_beauty)</a></code></pre></div>
-<p><img src="s245-notes_files/figure-html/unnamed-chunk-2-1.png" width="624" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" title="1"><span class="kw">gf_boxplot</span>(eval <span class="op">~</span><span class="st"> </span>formal <span class="op">|</span><span class="st"> </span>female, <span class="dt">data =</span> teach_beauty)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-58-1.png" width="624" style="display: block; margin: auto;" /></p>
 <p>Perhaps <em>Informal Dress</em> affects <code>eval</code> scores, but really only for non-females – for females, <code>formal</code> dress doesn’t make a difference either way.</p>
 <p>The effect of <code>formal</code> dress is <em>different</em> depending on the value of <code>female</code>. This is an interaction between <code>formal</code> and <code>female</code>.</p>
 </div>
@@ -290,11 +290,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="r-code" class="section level2">
 <h2><span class="header-section-number">8.4</span> R code</h2>
 <p>If you want to include an interaction term in a model in R, use a <code>*</code> rather than a <code>+</code> between the predictors that (may) interact. For example, based on our exploration above, we might try:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">beauty_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(eval <span class="op">~</span><span class="st"> </span>beauty<span class="op">*</span>female <span class="op">+</span></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="st">                   </span>formal<span class="op">*</span>female, </a>
-<a class="sourceLine" id="cb3-3" title="3">                 <span class="dt">data =</span> teach_beauty, </a>
-<a class="sourceLine" id="cb3-4" title="4">                 <span class="dt">na.action =</span> <span class="st">&#39;na.fail&#39;</span>)</a>
-<a class="sourceLine" id="cb3-5" title="5"><span class="kw">summary</span>(beauty_mod)</a></code></pre></div>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" title="1">beauty_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(eval <span class="op">~</span><span class="st"> </span>beauty<span class="op">*</span>female <span class="op">+</span></a>
+<a class="sourceLine" id="cb100-2" title="2"><span class="st">                   </span>formal<span class="op">*</span>female, </a>
+<a class="sourceLine" id="cb100-3" title="3">                 <span class="dt">data =</span> teach_beauty, </a>
+<a class="sourceLine" id="cb100-4" title="4">                 <span class="dt">na.action =</span> <span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb100-5" title="5"><span class="kw">summary</span>(beauty_mod)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## lm(formula = eval ~ beauty * female + formal * female, data = teach_beauty, 
@@ -327,8 +327,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## F-statistic: 7.226 on 5 and 457 DF,  p-value: 1.587e-06</code></pre>
 <p>Notice the additional indicator variables in the coefficient table/model equation. Now we need to <em>adjust</em> the effects of the <code>beauty</code> predictor depending on the values of <code>formal</code> and <code>female</code>, which interact with it.</p>
 <p>We can use IC-based model selection to determine whether including these interactions in a model is important or not.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">require</span>(MuMIn)</a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="kw">dredge</span>(beauty_mod, <span class="dt">rank =</span> <span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb102-2" title="2"><span class="kw">dredge</span>(beauty_mod, <span class="dt">rank =</span> <span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
 <pre><code>## Global model call: lm(formula = eval ~ beauty * female + formal * female, data = teach_beauty, 
 ##     na.action = &quot;na.fail&quot;)
 ## ---
@@ -407,6 +407,20 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>
