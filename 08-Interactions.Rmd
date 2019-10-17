@@ -23,7 +23,7 @@ teach_beauty <- read.csv('http://www.stat.columbia.edu/~gelman/arm/examples/beau
          language = ifelse(nonenglish == 1, 'English', 'Other Language'),
          formal = ifelse(formal == 1, 'Formal Dress', 'Informal Dress'),
          female = ifelse(female == 1, 'female', 'not female')) %>%
-  select(beauty, eval, race_eth, language, age, students, formal, profnumber, female)
+  dplyr::select(beauty, eval, race_eth, language, age, students, formal, profnumber, female)
 ```
 
 # Interactions

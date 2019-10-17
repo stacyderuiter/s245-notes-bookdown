@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Interactions | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Interactions | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Interactions | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-10-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="model-averaging.html"/>
+<link rel="next" href="binary-regression.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT 245 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#why-are-we-doing-this-again"><i class="fa fa-check"></i><b>2.7</b> Why are we doing this again?</a></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#shortcut-method---with-uncertainty"><i class="fa fa-check"></i><b>2.8</b> Shortcut Method - With Uncertainty</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="linear-regression.html"><a href="linear-regression.html#anatomy-of-a-confidence-interval"><i class="fa fa-check"></i><b>2.8.1</b> Anatomy of a Confidence Interval</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#diy-method"><i class="fa fa-check"></i><b>2.9</b> DIY Method</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-a-hypothetical-dataset"><i class="fa fa-check"></i><b>2.9.1</b> Creating a hypothetical dataset</a></li>
+<li class="chapter" data-level="2.9.2" data-path="linear-regression.html"><a href="linear-regression.html#making-the-plot"><i class="fa fa-check"></i><b>2.9.2</b> Making the plot</a></li>
+<li class="chapter" data-level="2.9.3" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors"><i class="fa fa-check"></i><b>2.9.3</b> Categorical predictors</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html"><i class="fa fa-check"></i><b>3</b> Model Selection Using Information Criteria</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#data-and-model"><i class="fa fa-check"></i><b>3.1</b> Data and Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#calculations"><i class="fa fa-check"></i><b>3.2</b> Calculations</a></li>
+<li class="chapter" data-level="3.3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#decisions-with-ics"><i class="fa fa-check"></i><b>3.3</b> Decisions with ICs</a></li>
+<li class="chapter" data-level="3.4" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#all-possible-subsets-selection"><i class="fa fa-check"></i><b>3.4</b> All-possible-subsets Selection</a></li>
+<li class="chapter" data-level="3.5" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#which-ic-should-i-use"><i class="fa fa-check"></i><b>3.5</b> Which IC should I use?</a></li>
+<li class="chapter" data-level="3.6" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#quantities-derived-from-aic"><i class="fa fa-check"></i><b>3.6</b> Quantities derived from AIC</a></li>
+<li class="chapter" data-level="3.7" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#important-caution"><i class="fa fa-check"></i><b>3.7</b> Important Caution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="likelihood.html"><a href="likelihood.html"><i class="fa fa-check"></i><b>4</b> Likelihood</a><ul>
+<li class="chapter" data-level="4.1" data-path="likelihood.html"><a href="likelihood.html#data-1"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="likelihood.html"><a href="likelihood.html#review---the-normal-probability-density-function-pdf"><i class="fa fa-check"></i><b>4.2</b> Review - the Normal probability density function (PDF)</a></li>
+<li class="chapter" data-level="4.3" data-path="likelihood.html"><a href="likelihood.html#a-simple-model"><i class="fa fa-check"></i><b>4.3</b> A simple model</a></li>
+<li class="chapter" data-level="4.4" data-path="likelihood.html"><a href="likelihood.html#using-the-model-to-make-predictions"><i class="fa fa-check"></i><b>4.4</b> Using the Model to Make Predictions</a></li>
+<li class="chapter" data-level="4.5" data-path="likelihood.html"><a href="likelihood.html#likelihood-to-the-rescue"><i class="fa fa-check"></i><b>4.5</b> Likelihood to the Rescue!</a></li>
+<li class="chapter" data-level="4.6" data-path="likelihood.html"><a href="likelihood.html#how-does-this-relate-to-linear-regression"><i class="fa fa-check"></i><b>4.6</b> How does this relate to linear regression?</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="likelihood.html"><a href="likelihood.html#model-equation"><i class="fa fa-check"></i><b>4.6.1</b> Model Equation:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="likelihood.html"><a href="likelihood.html#likelihood-of-a-dataset-given-a-model"><i class="fa fa-check"></i><b>4.7</b> Likelihood of a dataset, given a model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html"><i class="fa fa-check"></i><b>5</b> PDFs and PMFs</a><ul>
+<li class="chapter" data-level="5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beyond-normal"><i class="fa fa-check"></i><b>5.1</b> Beyond Normal</a></li>
+<li class="chapter" data-level="5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#types-of-probability-distributions"><i class="fa fa-check"></i><b>5.2</b> Types of probability distributions</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#continuous-distributions"><i class="fa fa-check"></i><b>5.2.1</b> Continuous distributions</a></li>
+<li class="chapter" data-level="5.2.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#discrete-distributions"><i class="fa fa-check"></i><b>5.2.2</b> Discrete Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#relevant-features-of-distributions"><i class="fa fa-check"></i><b>5.3</b> Relevant Features of Distributions</a></li>
+<li class="chapter" data-level="5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-continuous-distributions"><i class="fa fa-check"></i><b>5.4</b> Examples of Continuous Distributions</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#normal"><i class="fa fa-check"></i><b>5.4.1</b> Normal</a></li>
+<li class="chapter" data-level="5.4.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#gamma"><i class="fa fa-check"></i><b>5.4.2</b> Gamma</a></li>
+<li class="chapter" data-level="5.4.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beta"><i class="fa fa-check"></i><b>5.4.3</b> Beta</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-discrete-distributions"><i class="fa fa-check"></i><b>5.5</b> Examples of Discrete Distributions</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#binomial"><i class="fa fa-check"></i><b>5.5.1</b> Binomial</a></li>
+<li class="chapter" data-level="5.5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#poisson"><i class="fa fa-check"></i><b>5.5.2</b> Poisson</a></li>
+<li class="chapter" data-level="5.5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#negative-binomial"><i class="fa fa-check"></i><b>5.5.3</b> Negative Binomial</a></li>
+<li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-averaging.html"><a href="model-averaging.html"><i class="fa fa-check"></i><b>7</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.1" data-path="model-averaging.html"><a href="model-averaging.html#data-school-survey-on-crime-and-safety"><i class="fa fa-check"></i><b>7.1</b> Data: School Survey on Crime and Safety</a></li>
+<li class="chapter" data-level="7.2" data-path="model-averaging.html"><a href="model-averaging.html#modelling-number-of-violent-incidents-per-school"><i class="fa fa-check"></i><b>7.2</b> Modelling number of violent incidents per school</a></li>
+<li class="chapter" data-level="7.3" data-path="model-averaging.html"><a href="model-averaging.html#model-averaging-1"><i class="fa fa-check"></i><b>7.3</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="model-averaging.html"><a href="model-averaging.html#getting-the-averaged-model"><i class="fa fa-check"></i><b>7.3.1</b> Getting the Averaged Model</a></li>
+<li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interactions.html"><a href="interactions.html"><i class="fa fa-check"></i><b>8</b> Interactions</a><ul>
+<li class="chapter" data-level="8.1" data-path="interactions.html"><a href="interactions.html#example-quantitative-categorical-interaction"><i class="fa fa-check"></i><b>8.1</b> Example: Quantitative-Categorical Interaction</a></li>
+<li class="chapter" data-level="8.2" data-path="interactions.html"><a href="interactions.html#categorical-categorical-interaction-example"><i class="fa fa-check"></i><b>8.2</b> Categorical-Categorical Interaction Example</a></li>
+<li class="chapter" data-level="8.3" data-path="interactions.html"><a href="interactions.html#quant-quant-interactions"><i class="fa fa-check"></i><b>8.3</b> Quant-Quant interactions?</a></li>
+<li class="chapter" data-level="8.4" data-path="interactions.html"><a href="interactions.html#r-code"><i class="fa fa-check"></i><b>8.4</b> R code</a></li>
+<li class="chapter" data-level="8.5" data-path="interactions.html"><a href="interactions.html#cautionary-note"><i class="fa fa-check"></i><b>8.5</b> Cautionary note</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="binary-regression.html"><a href="binary-regression.html"><i class="fa fa-check"></i><b>9</b> Binary Regression</a><ul>
+<li class="chapter" data-level="9.1" data-path="binary-regression.html"><a href="binary-regression.html#data-source-1"><i class="fa fa-check"></i><b>9.1</b> Data Source</a></li>
+<li class="chapter" data-level="9.2" data-path="binary-regression.html"><a href="binary-regression.html#logistic-regression"><i class="fa fa-check"></i><b>9.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="9.3" data-path="binary-regression.html"><a href="binary-regression.html#checking-the-data-setup"><i class="fa fa-check"></i><b>9.3</b> Checking the data setup</a></li>
+<li class="chapter" data-level="9.4" data-path="binary-regression.html"><a href="binary-regression.html#fitting-a-saturated-model"><i class="fa fa-check"></i><b>9.4</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="9.5" data-path="binary-regression.html"><a href="binary-regression.html#link-functions"><i class="fa fa-check"></i><b>9.5</b> Link Functions</a></li>
+<li class="chapter" data-level="9.6" data-path="binary-regression.html"><a href="binary-regression.html#conditions-1"><i class="fa fa-check"></i><b>9.6</b> Conditions</a></li>
+<li class="chapter" data-level="9.7" data-path="binary-regression.html"><a href="binary-regression.html#model-assessment-plots"><i class="fa fa-check"></i><b>9.7</b> Model Assessment Plots</a></li>
+<li class="chapter" data-level="9.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>9.8</b> Odds Ratios</a></li>
+<li class="chapter" data-level="9.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>9.9</b> Model Selection</a></li>
+<li class="chapter" data-level="9.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>9.10</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="interactions" class="section level1">
+<h1><span class="header-section-number">Chapter 8</span> Interactions</h1>
+<p>Two predictors <strong>interact</strong> when you need to know values of <em>both</em> in order to make an accurate prediction of the response variable value.</p>
+<p>Predictors can interact in <em>any</em> type of regression model (so this chapter could really be placed almost anywhere).</p>
+<div id="example-quantitative-categorical-interaction" class="section level2">
+<h2><span class="header-section-number">8.1</span> Example: Quantitative-Categorical Interaction</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">gf_point</span>(eval <span class="op">~</span><span class="st"> </span>beauty, <span class="dt">color =</span> <span class="op">~</span>female, <span class="dt">shape =</span> <span class="op">~</span>female, <span class="dt">data =</span> teach_beauty) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="st">  </span><span class="kw">gf_lm</span>()</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-1-1.png" width="624" style="display: block; margin: auto;" /></p>
+<p><code>Eval</code> may go up as <code>beauty</code> increases, but the <em>slope</em> of the relationship is <em>different</em> for females and non-females. This is an <strong>interaction</strong> between <code>beauty</code> and <code>female</code>.</p>
+</div>
+<div id="categorical-categorical-interaction-example" class="section level2">
+<h2><span class="header-section-number">8.2</span> Categorical-Categorical Interaction Example</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">gf_boxplot</span>(eval <span class="op">~</span><span class="st"> </span>formal <span class="op">|</span><span class="st"> </span>female, <span class="dt">data =</span> teach_beauty)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-2-1.png" width="624" style="display: block; margin: auto;" /></p>
+<p>Perhaps <em>Informal Dress</em> affects <code>eval</code> scores, but really only for non-females – for females, <code>formal</code> dress doesn’t make a difference either way.</p>
+<p>The effect of <code>formal</code> dress is <em>different</em> depending on the value of <code>female</code>. This is an interaction between <code>formal</code> and <code>female</code>.</p>
+</div>
+<div id="quant-quant-interactions" class="section level2">
+<h2><span class="header-section-number">8.3</span> Quant-Quant interactions?</h2>
+<p>Yes, these are possible, but very hard to visualize and conceptualize. Basically, it would mean that the slope of the line for one predictor changes gradually as the value of a second variable changes.</p>
+</div>
+<div id="r-code" class="section level2">
+<h2><span class="header-section-number">8.4</span> R code</h2>
+<p>If you want to include an interaction term in a model in R, use a <code>*</code> rather than a <code>+</code> between the predictors that (may) interact. For example, based on our exploration above, we might try:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">beauty_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(eval <span class="op">~</span><span class="st"> </span>beauty<span class="op">*</span>female <span class="op">+</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="st">                   </span>formal<span class="op">*</span>female, </a>
+<a class="sourceLine" id="cb3-3" title="3">                 <span class="dt">data =</span> teach_beauty, </a>
+<a class="sourceLine" id="cb3-4" title="4">                 <span class="dt">na.action =</span> <span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="kw">summary</span>(beauty_mod)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = eval ~ beauty * female + formal * female, data = teach_beauty, 
+##     na.action = &quot;na.fail&quot;)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.83418 -0.36763  0.04966  0.39789  1.07161 
+## 
+## Coefficients:
+##                                       Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                            3.84839    0.10813  35.591   &lt;2e-16
+## beauty                                 0.09021    0.04744   1.902   0.0578
+## femalenot female                       0.27615    0.13130   2.103   0.0360
+## formalInformal Dress                   0.05751    0.11574   0.497   0.6195
+## beauty:femalenot female                0.10841    0.06452   1.680   0.0936
+## femalenot female:formalInformal Dress -0.08378    0.14276  -0.587   0.5576
+##                                          
+## (Intercept)                           ***
+## beauty                                .  
+## femalenot female                      *  
+## formalInformal Dress                     
+## beauty:femalenot female               .  
+## femalenot female:formalInformal Dress    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.5371 on 457 degrees of freedom
+## Multiple R-squared:  0.07326,    Adjusted R-squared:  0.06312 
+## F-statistic: 7.226 on 5 and 457 DF,  p-value: 1.587e-06</code></pre>
+<p>Notice the additional indicator variables in the coefficient table/model equation. Now we need to <em>adjust</em> the effects of the <code>beauty</code> predictor depending on the values of <code>formal</code> and <code>female</code>, which interact with it.</p>
+<p>We can use IC-based model selection to determine whether including these interactions in a model is important or not.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">dredge</span>(beauty_mod, <span class="dt">rank =</span> <span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
+<pre><code>## Global model call: lm(formula = eval ~ beauty * female + formal * female, data = teach_beauty, 
+##     na.action = &quot;na.fail&quot;)
+## ---
+## Model selection table 
+##    (Int)     bty fml frm bty:fml fml:frm df   logLik   AIC delta weight
+## 12 3.899 0.08762   +           +          5 -366.309 742.6  0.00  0.414
+## 4  3.897 0.14860   +                      4 -367.868 743.7  1.12  0.236
+## 16 3.896 0.08773   +   +       +          6 -366.308 744.6  2.00  0.152
+## 8  3.897 0.14860   +   +                  5 -367.868 745.7  3.12  0.087
+## 32 3.848 0.09021   +   +       +       +  7 -366.134 746.3  3.65  0.067
+## 24 3.833 0.14880   +   +               +  6 -367.560 747.1  4.50  0.044
+## 2  4.010 0.13300                          3 -375.323 756.6 14.03  0.000
+## 6  4.032 0.13170       +                  4 -375.249 758.5 15.88  0.000
+## 3  3.901           +                      3 -378.503 763.0 20.39  0.000
+## 7  3.932           +   +                  4 -378.367 764.7 22.12  0.000
+## 23 3.872           +   +               +  5 -378.103 766.2 23.59  0.000
+## 1  3.998                                  2 -383.747 771.5 28.88  0.000
+## 5  4.044               +                  3 -383.431 772.9 30.24  0.000
+## Models ranked by AIC(x)</code></pre>
+<p>In the case of the particular model we fitted, the “best” model starting from this full model is actually one <em>without</em> interactions. If you want to explore the dataset further, you will find that actually a model where <code>age</code>, <code>beauty</code> AND <code>female</code> interact fits much better…</p>
+</div>
+<div id="cautionary-note" class="section level2">
+<h2><span class="header-section-number">8.5</span> Cautionary note</h2>
+<p>If you include an interaction in a regression model, you <strong>must</strong> also include the corresponding “fixed effects” – this means if you have an indicator variable/slope term for an interaction in your model, you must also have the indicator variables/slopes corresponding to the individual predictors. Our fitting functions (<code>lm()</code>, <code>glm()</code>, <code>glmmTMB()</code>, etc.) are smart enough to ensure this for you. So is <code>dredge()</code>. (It would take effort to mess this up in R.)</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="model-averaging.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="binary-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/08-Interactions.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["s245-notes.pdf", "s245-notes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
