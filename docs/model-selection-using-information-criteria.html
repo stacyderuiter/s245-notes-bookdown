@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 3 Model Selection Using Information Criteria | STAT 245 Course Notes</title>
   <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
-  <meta name="generator" content="bookdown 0.13 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 3 Model Selection Using Information Criteria | STAT 245 Course Notes" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-10-17" />
+<meta name="date" content="2019-10-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,6 +40,9 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -243,6 +246,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>9.8</b> Odds Ratios</a></li>
 <li class="chapter" data-level="9.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>9.9</b> Model Selection</a></li>
 <li class="chapter" data-level="9.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>9.10</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html"><i class="fa fa-check"></i><b>10</b> Binary regression: Data with more than one trial per row</a><ul>
+<li class="chapter" data-level="10.1" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#data-2"><i class="fa fa-check"></i><b>10.1</b> Data</a></li>
+<li class="chapter" data-level="10.2" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#checking-the-data-setup-1"><i class="fa fa-check"></i><b>10.2</b> Checking the data setup</a></li>
+<li class="chapter" data-level="10.3" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#fitting-a-saturated-model-1"><i class="fa fa-check"></i><b>10.3</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="10.4" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#checking-linearity"><i class="fa fa-check"></i><b>10.4</b> Checking linearity</a></li>
+<li class="chapter" data-level="10.5" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#model-assessment-1"><i class="fa fa-check"></i><b>10.5</b> Model Assessment</a></li>
+<li class="chapter" data-level="10.6" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#model-selection-1"><i class="fa fa-check"></i><b>10.6</b> Model Selection</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -604,11 +615,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({

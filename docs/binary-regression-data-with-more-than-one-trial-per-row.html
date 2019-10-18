@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 8 Interactions | STAT 245 Course Notes</title>
+  <title>Chapter 10 Binary regression: Data with more than one trial per row | STAT 245 Course Notes</title>
   <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
   <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 8 Interactions | STAT 245 Course Notes" />
+  <meta property="og:title" content="Chapter 10 Binary regression: Data with more than one trial per row | STAT 245 Course Notes" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 8 Interactions | STAT 245 Course Notes" />
+  <meta name="twitter:title" content="Chapter 10 Binary regression: Data with more than one trial per row | STAT 245 Course Notes" />
   
   <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="model-averaging.html"/>
-<link rel="next" href="binary-regression.html"/>
+<link rel="prev" href="binary-regression.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -276,94 +276,216 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="interactions" class="section level1">
-<h1><span class="header-section-number">Chapter 8</span> Interactions</h1>
-<p>Two predictors <strong>interact</strong> when you need to know values of <em>both</em> in order to make an accurate prediction of the response variable value.</p>
-<p>Predictors can interact in <em>any</em> type of regression model (so this chapter could really be placed almost anywhere).</p>
-<div id="example-quantitative-categorical-interaction" class="section level2">
-<h2><span class="header-section-number">8.1</span> Example: Quantitative-Categorical Interaction</h2>
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" title="1"><span class="kw">gf_point</span>(eval <span class="op">~</span><span class="st"> </span>beauty, <span class="dt">color =</span> <span class="op">~</span>female, <span class="dt">shape =</span> <span class="op">~</span>female, <span class="dt">data =</span> teach_beauty) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb98-2" title="2"><span class="st">  </span><span class="kw">gf_lm</span>()</a></code></pre></div>
-<p><img src="s245-notes_files/figure-html/unnamed-chunk-57-1.png" width="624" style="display: block; margin: auto;" /></p>
-<p><code>Eval</code> may go up as <code>beauty</code> increases, but the <em>slope</em> of the relationship is <em>different</em> for females and non-females. This is an <strong>interaction</strong> between <code>beauty</code> and <code>female</code>.</p>
+<div id="binary-regression-data-with-more-than-one-trial-per-row" class="section level1">
+<h1><span class="header-section-number">Chapter 10</span> Binary regression: Data with more than one trial per row</h1>
+<p>So far, the dataset we used for binary regression had one “trial” per row: there was a categorical variable in the dataset with two categories, “success” and “failure” (for the frogs: Abnormal and Normal). We wanted to estimate the probability of “success” as a function of several predictors.</p>
+<p>If there are multiple trials that all have the same predictor-variable values, we can group them together into one row of data, and just record the number of “trials” and the number of “successes”. (From this, we can also get the number of “failures” = “trials” - “successes”, if needed.) If we have a dataset that is stored in this format, we can still use <code>glm()</code> to fit a binary regression model. The R code to fit the model changes just a bit, and we are able to do better model assessment a bit more easily.</p>
+<p>An example follows.</p>
+<div id="data-2" class="section level2">
+<h2><span class="header-section-number">10.1</span> Data</h2>
+<p>The dataset used here is a reality-based simulated EIA dataset on duck sightings before and after windfarm installation (<code>impact</code>). Hourly, observers did up to 200 scans of the study area, and for each scan recorded whether duck(s) were seen (a success) or not (a failure).</p>
+<p>The data file can be accessed online at:\ </p>
+<pre><code>##   successes trials day month impact
+## 1       172    200   7     1      0
+## 2       190    200  13     1      0
+## 3       191    200  27     1      0</code></pre>
 </div>
-<div id="categorical-categorical-interaction-example" class="section level2">
-<h2><span class="header-section-number">8.2</span> Categorical-Categorical Interaction Example</h2>
-<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" title="1"><span class="kw">gf_boxplot</span>(eval <span class="op">~</span><span class="st"> </span>formal <span class="op">|</span><span class="st"> </span>female, <span class="dt">data =</span> teach_beauty)</a></code></pre></div>
-<p><img src="s245-notes_files/figure-html/unnamed-chunk-58-1.png" width="624" style="display: block; margin: auto;" /></p>
-<p>Perhaps <em>Informal Dress</em> affects <code>eval</code> scores, but really only for non-females – for females, <code>formal</code> dress doesn’t make a difference either way.</p>
-<p>The effect of <code>formal</code> dress is <em>different</em> depending on the value of <code>female</code>. This is an interaction between <code>formal</code> and <code>female</code>.</p>
+<div id="checking-the-data-setup-1" class="section level2">
+<h2><span class="header-section-number">10.2</span> Checking the data setup</h2>
+<p>We would like to model the proportion scans with ducks sighted as a function of a set of covariates. Each row of our dataset gives us the number of successes in some number of trials (and also gives the corresponding values of the covariates for ALL those trials). We can also use this kind of summary data with a logistic regression; we will just need to add a column for the number of failures:</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" title="1">pd &lt;-<span class="st"> </span>pd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">failures =</span> trials<span class="op">-</span>successes)</a>
+<a class="sourceLine" id="cb127-2" title="2"><span class="co">#or same thing in base R</span></a>
+<a class="sourceLine" id="cb127-3" title="3">pd<span class="op">$</span>failures =<span class="st"> </span>pd<span class="op">$</span>trials <span class="op">-</span><span class="st"> </span>pd<span class="op">$</span>successes</a></code></pre></div>
 </div>
-<div id="quant-quant-interactions" class="section level2">
-<h2><span class="header-section-number">8.3</span> Quant-Quant interactions?</h2>
-<p>Yes, these are possible, but very hard to visualize and conceptualize. Basically, it would mean that the slope of the line for one predictor changes gradually as the value of a second variable changes.</p>
-</div>
-<div id="r-code" class="section level2">
-<h2><span class="header-section-number">8.4</span> R code</h2>
-<p>If you want to include an interaction term in a model in R, use a <code>*</code> rather than a <code>+</code> between the predictors that (may) interact. For example, based on our exploration above, we might try:</p>
-<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" title="1">beauty_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(eval <span class="op">~</span><span class="st"> </span>beauty<span class="op">*</span>female <span class="op">+</span></a>
-<a class="sourceLine" id="cb100-2" title="2"><span class="st">                   </span>formal<span class="op">*</span>female, </a>
-<a class="sourceLine" id="cb100-3" title="3">                 <span class="dt">data =</span> teach_beauty, </a>
-<a class="sourceLine" id="cb100-4" title="4">                 <span class="dt">na.action =</span> <span class="st">&#39;na.fail&#39;</span>)</a>
-<a class="sourceLine" id="cb100-5" title="5"><span class="kw">summary</span>(beauty_mod)</a></code></pre></div>
+<div id="fitting-a-saturated-model-1" class="section level2">
+<h2><span class="header-section-number">10.3</span> Fitting a saturated model</h2>
+<p>Let’s try fitting a model for proportion sightings as a function of day, month, and impact.</p>
+<p>We need a response “variable” that is really 2 variables bound together: a column with the “successes” and a column with the “failures”. These don’t have to be literally called successes and failures – you can use whatever variable names you like – but the first one of the two should be successes (the thing you want to compute the proportion for) and the second failures.</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" title="1">duck.logr &lt;-<span class="st"> </span><span class="kw">glm</span>( <span class="kw">cbind</span>(successes, failures) <span class="op">~</span><span class="st"> </span>day <span class="op">+</span><span class="st"> </span>month <span class="op">+</span><span class="st"> </span>impact, </a>
+<a class="sourceLine" id="cb128-2" title="2">                  <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>),</a>
+<a class="sourceLine" id="cb128-3" title="3">                  <span class="dt">data=</span>pd)</a>
+<a class="sourceLine" id="cb128-4" title="4"><span class="kw">summary</span>(duck.logr)</a></code></pre></div>
 <pre><code>## 
 ## Call:
-## lm(formula = eval ~ beauty * female + formal * female, data = teach_beauty, 
-##     na.action = &quot;na.fail&quot;)
+## glm(formula = cbind(successes, failures) ~ day + month + impact, 
+##     family = binomial(link = &quot;logit&quot;), data = pd)
 ## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -1.83418 -0.36763  0.04966  0.39789  1.07161 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -4.2724  -1.3442   0.2352   1.3119   3.6177  
 ## 
 ## Coefficients:
-##                                       Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)                            3.84839    0.10813  35.591   &lt;2e-16
-## beauty                                 0.09021    0.04744   1.902   0.0578
-## femalenot female                       0.27615    0.13130   2.103   0.0360
-## formalInformal Dress                   0.05751    0.11574   0.497   0.6195
-## beauty:femalenot female                0.10841    0.06452   1.680   0.0936
-## femalenot female:formalInformal Dress -0.08378    0.14276  -0.587   0.5576
-##                                          
-## (Intercept)                           ***
-## beauty                                .  
-## femalenot female                      *  
-## formalInformal Dress                     
-## beauty:femalenot female               .  
-## femalenot female:formalInformal Dress    
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  2.770286   0.077096  35.933  &lt; 2e-16 ***
+## day         -0.011727   0.003564  -3.290    0.001 ** 
+## month       -0.091546   0.007819 -11.708  &lt; 2e-16 ***
+## impact      -0.222642   0.048407  -4.599 4.24e-06 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 0.5371 on 457 degrees of freedom
-## Multiple R-squared:  0.07326,    Adjusted R-squared:  0.06312 
-## F-statistic: 7.226 on 5 and 457 DF,  p-value: 1.587e-06</code></pre>
-<p>Notice the additional indicator variables in the coefficient table/model equation. Now we need to <em>adjust</em> the effects of the <code>beauty</code> predictor depending on the values of <code>formal</code> and <code>female</code>, which interact with it.</p>
-<p>We can use IC-based model selection to determine whether including these interactions in a model is important or not.</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb102-1" title="1"><span class="kw">require</span>(MuMIn)</a>
-<a class="sourceLine" id="cb102-2" title="2"><span class="kw">dredge</span>(beauty_mod, <span class="dt">rank =</span> <span class="st">&#39;AIC&#39;</span>)</a></code></pre></div>
-<pre><code>## Global model call: lm(formula = eval ~ beauty * female + formal * female, data = teach_beauty, 
-##     na.action = &quot;na.fail&quot;)
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 488.19  on 71  degrees of freedom
+## Residual deviance: 244.96  on 68  degrees of freedom
+## AIC: 607.85
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" title="1"><span class="co">#or maybe...</span></a>
+<a class="sourceLine" id="cb130-2" title="2">duck.logr2 &lt;-<span class="st"> </span><span class="kw">glm</span>( <span class="kw">cbind</span>(successes, failures) <span class="op">~</span><span class="st"> </span>day <span class="op">+</span><span class="st"> </span><span class="kw">factor</span>(month) <span class="op">+</span><span class="st"> </span>impact, </a>
+<a class="sourceLine" id="cb130-3" title="3">                   <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>), </a>
+<a class="sourceLine" id="cb130-4" title="4">                   <span class="dt">data=</span>pd)</a>
+<a class="sourceLine" id="cb130-5" title="5"><span class="kw">summary</span>(duck.logr2)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = cbind(successes, failures) ~ day + factor(month) + 
+##     impact, family = binomial(link = &quot;logit&quot;), data = pd)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -3.7829  -1.1571   0.1723   1.2891   3.4281  
+## 
+## Coefficients:
+##                  Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)      2.618402   0.123703  21.167  &lt; 2e-16 ***
+## day             -0.011735   0.004058  -2.892 0.003829 ** 
+## factor(month)2  -0.297341   0.135091  -2.201 0.027734 *  
+## factor(month)3  -0.014290   0.141766  -0.101 0.919712    
+## factor(month)4  -0.287869   0.135761  -2.120 0.033971 *  
+## factor(month)5  -0.258362   0.141490  -1.826 0.067850 .  
+## factor(month)6  -0.404561   0.132914  -3.044 0.002336 ** 
+## factor(month)7  -0.141972   0.139208  -1.020 0.307799    
+## factor(month)8  -0.452317   0.132294  -3.419 0.000628 ***
+## factor(month)9  -0.632855   0.128257  -4.934 8.05e-07 ***
+## factor(month)10 -0.665992   0.129788  -5.131 2.88e-07 ***
+## factor(month)11 -1.136006   0.123841  -9.173  &lt; 2e-16 ***
+## factor(month)12 -0.949485   0.127997  -7.418 1.19e-13 ***
+## impact          -0.223631   0.048515  -4.609 4.04e-06 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 488.19  on 71  degrees of freedom
+## Residual deviance: 197.84  on 58  degrees of freedom
+## AIC: 580.73
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+<div id="checking-linearity" class="section level2">
+<h2><span class="header-section-number">10.4</span> Checking linearity</h2>
+<p>What should be linear here? Well, <code>logit(p)</code> (where <code>p</code> is the probability of success, for a given set of predictor-variable values) should be a linear function of the predictors. <em>We can actually check this graphically now that we have multiple trials per row of data!</em> (But remember that the effects of other, unplotted predictors may also be influencing the plot that you see…)</p>
+<p>Here, we need to decide: Do we see a linear pattern (or no pattern)? For the month and day data here, we might also consider whetehr it would make more sense to fit either of them as a categorical covariate rather than numeric.</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" title="1"><span class="kw">gf_point</span>(<span class="kw">logit</span>(successes<span class="op">/</span>trials) <span class="op">~</span><span class="st"> </span>day, <span class="dt">data=</span>pd) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb132-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;logit(p)&#39;</span>)</a>
+<a class="sourceLine" id="cb132-3" title="3"><span class="kw">gf_point</span>(<span class="kw">logit</span>(successes<span class="op">/</span>trials) <span class="op">~</span><span class="st"> </span>month, <span class="dt">data=</span>pd)<span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb132-4" title="4"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">y=</span><span class="st">&#39;logit(p)&#39;</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-71-1.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-71-2.png" width="336" style="display: block; margin: auto;" /></p>
+</div>
+<div id="model-assessment-1" class="section level2">
+<h2><span class="header-section-number">10.5</span> Model Assessment</h2>
+<p>With data set up as proportions (many trials with the number of successes and failures in each row, rather than one row per trial), model assessment plots are a bit more useful. Specifically, we can check the Pearson residuals vs. fitted plot for constant variance as a function of fitted value, to confirm that the mean-variance relationship matches what we expect.</p>
+<p>Since the Pearson residuals are already adjusted for the expected variance, we should see approximately constant spread, with values ranging from about -2 to 2 (and not more than a few larger than <span class="math inline">\(\pm\)</span> 3).</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(duck.logr2, <span class="dt">type=</span><span class="st">&#39;pearson&#39;</span>))</a>
+<a class="sourceLine" id="cb133-2" title="2"><span class="kw">gf_point</span>(<span class="kw">resid</span>(duck.logr2, <span class="dt">type=</span><span class="st">&#39;pearson&#39;</span>) <span class="op">~</span><span class="st"> </span><span class="kw">fitted</span>(duck.logr2))</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-72-1.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-72-2.png" width="336" style="display: block; margin: auto;" /></p>
+</div>
+<div id="model-selection-1" class="section level2">
+<h2><span class="header-section-number">10.6</span> Model Selection</h2>
+<p>We can do model selection as usual.
+Here, it looks like the best model is the saturated (full) model.</p>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb134-2" title="2">duck.logr2 &lt;-<span class="st"> </span><span class="kw">update</span>(duck.logr2, <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb134-3" title="3"><span class="kw">dredge</span>(duck.logr2)</a></code></pre></div>
+<pre><code>## Global model call: glm(formula = cbind(successes, failures) ~ day + factor(month) + 
+##     impact, family = binomial(link = &quot;logit&quot;), data = pd, na.action = &quot;na.fail&quot;)
 ## ---
 ## Model selection table 
-##    (Int)     bty fml frm bty:fml fml:frm df   logLik   AIC delta weight
-## 12 3.899 0.08762   +           +          5 -366.309 742.6  0.00  0.414
-## 4  3.897 0.14860   +                      4 -367.868 743.7  1.12  0.236
-## 16 3.896 0.08773   +   +       +          6 -366.308 744.6  2.00  0.152
-## 8  3.897 0.14860   +   +                  5 -367.868 745.7  3.12  0.087
-## 32 3.848 0.09021   +   +       +       +  7 -366.134 746.3  3.65  0.067
-## 24 3.833 0.14880   +   +               +  6 -367.560 747.1  4.50  0.044
-## 2  4.010 0.13300                          3 -375.323 756.6 14.03  0.000
-## 6  4.032 0.13170       +                  4 -375.249 758.5 15.88  0.000
-## 3  3.901           +                      3 -378.503 763.0 20.39  0.000
-## 7  3.932           +   +                  4 -378.367 764.7 22.12  0.000
-## 23 3.872           +   +               +  5 -378.103 766.2 23.59  0.000
-## 1  3.998                                  2 -383.747 771.5 28.88  0.000
-## 5  4.044               +                  3 -383.431 772.9 30.24  0.000
-## Models ranked by AIC(x)</code></pre>
-<p>In the case of the particular model we fitted, the “best” model starting from this full model is actually one <em>without</em> interactions. If you want to explore the dataset further, you will find that actually a model where <code>age</code>, <code>beauty</code> AND <code>female</code> interact fits much better…</p>
-</div>
-<div id="cautionary-note" class="section level2">
-<h2><span class="header-section-number">8.5</span> Cautionary note</h2>
-<p>If you include an interaction in a regression model, you <strong>must</strong> also include the corresponding “fixed effects” – this means if you have an indicator variable/slope term for an interaction in your model, you must also have the indicator variables/slopes corresponding to the individual predictors. Our fitting functions (<code>lm()</code>, <code>glm()</code>, <code>glmmTMB()</code>, etc.) are smart enough to ensure this for you. So is <code>dredge()</code>. (It would take effort to mess this up in R.)</p>
+##   (Int)      day fct(mnt)     imp df   logLik  AICc  delta weight
+## 8 2.618 -0.01173        + -0.2236 14 -276.365 588.1   0.00  0.934
+## 7 2.430                 + -0.2235 13 -280.560 593.4   5.30  0.066
+## 4 2.501 -0.01172        +         13 -287.029 606.3  18.24  0.000
+## 3 2.314                 +         12 -291.218 611.7  23.63  0.000
+## 6 2.444 -0.02848          -0.2204  3 -371.770 749.9 161.80  0.000
+## 2 2.328 -0.02844                   2 -382.278 768.7 180.63  0.000
+## 5 1.918                   -0.2192  2 -411.086 826.3 238.25  0.000
+## 1 1.804                            1 -421.538 845.1 257.04  0.000
+## Models ranked by AICc(x)</code></pre>
+<p>We might also try using model selection to help us decide whether to use quantitative or categorical month and/or day…</p>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" title="1">duck.logr2 &lt;-<span class="st"> </span><span class="kw">update</span>(duck.logr2, <span class="dt">formula=</span> . <span class="op">~</span><span class="st"> </span>. <span class="op">+</span><span class="st"> </span>month <span class="op">+</span><span class="st"> </span><span class="kw">factor</span>(day), <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb136-2" title="2"><span class="kw">dredge</span>(duck.logr2, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a></code></pre></div>
+<pre><code>## Global model call: glm(formula = cbind(successes, failures) ~ day + factor(month) + 
+##     impact + month + factor(day), family = binomial(link = &quot;logit&quot;), 
+##     data = pd, na.action = &quot;na.fail&quot;)
+## ---
+## Model selection table 
+##    (Int)      day fct(day) fct(mnt)     imp      mnt df   logLik   BIC
+## 14 2.618 -0.01173                 + -0.2236          14 -276.365 612.6
+## 30 2.618 -0.01173                 + -0.2236          14 -276.365 612.6
+## 13 2.430                          + -0.2235          13 -280.560 616.7
+## 29 2.430                          + -0.2235          13 -280.560 616.7
+## 26 2.770 -0.01173                   -0.2226 -0.09155  4 -299.926 617.0
+## 15 2.313                 +        + -0.2250          33 -238.023 617.2
+## 16 2.342 -0.01464        +        + -0.2250          33 -238.023 617.2
+## 31 2.313                 +        + -0.2250          33 -238.023 617.2
+## 32 2.342 -0.01464        +        + -0.2250          33 -238.023 617.2
+## 25 2.631                            -0.2224 -0.10250  3 -305.371 623.6
+## 6  2.501 -0.01172                 +                  13 -287.029 629.7
+## 22 2.501 -0.01172                 +                  13 -287.029 629.7
+## 5  2.314                          +                  12 -291.218 633.8
+## 21 2.314                          +                  12 -291.218 633.8
+## 18 2.653 -0.01171                           -0.09141  3 -310.543 633.9
+## 7  2.195                 +        +                  32 -248.752 634.4
+## 8  2.224 -0.01459        +        +                  32 -248.752 634.4
+## 23 2.195                 +        +                  32 -248.752 634.4
+## 24 2.224 -0.01459        +        +                  32 -248.752 634.4
+## 27 2.884                 +          -0.2237 -0.11950 24 -267.701 638.0
+## 28 2.911 -0.01337        +          -0.2237 -0.11950 24 -267.701 638.0
+## 17 2.514                                    -0.10230  2 -315.978 640.5
+## 19 2.766                 +                  -0.11930 23 -278.371 655.1
+## 20 2.793 -0.01335        +                  -0.11930 23 -278.371 655.1
+## 10 2.444 -0.02848                   -0.2204           3 -371.770 756.4
+## 12 2.347 -0.03102        +          -0.2216          23 -335.678 769.7
+## 11 2.285                 +          -0.2216          23 -335.678 769.7
+## 2  2.328 -0.02844                                     2 -382.278 773.1
+## 3  2.170                 +                           22 -346.244 786.6
+## 4  2.232 -0.03097        +                           22 -346.244 786.6
+## 9  1.918                            -0.2192           2 -411.086 830.7
+## 1  1.804                                              1 -421.538 847.4
+##     delta weight
+## 14   0.00  0.360
+## 30   0.00  0.360
+## 13   4.11  0.046
+## 29   4.11  0.046
+## 26   4.36  0.041
+## 15   4.57  0.037
+## 16   4.57  0.037
+## 31   4.57  0.037
+## 32   4.57  0.037
+## 25  10.97  0.001
+## 6   17.05  0.000
+## 22  17.05  0.000
+## 5   21.15  0.000
+## 21  21.15  0.000
+## 18  21.31  0.000
+## 7   21.75  0.000
+## 8   21.75  0.000
+## 23  21.75  0.000
+## 24  21.75  0.000
+## 27  25.44  0.000
+## 28  25.44  0.000
+## 17  27.91  0.000
+## 19  42.50  0.000
+## 20  42.50  0.000
+## 10 143.77  0.000
+## 12 157.12  0.000
+## 11 157.12  0.000
+## 2  160.51  0.000
+## 3  173.97  0.000
+## 4  173.97  0.000
+## 9  218.12  0.000
+## 1  234.75  0.000
+## Models ranked by BIC(x)</code></pre>
+<p>Here it looks like day as quantitative and month as categorical works best.</p>
 
 </div>
 </div>
@@ -372,8 +494,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="model-averaging.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="binary-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="binary-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -405,7 +527,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/08-Interactions.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/10-BinaryRegression2.Rmd",
 "text": "Edit"
 },
 "history": {
