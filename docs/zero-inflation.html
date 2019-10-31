@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 12 Zero-Inflation | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 12 Zero-Inflation | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 12 Zero-Inflation | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-10-31" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="collinearity-and-multicollinearity.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT 245 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#why-are-we-doing-this-again"><i class="fa fa-check"></i><b>2.7</b> Why are we doing this again?</a></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#shortcut-method---with-uncertainty"><i class="fa fa-check"></i><b>2.8</b> Shortcut Method - With Uncertainty</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="linear-regression.html"><a href="linear-regression.html#anatomy-of-a-confidence-interval"><i class="fa fa-check"></i><b>2.8.1</b> Anatomy of a Confidence Interval</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#diy-method"><i class="fa fa-check"></i><b>2.9</b> DIY Method</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-a-hypothetical-dataset"><i class="fa fa-check"></i><b>2.9.1</b> Creating a hypothetical dataset</a></li>
+<li class="chapter" data-level="2.9.2" data-path="linear-regression.html"><a href="linear-regression.html#making-the-plot"><i class="fa fa-check"></i><b>2.9.2</b> Making the plot</a></li>
+<li class="chapter" data-level="2.9.3" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors"><i class="fa fa-check"></i><b>2.9.3</b> Categorical predictors</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html"><i class="fa fa-check"></i><b>3</b> Model Selection Using Information Criteria</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#data-and-model"><i class="fa fa-check"></i><b>3.1</b> Data and Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#calculations"><i class="fa fa-check"></i><b>3.2</b> Calculations</a></li>
+<li class="chapter" data-level="3.3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#decisions-with-ics"><i class="fa fa-check"></i><b>3.3</b> Decisions with ICs</a></li>
+<li class="chapter" data-level="3.4" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#all-possible-subsets-selection"><i class="fa fa-check"></i><b>3.4</b> All-possible-subsets Selection</a></li>
+<li class="chapter" data-level="3.5" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#which-ic-should-i-use"><i class="fa fa-check"></i><b>3.5</b> Which IC should I use?</a></li>
+<li class="chapter" data-level="3.6" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#quantities-derived-from-aic"><i class="fa fa-check"></i><b>3.6</b> Quantities derived from AIC</a></li>
+<li class="chapter" data-level="3.7" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#important-caution"><i class="fa fa-check"></i><b>3.7</b> Important Caution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="likelihood.html"><a href="likelihood.html"><i class="fa fa-check"></i><b>4</b> Likelihood</a><ul>
+<li class="chapter" data-level="4.1" data-path="likelihood.html"><a href="likelihood.html#data-1"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="likelihood.html"><a href="likelihood.html#review---the-normal-probability-density-function-pdf"><i class="fa fa-check"></i><b>4.2</b> Review - the Normal probability density function (PDF)</a></li>
+<li class="chapter" data-level="4.3" data-path="likelihood.html"><a href="likelihood.html#a-simple-model"><i class="fa fa-check"></i><b>4.3</b> A simple model</a></li>
+<li class="chapter" data-level="4.4" data-path="likelihood.html"><a href="likelihood.html#using-the-model-to-make-predictions"><i class="fa fa-check"></i><b>4.4</b> Using the Model to Make Predictions</a></li>
+<li class="chapter" data-level="4.5" data-path="likelihood.html"><a href="likelihood.html#likelihood-to-the-rescue"><i class="fa fa-check"></i><b>4.5</b> Likelihood to the Rescue!</a></li>
+<li class="chapter" data-level="4.6" data-path="likelihood.html"><a href="likelihood.html#how-does-this-relate-to-linear-regression"><i class="fa fa-check"></i><b>4.6</b> How does this relate to linear regression?</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="likelihood.html"><a href="likelihood.html#model-equation"><i class="fa fa-check"></i><b>4.6.1</b> Model Equation:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="likelihood.html"><a href="likelihood.html#likelihood-of-a-dataset-given-a-model"><i class="fa fa-check"></i><b>4.7</b> Likelihood of a dataset, given a model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html"><i class="fa fa-check"></i><b>5</b> PDFs and PMFs</a><ul>
+<li class="chapter" data-level="5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beyond-normal"><i class="fa fa-check"></i><b>5.1</b> Beyond Normal</a></li>
+<li class="chapter" data-level="5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#types-of-probability-distributions"><i class="fa fa-check"></i><b>5.2</b> Types of probability distributions</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#continuous-distributions"><i class="fa fa-check"></i><b>5.2.1</b> Continuous distributions</a></li>
+<li class="chapter" data-level="5.2.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#discrete-distributions"><i class="fa fa-check"></i><b>5.2.2</b> Discrete Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#relevant-features-of-distributions"><i class="fa fa-check"></i><b>5.3</b> Relevant Features of Distributions</a></li>
+<li class="chapter" data-level="5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-continuous-distributions"><i class="fa fa-check"></i><b>5.4</b> Examples of Continuous Distributions</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#normal"><i class="fa fa-check"></i><b>5.4.1</b> Normal</a></li>
+<li class="chapter" data-level="5.4.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#gamma"><i class="fa fa-check"></i><b>5.4.2</b> Gamma</a></li>
+<li class="chapter" data-level="5.4.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beta"><i class="fa fa-check"></i><b>5.4.3</b> Beta</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-discrete-distributions"><i class="fa fa-check"></i><b>5.5</b> Examples of Discrete Distributions</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#binomial"><i class="fa fa-check"></i><b>5.5.1</b> Binomial</a></li>
+<li class="chapter" data-level="5.5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#poisson"><i class="fa fa-check"></i><b>5.5.2</b> Poisson</a></li>
+<li class="chapter" data-level="5.5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#negative-binomial"><i class="fa fa-check"></i><b>5.5.3</b> Negative Binomial</a></li>
+<li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-averaging.html"><a href="model-averaging.html"><i class="fa fa-check"></i><b>7</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.1" data-path="model-averaging.html"><a href="model-averaging.html#data-school-survey-on-crime-and-safety"><i class="fa fa-check"></i><b>7.1</b> Data: School Survey on Crime and Safety</a></li>
+<li class="chapter" data-level="7.2" data-path="model-averaging.html"><a href="model-averaging.html#modelling-number-of-violent-incidents-per-school"><i class="fa fa-check"></i><b>7.2</b> Modelling number of violent incidents per school</a></li>
+<li class="chapter" data-level="7.3" data-path="model-averaging.html"><a href="model-averaging.html#model-averaging-1"><i class="fa fa-check"></i><b>7.3</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="model-averaging.html"><a href="model-averaging.html#getting-the-averaged-model"><i class="fa fa-check"></i><b>7.3.1</b> Getting the Averaged Model</a></li>
+<li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interactions.html"><a href="interactions.html"><i class="fa fa-check"></i><b>8</b> Interactions</a><ul>
+<li class="chapter" data-level="8.1" data-path="interactions.html"><a href="interactions.html#example-quantitative-categorical-interaction"><i class="fa fa-check"></i><b>8.1</b> Example: Quantitative-Categorical Interaction</a></li>
+<li class="chapter" data-level="8.2" data-path="interactions.html"><a href="interactions.html#categorical-categorical-interaction-example"><i class="fa fa-check"></i><b>8.2</b> Categorical-Categorical Interaction Example</a></li>
+<li class="chapter" data-level="8.3" data-path="interactions.html"><a href="interactions.html#quant-quant-interactions"><i class="fa fa-check"></i><b>8.3</b> Quant-Quant interactions?</a></li>
+<li class="chapter" data-level="8.4" data-path="interactions.html"><a href="interactions.html#r-code"><i class="fa fa-check"></i><b>8.4</b> R code</a></li>
+<li class="chapter" data-level="8.5" data-path="interactions.html"><a href="interactions.html#cautionary-note"><i class="fa fa-check"></i><b>8.5</b> Cautionary note</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="binary-regression.html"><a href="binary-regression.html"><i class="fa fa-check"></i><b>9</b> Binary Regression</a><ul>
+<li class="chapter" data-level="9.1" data-path="binary-regression.html"><a href="binary-regression.html#data-source-1"><i class="fa fa-check"></i><b>9.1</b> Data Source</a></li>
+<li class="chapter" data-level="9.2" data-path="binary-regression.html"><a href="binary-regression.html#logistic-regression"><i class="fa fa-check"></i><b>9.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="9.3" data-path="binary-regression.html"><a href="binary-regression.html#checking-the-data-setup"><i class="fa fa-check"></i><b>9.3</b> Checking the data setup</a></li>
+<li class="chapter" data-level="9.4" data-path="binary-regression.html"><a href="binary-regression.html#fitting-a-saturated-model"><i class="fa fa-check"></i><b>9.4</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="9.5" data-path="binary-regression.html"><a href="binary-regression.html#link-functions"><i class="fa fa-check"></i><b>9.5</b> Link Functions</a></li>
+<li class="chapter" data-level="9.6" data-path="binary-regression.html"><a href="binary-regression.html#conditions-1"><i class="fa fa-check"></i><b>9.6</b> Conditions</a></li>
+<li class="chapter" data-level="9.7" data-path="binary-regression.html"><a href="binary-regression.html#model-assessment-plots"><i class="fa fa-check"></i><b>9.7</b> Model Assessment Plots</a></li>
+<li class="chapter" data-level="9.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>9.8</b> Odds Ratios</a></li>
+<li class="chapter" data-level="9.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>9.9</b> Model Selection</a></li>
+<li class="chapter" data-level="9.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>9.10</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html"><i class="fa fa-check"></i><b>10</b> Binary regression: Data with more than one trial per row</a><ul>
+<li class="chapter" data-level="10.1" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#data-2"><i class="fa fa-check"></i><b>10.1</b> Data</a></li>
+<li class="chapter" data-level="10.2" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#checking-the-data-setup-1"><i class="fa fa-check"></i><b>10.2</b> Checking the data setup</a></li>
+<li class="chapter" data-level="10.3" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#fitting-a-saturated-model-1"><i class="fa fa-check"></i><b>10.3</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="10.4" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#checking-linearity"><i class="fa fa-check"></i><b>10.4</b> Checking linearity</a></li>
+<li class="chapter" data-level="10.5" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#model-assessment-1"><i class="fa fa-check"></i><b>10.5</b> Model Assessment</a></li>
+<li class="chapter" data-level="10.6" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#model-selection-1"><i class="fa fa-check"></i><b>10.6</b> Model Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html"><i class="fa fa-check"></i><b>11</b> Collinearity and Multicollinearity</a><ul>
+<li class="chapter" data-level="11.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#graphical-checks"><i class="fa fa-check"></i><b>11.1</b> Graphical Checks</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#preferred-option-correlation-scatter-plot"><i class="fa fa-check"></i><b>11.1.1</b> Preferred option: Correlation Scatter Plot</a></li>
+<li class="chapter" data-level="11.1.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#another-option-heat-map-of-correlation-coefficients"><i class="fa fa-check"></i><b>11.1.2</b> Another option: Heat map of correlation coefficients</a></li>
+<li class="chapter" data-level="11.1.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#how-to-use-this-information"><i class="fa fa-check"></i><b>11.1.3</b> How to use this information</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#variance-inflation-factors"><i class="fa fa-check"></i><b>11.2</b> Variance Inflation Factors</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#quantitative-predictors-vifs"><i class="fa fa-check"></i><b>11.2.1</b> Quantitative predictors (VIFs)</a></li>
+<li class="chapter" data-level="11.2.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#some-categorical-predictors-gvifs"><i class="fa fa-check"></i><b>11.2.2</b> (Some) Categorical Predictors (GVIFs)</a></li>
+<li class="chapter" data-level="11.2.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#rules-of-thumb"><i class="fa fa-check"></i><b>11.2.3</b> Rules of Thumb</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#was-it-worth-it"><i class="fa fa-check"></i><b>11.3</b> Was it worth it?</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="zero-inflation.html"><a href="zero-inflation.html"><i class="fa fa-check"></i><b>12</b> Zero-Inflation</a><ul>
+<li class="chapter" data-level="12.1" data-path="zero-inflation.html"><a href="zero-inflation.html#reference-material"><i class="fa fa-check"></i><b>12.1</b> Reference material</a></li>
+<li class="chapter" data-level="12.2" data-path="zero-inflation.html"><a href="zero-inflation.html#data-for-example"><i class="fa fa-check"></i><b>12.2</b> Data for Example</a></li>
+<li class="chapter" data-level="12.3" data-path="zero-inflation.html"><a href="zero-inflation.html#visualization"><i class="fa fa-check"></i><b>12.3</b> Visualization?</a></li>
+<li class="chapter" data-level="12.4" data-path="zero-inflation.html"><a href="zero-inflation.html#collinearitymulticollinearity"><i class="fa fa-check"></i><b>12.4</b> Collinearity/Multicollinearity?</a></li>
+<li class="chapter" data-level="12.5" data-path="zero-inflation.html"><a href="zero-inflation.html#fitting-models"><i class="fa fa-check"></i><b>12.5</b> Fitting models</a><ul>
+<li class="chapter" data-level="12.5.1" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-poisson"><i class="fa fa-check"></i><b>12.5.1</b> Zero-inflated Poisson</a></li>
+<li class="chapter" data-level="12.5.2" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-nb-one-way"><i class="fa fa-check"></i><b>12.5.2</b> Zero-inflated NB: one way</a></li>
+<li class="chapter" data-level="12.5.3" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-negative-binomial-other-way"><i class="fa fa-check"></i><b>12.5.3</b> Zero-inflated negative binomial (other way)</a></li>
+<li class="chapter" data-level="12.5.4" data-path="zero-inflation.html"><a href="zero-inflation.html#tweedie-model"><i class="fa fa-check"></i><b>12.5.4</b> Tweedie Model</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="zero-inflation.html"><a href="zero-inflation.html#model-assessment-2"><i class="fa fa-check"></i><b>12.6</b> Model Assessment</a></li>
+<li class="chapter" data-level="12.7" data-path="zero-inflation.html"><a href="zero-inflation.html#model-selection-2"><i class="fa fa-check"></i><b>12.7</b> Model Selection?</a><ul>
+<li class="chapter" data-level="12.7.1" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflation-covariates"><i class="fa fa-check"></i><b>12.7.1</b> Zero inflation covariates</a></li>
+<li class="chapter" data-level="12.7.2" data-path="zero-inflation.html"><a href="zero-inflation.html#interaction-terms"><i class="fa fa-check"></i><b>12.7.2</b> Interaction terms</a></li>
+<li class="chapter" data-level="12.7.3" data-path="zero-inflation.html"><a href="zero-inflation.html#dredge"><i class="fa fa-check"></i><b>12.7.3</b> Dredge</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="zero-inflation.html"><a href="zero-inflation.html#prediction-plots-2"><i class="fa fa-check"></i><b>12.8</b> Prediction Plots</a></li>
+<li class="chapter" data-level="12.9" data-path="zero-inflation.html"><a href="zero-inflation.html#acknowledgements"><i class="fa fa-check"></i><b>12.9</b> Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="zero-inflation" class="section level1">
+<h1><span class="header-section-number">Chapter 12</span> Zero-Inflation</h1>
+<p>Zero-inflated data are count data that:</p>
+<ul>
+<li>Have a lot of zeros; <strong>and</strong></li>
+<li>It may not be appropriate to explain the extra zeros via a model for count data with overdispersion (NB or quasi-Poisson) because:
+<ul>
+<li>There is too much overdispersion to account for this way</li>
+<li>The zeros in the data are of two classes: <em>true</em> zeros (definite absence) and <em>other</em> zeros (might have been a positive count but just happened to be a 0 this time).</li>
+</ul></li>
+</ul>
+<div id="reference-material" class="section level2">
+<h2><span class="header-section-number">12.1</span> Reference material</h2>
+<p>On the topic of zero-inflated data (as on many other topics), your book is …terse! I have several copies of \url<a href="https://highstat.com/index.php/mixed-effects-models-and-extensions-in-ecology-with-r">Mixed models and extensions for ecology in R</a> if you want to borrow – You may want to check out Chapter 11 in that book.</p>
+</div>
+<div id="data-for-example" class="section level2">
+<h2><span class="header-section-number">12.2</span> Data for Example</h2>
+<p>The state wildlife biologists want to model how many fish are being caught by fishermen at a state park. Visitors are asked how long they stayed, how many people were in the group, were there children in the group and how many fish were caught. Some visitors do not fish, but there is no data on whether a person fished or not. Some visitors who did fish did not catch any fish so there are excess zeros in the data because of the people that did not fish.</p>
+<p>We have data on 250 groups that went to a park. Each group was questioned about how many fish they caught (count), how many children were in the group (child), how many people were in the group (persons), and whether or not they brought a camper to the park (camper).</p>
+<p>In addition to predicting the number of fish caught, there is interest in predicting the existence of excess zeros, i.e., the probability that a group caught zero fish. We will use the variables child, persons, and camper in our model. Let’s look at the data.</p>
+<div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" title="1">zinb &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://stats.idre.ucla.edu/stat/data/fish.csv&quot;</span>)</a>
+<a class="sourceLine" id="cb153-2" title="2"><span class="kw">head</span>(zinb)</a></code></pre></div>
+<pre><code>##   nofish livebait camper persons child         xb         zg count
+## 1      1        0      0       1     0 -0.8963146  3.0504048     0
+## 2      0        1      1       1     0 -0.5583450  1.7461489     0
+## 3      0        1      0       1     0 -0.4017310  0.2799389     0
+## 4      0        1      1       2     1 -0.9562981 -0.6015257     0
+## 5      0        1      0       1     0  0.4368910  0.5277091     1
+## 6      0        1      1       4     2  1.3944855 -0.7075348     0</code></pre>
+<div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb155-1" title="1">zinb &lt;-<span class="st"> </span>zinb <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">nofish=</span><span class="kw">factor</span>(nofish),</a>
+<a class="sourceLine" id="cb155-2" title="2">                        <span class="dt">livebait=</span><span class="kw">factor</span>(livebait),</a>
+<a class="sourceLine" id="cb155-3" title="3">                        <span class="dt">livebait =</span> <span class="kw">ifelse</span>(livebait<span class="op">==</span><span class="dv">0</span>, <span class="st">&#39;No&#39;</span>, <span class="st">&#39;Yes&#39;</span>),</a>
+<a class="sourceLine" id="cb155-4" title="4">                        <span class="dt">camper=</span><span class="kw">factor</span>(camper),</a>
+<a class="sourceLine" id="cb155-5" title="5">                        <span class="dt">camper =</span> <span class="kw">ifelse</span>(camper <span class="op">==</span><span class="dv">0</span>, <span class="st">&#39;No&#39;</span>, <span class="st">&#39;Yes&#39;</span>),</a>
+<a class="sourceLine" id="cb155-6" title="6">                        <span class="dt">child_cat =</span> <span class="kw">factor</span>(child))</a>
+<a class="sourceLine" id="cb155-7" title="7"><span class="kw">head</span>(zinb)</a></code></pre></div>
+<pre><code>##   nofish livebait camper persons child         xb         zg count
+## 1      1       No     No       1     0 -0.8963146  3.0504048     0
+## 2      0      Yes    Yes       1     0 -0.5583450  1.7461489     0
+## 3      0      Yes     No       1     0 -0.4017310  0.2799389     0
+## 4      0      Yes    Yes       2     1 -0.9562981 -0.6015257     0
+## 5      0      Yes     No       1     0  0.4368910  0.5277091     1
+## 6      0      Yes    Yes       4     2  1.3944855 -0.7075348     0
+##   child_cat
+## 1         0
+## 2         0
+## 3         0
+## 4         1
+## 5         0
+## 6         2</code></pre>
+</div>
+<div id="visualization" class="section level2">
+<h2><span class="header-section-number">12.3</span> Visualization?</h2>
+<p>In class, we created several figures for data exploration. They are not printed here.</p>
+<p>One idea was to make a pairs plot to look at possible collinearity. Good idea! But all our predictors are either yes/no or have very small ranges of integers as their values, so it doesn’t prove very informative with our data - feel free to try for yourself to illustrate:</p>
+<div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb157-1" title="1"><span class="kw">require</span>(GGally)</a>
+<a class="sourceLine" id="cb157-2" title="2"><span class="kw">ggpairs</span>(zinb[, <span class="kw">c</span>(<span class="st">&#39;livebait&#39;</span>, <span class="st">&#39;camper&#39;</span>, <span class="st">&#39;persons&#39;</span>, <span class="st">&#39;child&#39;</span>)])</a></code></pre></div>
+<p>Another idea would be to plot response as a function of possible predictors, to check the linearity conditions of the parts of the model. This could be a good idea, but on the other hand we don’t have any predictors that are unequivocally numerical. (If we had one, we could plot log(count) as a function of the predictor.)</p>
+</div>
+<div id="collinearitymulticollinearity" class="section level2">
+<h2><span class="header-section-number">12.4</span> Collinearity/Multicollinearity?</h2>
+<p>We might want to check VIFs, but we can’t compute them directly for a ZIP model (fitted later) using <code>vif()</code> from the <code>car</code> package.</p>
+<p>However, note: VIFs really depend mainly on the covariates, not the model fitted. We can check them effectively by fitting the Poisson model (and the logistic regression, if we had more than one predictor in that part of the model) and checking <strong>its</strong> VIFs:</p>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" title="1">P &lt;-<span class="st"> </span><span class="kw">glm</span>(count <span class="op">~</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>persons, <span class="dt">data=</span>zinb, <span class="dt">family=</span>poisson)</a>
+<a class="sourceLine" id="cb158-2" title="2"><span class="kw">require</span>(car)</a>
+<a class="sourceLine" id="cb158-3" title="3"><span class="kw">vif</span>(P)</a></code></pre></div>
+<pre><code>##   camper    child  persons 
+## 1.008616 1.011875 1.008656</code></pre>
+<p>No evidence of any problem there!</p>
+</div>
+<div id="fitting-models" class="section level2">
+<h2><span class="header-section-number">12.5</span> Fitting models</h2>
+<div id="zero-inflated-poisson" class="section level3">
+<h3><span class="header-section-number">12.5.1</span> Zero-inflated Poisson</h3>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" title="1"><span class="kw">require</span>(pscl)</a>
+<a class="sourceLine" id="cb160-2" title="2">ZIP &lt;-<span class="st"> </span><span class="kw">zeroinfl</span>(count <span class="op">~</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>persons <span class="op">|</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> zinb,</a>
+<a class="sourceLine" id="cb160-3" title="3">                <span class="dt">dist =</span> <span class="st">&#39;poisson&#39;</span>)</a>
+<a class="sourceLine" id="cb160-4" title="4"><span class="kw">summary</span>(ZIP)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## zeroinfl(formula = count ~ child + camper + persons | 1, data = zinb, 
+##     dist = &quot;poisson&quot;)
+## 
+## Pearson residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1.08779 -0.77677 -0.57757 -0.09895 27.97092 
+## 
+## Count model coefficients (poisson with log link):
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.99805    0.17557  -5.685 1.31e-08 ***
+## child       -1.36091    0.09410 -14.462  &lt; 2e-16 ***
+## camperYes    0.79561    0.09411   8.454  &lt; 2e-16 ***
+## persons      0.87214    0.04496  19.398  &lt; 2e-16 ***
+## 
+## Zero-inflation model coefficients (binomial with logit link):
+##             Estimate Std. Error z value Pr(&gt;|z|)  
+## (Intercept)  -0.3659     0.1868  -1.958   0.0502 .
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1 
+## 
+## Number of iterations in BFGS optimization: 10 
+## Log-likelihood: -776.5 on 5 Df</code></pre>
+</div>
+<div id="zero-inflated-nb-one-way" class="section level3">
+<h3><span class="header-section-number">12.5.2</span> Zero-inflated NB: one way</h3>
+<p>We can also use this function to fit a NB model. <em>BUT BEWARE:</em> this is a different parameterization of the NB model than the NB1 and NB2 models we use in <code>glmmTMB()</code> and may be closer to type 1 or type 2 depending on the dataset. You could compare all three NB versions via IC.</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb162-1" title="1">ZINBx &lt;-<span class="st"> </span><span class="kw">zeroinfl</span>(count <span class="op">~</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>persons <span class="op">|</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> zinb,</a>
+<a class="sourceLine" id="cb162-2" title="2">                  <span class="dt">dist=</span><span class="st">&#39;negbin&#39;</span>)</a>
+<a class="sourceLine" id="cb162-3" title="3"><span class="kw">summary</span>(ZINBx)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## zeroinfl(formula = count ~ child + camper + persons | 1, data = zinb, 
+##     dist = &quot;negbin&quot;)
+## 
+## Pearson residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.66363 -0.54174 -0.42089 -0.03144 20.44983 
+## 
+## Count model coefficients (negbin with log link):
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -1.6249     0.3294  -4.933 8.10e-07 ***
+## child        -1.7805     0.1920  -9.271  &lt; 2e-16 ***
+## camperYes     0.6211     0.2358   2.634  0.00844 ** 
+## persons       1.0608     0.1175   9.030  &lt; 2e-16 ***
+## Log(theta)   -0.7689     0.1539  -4.997 5.81e-07 ***
+## 
+## Zero-inflation model coefficients (binomial with logit link):
+##             Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)   -10.72      50.88  -0.211    0.833
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1 
+## 
+## Theta = 0.4635 
+## Number of iterations in BFGS optimization: 27 
+## Log-likelihood: -405.2 on 6 Df</code></pre>
+<div id="what-do-the-summary-outputs-mean" class="section level4">
+<h4><span class="header-section-number">12.5.2.1</span> What do the <code>summary()</code> outputs mean?</h4>
+<p>The second part of the output (labelled “Zero Inflation model coefficients”) is from a logistic regression with one predictor (persons) to predict the probability of an observation being a “true zero” - a group that was not in the park to fish. (We can’t really tell from thsi output whether being there to fish, or not, is considered a true zero by the model…I figured it out by reading the help file for zeroinfl and looking at prediction plots below). The first part of the out put (labelled “Count model coefficients”) is a Poisson regression fitted to the count data for the proportion of the groups in the data set who were <em>not</em> true zeros (and were thus actually there to fish). Both parts of the model can have predictors included; to have no predictors in the logistic regression part, you would use a formula like <strong>y ~ x1 + x2 … + xn | 1</strong>, and to include the <em>same</em> predictors for both the Poisson and logistic parts, you exclude the <strong>|…</strong> part, for example ** y ~ x1+x2** is the same as <strong>y ~ x1 + x2 | x1 + x2</strong>.</p>
+</div>
+</div>
+<div id="zero-inflated-negative-binomial-other-way" class="section level3">
+<h3><span class="header-section-number">12.5.3</span> Zero-inflated negative binomial (other way)</h3>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" title="1"><span class="kw">require</span>(glmmTMB)</a>
+<a class="sourceLine" id="cb164-2" title="2">ZINB1 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(count <span class="op">~</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>persons, <span class="dt">ziformula =</span> <span class="op">~</span><span class="dv">1</span>, <span class="dt">data=</span>zinb, <span class="dt">family=</span><span class="kw">nbinom1</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb164-3" title="3">ZINB2 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(count <span class="op">~</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>persons, <span class="dt">ziformula =</span> <span class="op">~</span><span class="dv">1</span>, <span class="dt">data=</span>zinb, <span class="dt">family=</span><span class="kw">nbinom2</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb164-4" title="4"><span class="kw">summary</span>(ZINB1)</a></code></pre></div>
+<pre><code>##  Family: nbinom1  ( log )
+## Formula:          count ~ child + camper + persons
+## Zero inflation:         ~1
+## Data: zinb
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##    823.7    844.8   -405.8    811.7      244 
+## 
+## 
+## Overdispersion parameter for nbinom1 family (): 9.21 
+## 
+## Conditional model:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -0.82828    0.32013  -2.587 0.009673 ** 
+## child       -1.42884    0.16569  -8.624  &lt; 2e-16 ***
+## camperYes    0.72240    0.19303   3.742 0.000182 ***
+## persons      0.77145    0.08394   9.190  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Zero-inflation model:
+##             Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)    -20.1     4603.4  -0.004    0.997</code></pre>
+<p>Note the difference from the <code>zeroinfl()</code> model formula and function call. There is an separate input, <code>ziformula</code>, to add zero inflation to a <code>glmmTMB()</code> model. (The default is no zero inflation, if you do not include a <code>ziformula</code>). The zero-inflation model always uses a logit link.</p>
+</div>
+<div id="tweedie-model" class="section level3">
+<h3><span class="header-section-number">12.5.4</span> Tweedie Model</h3>
+<p>Another option for this type of data might be to try a Tweedie model, because it also has a probability mass at 0 (in other words, allows for zero inflation). The Tweedie distributions we are considering are not exactly perfect for count data since the positive part of the distribution is like a gamma distribution (continuous, not counts), but the shape and support of the distribution are pretty close to our data. Let’s try:</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" title="1">ZIT &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(count <span class="op">~</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>persons, <span class="dt">data=</span>zinb, <span class="dt">family=</span><span class="kw">tweedie</span>(<span class="dt">link =</span> <span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb166-2" title="2"><span class="kw">summary</span>(ZIT)</a></code></pre></div>
+<pre><code>##  Family: tweedie  ( log )
+## Formula:          count ~ child + camper + persons
+## Data: zinb
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##    857.6    878.8   -422.8    845.6      244 
+## 
+## 
+## Overdispersion parameter for tweedie family (): 3.95 
+## 
+## Conditional model:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -1.75575    0.32878  -5.340 9.29e-08 ***
+## child       -1.75659    0.18369  -9.563  &lt; 2e-16 ***
+## camperYes    0.76704    0.22200   3.455  0.00055 ***
+## persons      1.06495    0.09683  10.998  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+</div>
+<div id="model-assessment-2" class="section level2">
+<h2><span class="header-section-number">12.6</span> Model Assessment</h2>
+<p>We can do model assessment “like” we do for other count data models…more or less. (It is much harder to get something like Pearson residuals for these models, though…) <em>Please stay tuned!</em></p>
+</div>
+<div id="model-selection-2" class="section level2">
+<h2><span class="header-section-number">12.7</span> Model Selection?</h2>
+<p>One thing to understand is: is the ZIP model a better fit to the data than just a Poisson model? We can think of ZI as a different way of modelling overdispersion, an alternative to NB or quasi-Poisson models when we know there are true zeros in the data set.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" title="1">P &lt;-<span class="st"> </span><span class="kw">glm</span>(count <span class="op">~</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>persons, <span class="dt">data=</span>zinb, <span class="dt">family=</span>poisson)</a>
+<a class="sourceLine" id="cb168-2" title="2">NB1 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(count <span class="op">~</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>persons, <span class="dt">data=</span>zinb,</a>
+<a class="sourceLine" id="cb168-3" title="3">              <span class="dt">family=</span><span class="kw">nbinom1</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb168-4" title="4">NB2 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(count <span class="op">~</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>child <span class="op">+</span><span class="st"> </span>persons, <span class="dt">data=</span>zinb,</a>
+<a class="sourceLine" id="cb168-5" title="5">              <span class="dt">family=</span><span class="kw">nbinom2</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb168-6" title="6"><span class="kw">AIC</span>(ZIP,P, NB1, NB2)</a></code></pre></div>
+<pre><code>##     df       AIC
+## ZIP  5 1562.9324
+## P    4 1682.1450
+## NB1  5  821.6926
+## NB2  5  820.4440</code></pre>
+<p>Well, yes, the ZIP model is much better than the Poisson! But, the NB1 and NB2 models are <em>much</em> better than both.</p>
+<p>Among the different families and types of models that we have tried, which seems to be best for this data set?</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb170-1" title="1"><span class="kw">BIC</span>(P, ZIP, ZINB1, ZINB2, ZINBx, ZIT)</a></code></pre></div>
+<pre><code>##       df       BIC
+## P      4 1696.2308
+## ZIP    5 1580.5397
+## ZINB1  6  844.8214
+## ZINB2  6  843.5728
+## ZINBx  6  843.5735
+## ZIT    6  878.7701</code></pre>
+<p>For these data, the zero-inflated models are very similar to the other NB models, in terms of the AIC. If we used BIC instead, the non-zero inflated models would look quite a bit better! The improvement in goodness of fit with the zero-inflation is not really enough to make us prefer these ZI models to simpler models that also allow overdispersion, like the NB models.</p>
+<p>The NB models and the ZI models (with whatever “family” you choose) are two <em>different</em> ways of dealing with overdispersion caused by an abundance of zeros in the data. I’d recommend choosing ZI models if:</p>
+<ul>
+<li>There are <em>true zeros</em> and <em>other zeros</em> in your data, and you want to model this explicitly; or if</li>
+<li>The ZI models fit the data much better than a simpler non-ZI NB (or perhaps Tweedie) model.</li>
+</ul>
+<p>The zero-inflated negative binomial models seem to be best, among the ZI models. However, there is still a lot more work that could be done here! For example…</p>
+<div id="zero-inflation-covariates" class="section level3">
+<h3><span class="header-section-number">12.7.1</span> Zero inflation covariates</h3>
+<p>what if the Logistic regression part of the model <em>also</em> depends on covariates? That seems reasonable – maybe the number of people present, whether they are camping, and the number of kids present would help you to predict whether a group was not going to go fishing at all. To check that, we would need to change the <code>ziformula</code> (in NB models) or the part of the formula after the <span class="math inline">\(\vert\)</span> in ZIP models. It is possible this change <strong>might</strong> make the ZI models competitive with, or better than, the non-ZI NB models in IC terms.</p>
+</div>
+<div id="interaction-terms" class="section level3">
+<h3><span class="header-section-number">12.7.2</span> Interaction terms</h3>
+<p>For this dataset, it may also make sense to consider some more predictors, and interaction terms. For example, maybe live bait use is a good predictor, and maybe the relationship between live bait use and number of fish caught changes depending on the number of children present – for example, we might try something like:</p>
+<div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb172-1" title="1">ZINB1b &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(count <span class="op">~</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>child<span class="op">*</span>livebait <span class="op">+</span><span class="st"> </span>persons, <span class="dt">ziformula=</span> <span class="op">~</span><span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb172-2" title="2">                  <span class="dt">data=</span>zinb, <span class="dt">family=</span><span class="kw">nbinom1</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>))</a>
+<a class="sourceLine" id="cb172-3" title="3"><span class="kw">summary</span>(ZINB1b)</a></code></pre></div>
+<pre><code>##  Family: nbinom1  ( log )
+## Formula:          count ~ camper + child * livebait + persons
+## Zero inflation:         ~1
+## Data: zinb
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##    818.0    846.2   -401.0    802.0      242 
+## 
+## 
+## Overdispersion parameter for nbinom1 family (): 8.47 
+## 
+## Conditional model:
+##                    Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)       -1.648964   0.457499  -3.604 0.000313 ***
+## camperYes          0.649637   0.191185   3.398 0.000679 ***
+## child             -1.469266   0.643409  -2.284 0.022397 *  
+## livebaitYes        0.900232   0.352927   2.551 0.010749 *  
+## persons            0.790689   0.082140   9.626  &lt; 2e-16 ***
+## child:livebaitYes -0.008494   0.663504  -0.013 0.989786    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Zero-inflation model:
+##             Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)   -19.73    4306.92  -0.005    0.996</code></pre>
+<div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb174-1" title="1"><span class="kw">AIC</span>(ZINB1, ZINB1b)</a></code></pre></div>
+<pre><code>##        df      AIC
+## ZINB1   6 823.6926
+## ZINB1b  8 817.9976</code></pre>
+<p>Hmmm…it looks like we made an improvement. But do you think the improvement is because of the interaction term?</p>
+<p>Looking at the p-values, we might suspect that while <code>livebait</code> helps predict fish caught, there isn’t a clear interaction between effects of live bait use and the number of kids present.</p>
+<p>In this case, it is hard to fathom all the model selection options because there are predictors in <em>both parts</em> of the model.</p>
+<p>If you continue by hand, one thing to remember is: You can <strong>never</strong> include an interaction term in a model without also including the corresponding “main effect” term. For example, you <em>can not</em> have an interaction between <code>child</code> and <code>livebait</code> without also having both <code>child</code> and <code>livebait</code> as individual predictors in the model. (In fact, I have intentionally not taught you how to fit the “wrong” model…as long as you use the * to specify an interaction in your model formula, you should be fine!)</p>
+</div>
+<div id="dredge" class="section level3">
+<h3><span class="header-section-number">12.7.3</span> Dredge</h3>
+<p>We <em>can</em> also use dredge(), but:</p>
+<ul>
+<li>It will only put covariates in/out of the model, not compare zero-inflated with non-zero-inflated models.</li>
+<li>It <em>will</em> put covariates in and out of both the zero-inflation and regular parts of the model.</li>
+</ul>
+<p>So to do a comprehensive comparison, you would need to start with several full models – one for each “family” you want to try, with and without ZI, and with all possible predictors included for both the count and ZI parts of the models – and compare dredge results for all of them.</p>
+<p><code>dredge()</code> is also nice and smart about interaction terms – it will never
+include an interaction unless the main effect terms are also present.</p>
+<div class="sourceCode" id="cb176"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb176-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb176-2" title="2">ZINB1c &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(count <span class="op">~</span><span class="st"> </span>child_cat<span class="op">*</span>livebait <span class="op">+</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>persons, </a>
+<a class="sourceLine" id="cb176-3" title="3">                  <span class="dt">ziformula =</span> <span class="op">~</span><span class="st"> </span>child_cat <span class="op">+</span><span class="st"> </span>camper <span class="op">+</span><span class="st"> </span>persons, </a>
+<a class="sourceLine" id="cb176-4" title="4">                  <span class="dt">data=</span>zinb, <span class="dt">family=</span><span class="kw">nbinom1</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>), <span class="dt">na.action =</span> <span class="st">&#39;na.fail&#39;</span>)</a>
+<a class="sourceLine" id="cb176-5" title="5">ms &lt;-<span class="st"> </span><span class="kw">dredge</span>(ZINB1c, <span class="dt">rank=</span><span class="st">&#39;AIC&#39;</span>)</a>
+<a class="sourceLine" id="cb176-6" title="6"><span class="kw">head</span>(ms)</a></code></pre></div>
+<pre><code>## Global model call: glmmTMB(formula = count ~ child_cat * livebait + camper + persons, 
+##     data = zinb, family = nbinom1(link = &quot;log&quot;), ziformula = ~child_cat + 
+##         camper + persons, na.action = &quot;na.fail&quot;, dispformula = ~1)
+## ---
+## Model selection table 
+##     cnd((Int)) zi((Int)) dsp((Int)) cnd(cmp) cnd(chl_cat) cnd(lvb)
+## 16      -1.655    -20.13          +        +            +        +
+## 144     -1.655    -14.99          +        +            +        +
+## 48      -1.655    -19.44          +        +            +        +
+## 176     -1.655    -25.77          +        +            +        +
+## 32      -1.685    -24.09          +        +            +        +
+## 12      -0.850    -20.29          +        +            +         
+##     cnd(prs) cnd(chl_cat:lvb) zi(cmp) zi(prs) df   logLik   AIC weight
+## 16    0.7894                                   9 -399.843 817.7  0.511
+## 144   0.7894                           -3.018 10 -399.843 819.7  0.188
+## 48    0.7894                        +         10 -399.843 819.7  0.188
+## 176   0.7894                        +  -4.369 11 -399.843 821.7  0.069
+## 32    0.7890                +                 12 -399.634 823.3  0.031
+## 12    0.7696                                   8 -404.525 825.1  0.013
+## Models ranked by AIC(x)</code></pre>
+<p>In this case, which model do you think is best? What else might you try?</p>
+</div>
+</div>
+<div id="prediction-plots-2" class="section level2">
+<h2><span class="header-section-number">12.8</span> Prediction Plots</h2>
+<p>We can also use prediction plots as usual. Here, they will help us clarify what “success” is in the logistic regression part of the model – according to the help file for the <code>zeroinfl()</code> function, we should be able to see that a “success” is to be a “true zero”.</p>
+<p>Let’s try an example - making prediction plots for our ZIP model for different numbers of persons in the group.</p>
+<p>First let’s check the range of the data for different variables:</p>
+<div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb178-1" title="1"><span class="kw">summary</span>(zinb[,<span class="kw">c</span>(<span class="st">&#39;camper&#39;</span>, <span class="st">&#39;child&#39;</span>, <span class="st">&#39;persons&#39;</span>)])</a></code></pre></div>
+<pre><code>##     camper              child          persons     
+##  Length:250         Min.   :0.000   Min.   :1.000  
+##  Class :character   1st Qu.:0.000   1st Qu.:2.000  
+##  Mode  :character   Median :0.000   Median :2.000  
+##                     Mean   :0.684   Mean   :2.528  
+##                     3rd Qu.:1.000   3rd Qu.:4.000  
+##                     Max.   :3.000   Max.   :4.000</code></pre>
+<p>Now, the prediction plots:</p>
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" title="1">new_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">persons=</span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb180-2" title="2">                       <span class="dt">camper=</span><span class="st">&#39;Yes&#39;</span>,</a>
+<a class="sourceLine" id="cb180-3" title="3">                       <span class="dt">child=</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb180-4" title="4">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(ZIP, <span class="dt">newdata=</span>new_data)</a>
+<a class="sourceLine" id="cb180-5" title="5"><span class="kw">gf_point</span>(pred<span class="op">~</span>persons, <span class="dt">data=</span>new_data) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb180-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;People in Group&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Number of Fish Caught&#39;</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-95-1.png" width="336" style="display: block; margin: auto;" /></p>
+<p>The number of fish caught goes <em>up</em> as the number of people in the group goes up. But persons was a predictor for the logistic regression (zero-inflation part) of the model! And its coefficient was estimated to have a negative value. So according to our model, the more persons in the group, the less likely you are to be a “true zero” (and the more likely you are to be in the park to fish). Therefore, the number of fish your group catches goes up.</p>
+<p>However, notice that unfortunately, the <code>predict()</code> function for <code>zerofinl()</code> ZIP models does not return standard errors on the fitted values. Shucks! We would have to compute these ourselves to show uncertainty on the prediction plot. We could use something called a parametric or nonparametric bootstrap to do it. We may learn how to do this later on in the course, but for now we don’t have a tool to do it.</p>
+<p>If you use one of the <code>glmmTMB()</code> models, though, you should be able to make prediction plots with uncertainty as usual.</p>
+</div>
+<div id="acknowledgements" class="section level2">
+<h2><span class="header-section-number">12.9</span> Acknowledgements</h2>
+<p>Many thanks to: <a href="https://stats.idre.ucla.edu/r/dae/zip/" class="uri">https://stats.idre.ucla.edu/r/dae/zip/</a>, a source of the data set and information used in preparing these notes.</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="collinearity-and-multicollinearity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/12-zero-inflation.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["s245-notes.pdf", "s245-notes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
