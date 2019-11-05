@@ -24,7 +24,7 @@
 <meta name="author" content="Stacy DeRuiter, Calvin University" />
 
 
-<meta name="date" content="2019-10-31" />
+<meta name="date" content="2019-11-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -32,7 +32,7 @@
   
   
 <link rel="prev" href="collinearity-and-multicollinearity.html"/>
-<link rel="next" href="references.html"/>
+<link rel="next" href="non-constant-variance-and-other-unresolved-problems.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -287,6 +287,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12.8" data-path="zero-inflation.html"><a href="zero-inflation.html#prediction-plots-2"><i class="fa fa-check"></i><b>12.8</b> Prediction Plots</a></li>
 <li class="chapter" data-level="12.9" data-path="zero-inflation.html"><a href="zero-inflation.html#acknowledgements"><i class="fa fa-check"></i><b>12.9</b> Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html"><i class="fa fa-check"></i><b>13</b> Non-constant variance (and other unresolved problems)</a><ul>
+<li class="chapter" data-level="13.0.1" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#already-in-our-tool-box-make-sure-the-model-is-right"><i class="fa fa-check"></i><b>13.0.1</b> Already in Our Tool Box: Make sure the model is “right”</a></li>
+<li class="chapter" data-level="13.0.2" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#already-in-our-tool-box-models-that-estimate-dispersion-parameters"><i class="fa fa-check"></i><b>13.0.2</b> Already in Our Tool Box: Models that estimate dispersion parameters</a></li>
+<li class="chapter" data-level="13.0.3" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#gamma-glms"><i class="fa fa-check"></i><b>13.0.3</b> Gamma GLMs</a></li>
+<li class="chapter" data-level="13.0.4" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#beta-glms"><i class="fa fa-check"></i><b>13.0.4</b> Beta GLMs</a></li>
+<li class="chapter" data-level="13.0.5" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#transformations"><i class="fa fa-check"></i><b>13.0.5</b> Transformations</a></li>
+<li class="chapter" data-level="13.0.6" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#modelling-non-constant-variance"><i class="fa fa-check"></i><b>13.0.6</b> Modelling non-constant variance</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -643,7 +651,7 @@ include an interaction unless the main effect terms are also present.</p>
 <a class="sourceLine" id="cb180-4" title="4">pred &lt;-<span class="st"> </span><span class="kw">predict</span>(ZIP, <span class="dt">newdata=</span>new_data)</a>
 <a class="sourceLine" id="cb180-5" title="5"><span class="kw">gf_point</span>(pred<span class="op">~</span>persons, <span class="dt">data=</span>new_data) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb180-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;People in Group&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Number of Fish Caught&#39;</span>)</a></code></pre></div>
-<p><img src="s245-notes_files/figure-html/unnamed-chunk-95-1.png" width="336" style="display: block; margin: auto;" /></p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-95-1.png" width="576" style="display: block; margin: auto;" /></p>
 <p>The number of fish caught goes <em>up</em> as the number of people in the group goes up. But persons was a predictor for the logistic regression (zero-inflation part) of the model! And its coefficient was estimated to have a negative value. So according to our model, the more persons in the group, the less likely you are to be a “true zero” (and the more likely you are to be in the park to fish). Therefore, the number of fish your group catches goes up.</p>
 <p>However, notice that unfortunately, the <code>predict()</code> function for <code>zerofinl()</code> ZIP models does not return standard errors on the fitted values. Shucks! We would have to compute these ourselves to show uncertainty on the prediction plot. We could use something called a parametric or nonparametric bootstrap to do it. We may learn how to do this later on in the course, but for now we don’t have a tool to do it.</p>
 <p>If you use one of the <code>glmmTMB()</code> models, though, you should be able to make prediction plots with uncertainty as usual.</p>
@@ -660,7 +668,7 @@ include an interaction unless the main effect terms are also present.</p>
         </div>
       </div>
 <a href="collinearity-and-multicollinearity.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="non-constant-variance-and-other-unresolved-problems.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

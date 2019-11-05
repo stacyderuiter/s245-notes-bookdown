@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 9 Binary Regression | STAT 245 Course Notes</title>
+  <title>Chapter 13 Non-constant variance (and other unresolved problems) | STAT 245 Course Notes</title>
   <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
   <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 9 Binary Regression | STAT 245 Course Notes" />
+  <meta property="og:title" content="Chapter 13 Non-constant variance (and other unresolved problems) | STAT 245 Course Notes" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 9 Binary Regression | STAT 245 Course Notes" />
+  <meta name="twitter:title" content="Chapter 13 Non-constant variance (and other unresolved problems) | STAT 245 Course Notes" />
   
   <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="interactions.html"/>
-<link rel="next" href="binary-regression-data-with-more-than-one-trial-per-row.html"/>
+<link rel="prev" href="zero-inflation.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -317,218 +317,69 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="binary-regression" class="section level1">
-<h1><span class="header-section-number">Chapter 9</span> Binary Regression</h1>
-<p>Our next goal: establish a framework for doing regression modelling when the response variable is a categorical one, with two categories.</p>
-<div id="data-source-1" class="section level2">
-<h2><span class="header-section-number">9.1</span> Data Source</h2>
-<p>The dataset used here is on Alaskan wood frogs, detailing some physical characteristics, habitat characteristics, and the number of developmental and other abnormalities found in the frogs. It was originally obtained from:[<a href="http://datadryad.org/resource/doi:10.5061/dryad.sq72d" class="uri">http://datadryad.org/resource/doi:10.5061/dryad.sq72d</a>].</p>
-<p>The data file can be accessed online at: [<a href="http://sldr.netlify.com/data/FrogAbnormalities.csv" class="uri">http://sldr.netlify.com/data/FrogAbnormalities.csv</a>]</p>
-<pre><code>##   FrogID TotalLength TailLength    Stage Year RoadDistance RoadType
-## 1     25    19.19701 31.8285559 Stage 43 2011           22   Gravel
-## 2     29    20.99035  0.1151022 Stage 46 2012          387   Gravel
-## 3     29    20.50364  0.1055217 Stage 46 2011          781    Paved
-##   Abnormal SkeletalAbnormality EyeAbnormality orig.id
-## 1       No                  No             No    3450
-## 2       No                  No             No    2276
-## 3       No                  No             No     158</code></pre>
-</div>
-<div id="logistic-regression" class="section level2">
-<h2><span class="header-section-number">9.2</span> Logistic Regression</h2>
-<p>Recall, for linear regression we fitted a model for continuous (numeric) response variable <span class="math inline">\(y\)</span> according to:</p>
-<p><span class="math display">\[y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon \]</span></p>
-<p>where <span class="math inline">\(x\)</span>s are the <span class="math inline">\(k\)</span> predictor variables, <span class="math inline">\(\beta\)</span>s are the parameters to be estimated by the model, and <span class="math inline">\(\epsilon \sim N(0,\sigma)\)</span> are the model residuals.</p>
-<p>When our response variable was a <em>count</em> variable, we modified our equation to:</p>
-<p><span class="math display">\[log(\lambda_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon_{link} \]</span></p>
-<p>positing that <span class="math inline">\(y_i \sim Pois(\lambda_i)\)</span> for Poisson regression; similarly for quasiPoisson or negative binomial regression, we just replaced that Poisson distribution with a quasiPoisson or a negative binomial distribution.</p>
-<p>What if our response variable is <em>logical</em> – a categorical variable with just two possible values? We will designate one of the two values a “success,” and then we want to predict the probability of success as a function of some set of predictors. What will our model equation look like in this case?</p>
-<p><span class="math display">\[ logit(p_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon_{link}\]</span></p>
-<p>where the <code>logit</code> function is <span class="math inline">\(logit(x) = log(\frac{x}{1-x})\)</span>. This function maps probabilities to positive and negative real numbers, effectively “spreading them out” from the range 0-1 to the full range of real numbers. How does this equation relate back to our desired response variable? Well, <span class="math inline">\(i\)</span>th observation of the response variable is assumed to follow a binomial distribution with probability <span class="math inline">\(p_i\)</span> (<span class="math inline">\(y_i \sim Binom(n_i, p_i)\)</span>). (<span class="math inline">\(n_i\)</span> depends on the setup of the data – often n=1 for each row of the dataset, as here where each row is one frog. We can think of each frog as one binomial trial, with success/failure meaning abnormality/normality of the frog.)</p>
-</div>
-<div id="checking-the-data-setup" class="section level2">
-<h2><span class="header-section-number">9.3</span> Checking the data setup</h2>
-<p>We would like to model the proportion frogs with abnormalities as a function of a set of covariates. The variable <code>Abnormal</code> has values “Yes” and “No”. In R, if we use this (factor) variable as our response, how will R determine which level (value of the variable) is a “success”?</p>
-<p>R uses the FIRST variable value as “failure” and the second as “success” – this makes sense if you imagine coding 0 for failure and 1 for success (and then sorting in numeric/alphabetical order). If you have a categorical variable with informative values, you will need to make sure that the “base” (first) level is the one you want to equate with “failure”.</p>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb105-1" title="1"><span class="kw">levels</span>(frogs<span class="op">$</span>Abnormal)</a></code></pre></div>
-<pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
-<p>If you do need to rearrange the levels, one way to do it is to use the <code>forcats::fct_relevel()</code> function. Example:</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" title="1"><span class="co">#ref will be the FIRST level after releveling</span></a>
-<a class="sourceLine" id="cb107-2" title="2">frogs &lt;-<span class="st"> </span>frogs <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb107-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">Abnormal =</span> forcats<span class="op">::</span><span class="kw">fct_relevel</span>(Abnormal, <span class="dt">ref=</span><span class="st">&#39;No&#39;</span>))</a>
-<a class="sourceLine" id="cb107-4" title="4">frogs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(Abnormal) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">levels</span>()</a></code></pre></div>
-<pre><code>## [1] &quot;No&quot;  &quot;Yes&quot;</code></pre>
-</div>
-<div id="fitting-a-saturated-model" class="section level2">
-<h2><span class="header-section-number">9.4</span> Fitting a saturated model</h2>
-<p>Let’s try fitting a model for Abnormalities as a function of Stage, Year, RoadType, and RoadDistance. Why do you think these variables and not others were chosen?</p>
-<p>Perhaps it makes sense that type and distance to road are proxies for urbanization, and frogs may do better in more pristine habitats. It also seems likely that there would be differences over time. There may also be differences by Stage, if frogs with severe abnormalities have trouble even surviving to the later/older stages.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" title="1">frog.logr &lt;-<span class="st"> </span><span class="kw">glm</span>(Abnormal <span class="op">~</span><span class="st"> </span>Stage <span class="op">+</span><span class="st"> </span><span class="kw">factor</span>(Year) <span class="op">+</span><span class="st"> </span>RoadType <span class="op">+</span><span class="st"> </span>RoadDistance,</a>
-<a class="sourceLine" id="cb109-2" title="2">                 <span class="dt">data=</span>frogs, <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>))</a>
-<a class="sourceLine" id="cb109-3" title="3"><span class="kw">summary</span>(frog.logr)</a></code></pre></div>
-<pre><code>## 
-## Call:
-## glm(formula = Abnormal ~ Stage + factor(Year) + RoadType + RoadDistance, 
-##     family = binomial(link = &quot;logit&quot;), data = frogs)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -0.8904  -0.6398  -0.5574  -0.4788   2.2886  
-## 
-## Coefficients:
-##                    Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)      -0.3509350  0.4198798  -0.836 0.403268    
-## StageStage 43     0.1129785  0.1136966   0.994 0.320376    
-## StageStage 44    -0.0987133  0.1290558  -0.765 0.444338    
-## StageStage 45    -0.4616044  0.1301337  -3.547 0.000389 ***
-## StageStage 46    -0.5954533  0.1451580  -4.102 4.09e-05 ***
-## factor(Year)2001 -1.4231818  0.8393630  -1.696 0.089971 .  
-## factor(Year)2002 -1.3820162  1.1210725  -1.233 0.217664    
-## factor(Year)2003 -0.9744573  0.5216890  -1.868 0.061778 .  
-## factor(Year)2004 -1.4345710  0.4272057  -3.358 0.000785 ***
-## factor(Year)2005 -1.1185067  0.4214799  -2.654 0.007960 ** 
-## factor(Year)2006 -1.1232649  0.4229028  -2.656 0.007905 ** 
-## factor(Year)2010 -0.4985424  0.4299638  -1.159 0.246253    
-## factor(Year)2011 -1.1674055  0.4163277  -2.804 0.005046 ** 
-## factor(Year)2012 -1.0488208  0.4157733  -2.523 0.011650 *  
-## RoadTypePaved    -0.1689634  0.0842935  -2.004 0.045020 *  
-## RoadDistance      0.0005653  0.0002471   2.287 0.022176 *  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 4787.5  on 5370  degrees of freedom
-## Residual deviance: 4701.4  on 5355  degrees of freedom
-## AIC: 4733.4
-## 
-## Number of Fisher Scoring iterations: 4</code></pre>
-</div>
-<div id="link-functions" class="section level2">
-<h2><span class="header-section-number">9.5</span> Link Functions</h2>
-<p>Here, we have used the logit link function, which is the most common. However, there are other functions that translate proportions to real numbers, and are sometimes used in regression for binary data. Two common options are:</p>
+<div id="non-constant-variance-and-other-unresolved-problems" class="section level1">
+<h1><span class="header-section-number">Chapter 13</span> Non-constant variance (and other unresolved problems)</h1>
+<p>So far, we have worked to assemble a tool-kit that allows us to fit appropriate regression models for a variety of types of response and predictor variables. If we fit an appropriate model (conditions are met) to an appropriate dataset (representative sample of the population of interest), we should be able to draw valid conclusions – but as we have seen, if conditions are <em>not</em> met, then our conclusions (model predictions, judgements about which predictors are important, etc.) may all be unreliable.</p>
+<p>So what can we do if we’ve fit the best model we know how to fit, and it’s still not quite right? We have seen a number of examples so far where, even after we fit a model with what seem to be the right family and sensible predictors, conditions are not met. The most common problems are non-constant variance of residuals (often seen with non-normal residuals), and non-independent residuals. Solutions for non-independent residuals are coming soon, in future sections. Here we’ll review options (some already in our tool-kit, and some new) to try to improve the situation when non-constant variance (NCV) is present.</p>
+<p>What can we try if a model seems to fit data well, except for the fact that the constant variance condition doesn’t hold (for linear regression) or the mean-variance relationship is not as expected (GLMs etc.)? (Note: this problem is also often accompanied by right skew in the distribution of the residuals.) Possible solutions are presented approximately in order of desirability…</p>
+<div id="already-in-our-tool-box-make-sure-the-model-is-right" class="section level3">
+<h3><span class="header-section-number">13.0.1</span> Already in Our Tool Box: Make sure the model is “right”</h3>
+<p>Improving the model specification sometimes corrects a problem with non-constant variance. Make sure you have considered:</p>
 <ul>
-<li>Probit regression: link=‘probit’</li>
-<li>Complementary log-log regression: link=‘cloglog’</li>
-</ul>
-<p>There are not closed-form expressions for the the probit and complementary log-log functions that are easy to write down, so that is why the exact functions are not given here. As shown below, the shapes of these three functions are very similar. So it may come as no big surprise that frequently they provide similar goodness of fit to data (according to IC). If that is the case, choose logit (which makes some of the interpretation of results easier).</p>
-<p><img src="binary-regression-links.png" width="3in" style="display: block; margin: auto;" /></p>
-<p>Note: figure is from [<a href="http://data.princeton.edu/wws509/notes" class="uri">http://data.princeton.edu/wws509/notes</a>].</p>
-</div>
-<div id="conditions-1" class="section level2">
-<h2><span class="header-section-number">9.6</span> Conditions</h2>
-<p>Under what conditions is a logistic regression model appropriate?</p>
-<ul>
-<li>Response variable is logical – you can characterize it as the outcome of a binomial trial (or a set of independent binomial trials). Some response variables can be expressed as proportions, but can <em>not</em> be well modelled with binomial regression. For example, you might take one-minute recordings in the woods and measure the proportion of each minute during which bird song was audible. The data will look like proportions, but you can’t think of them as binomial trials and should not model them with binomial regression (what is a “trial” here, and what is a “success”? Make sure you can answer those questions before using binomial regression.)</li>
-<li>Linearity: logit(p) should have a linear relationship with each predictor variable. (A bit hard to check - see solutions to HW8 for an example of how it can be done.)</li>
-<li>Independence: Same as usual.</li>
-<li>Mean-variance relationship: The Pearson or Deviance residuals will decrease as a function of fitted value, and should have approximately constant variance as a function of fitted value. But a residuals vs fitted plot is of almost no use to us – the examples later on show how you can expect it to look, and if it deviates from the expected appearance, try to figure out why and what is going on; but if it looks as expected, you can say “there is no evidence in this figure of a violation of the conditions of binary regression.”</li>
-<li>NO distributional assumptions about residuals.</li>
+<li>Is the right “family” being used for the data type being modelled?</li>
+<li>Are <strong>all</strong> the variables that you think are important predictors (and are available to you in the data) included in the model?
+<!-- If there is a need for random effects (or GEE clusters), are they included in the model? --></li>
 </ul>
 </div>
-<div id="model-assessment-plots" class="section level2">
-<h2><span class="header-section-number">9.7</span> Model Assessment Plots</h2>
-<p><img src="s245-notes_files/figure-html/frog-assess1-1.png" width="336" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" title="1"><span class="kw">gf_point</span>(<span class="kw">resid</span>(frog.logr, <span class="dt">type=</span><span class="st">&#39;pearson&#39;</span>) <span class="op">~</span><span class="st"> </span><span class="kw">fitted</span>(frog.logr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb111-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">title=</span><span class="st">&#39;frog.logr&#39;</span>, </a>
-<a class="sourceLine" id="cb111-3" title="3">          <span class="dt">y=</span><span class="st">&#39; Pearson</span><span class="ch">\n</span><span class="st">Residuals&#39;</span>,<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>)</a>
-<a class="sourceLine" id="cb111-4" title="4"></a>
-<a class="sourceLine" id="cb111-5" title="5"><span class="kw">gf_point</span>(<span class="kw">resid</span>(frog.logr, <span class="dt">type=</span><span class="st">&#39;deviance&#39;</span>) <span class="op">~</span><span class="st"> </span><span class="kw">fitted</span>(frog.logr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb111-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">title=</span><span class="st">&#39;frog.logr&#39;</span>, </a>
-<a class="sourceLine" id="cb111-7" title="7">          <span class="dt">y=</span><span class="st">&#39; Deviance</span><span class="ch">\n</span><span class="st">Residuals&#39;</span>,<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>)</a>
-<a class="sourceLine" id="cb111-8" title="8"></a>
-<a class="sourceLine" id="cb111-9" title="9"><span class="kw">gf_point</span>(<span class="kw">resid</span>(frog.logr, <span class="dt">type=</span><span class="st">&#39;response&#39;</span>) <span class="op">~</span><span class="st"> </span><span class="kw">fitted</span>(frog.logr)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb111-10" title="10"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">title=</span><span class="st">&#39;frog.logr&#39;</span>, </a>
-<a class="sourceLine" id="cb111-11" title="11">          <span class="dt">y=</span><span class="st">&#39; Raw Response</span><span class="ch">\n</span><span class="st">Residuals&#39;</span>,<span class="dt">x=</span><span class="st">&#39;Fitted Values&#39;</span>)</a>
-<a class="sourceLine" id="cb111-12" title="12"></a>
-<a class="sourceLine" id="cb111-13" title="13"><span class="kw">gf_histogram</span>(<span class="op">~</span><span class="kw">resid</span>(frog.logr, <span class="dt">type=</span><span class="st">&#39;pearson&#39;</span>), <span class="dt">bins=</span><span class="dv">15</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb111-14" title="14"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">title=</span><span class="st">&#39;frog.logr&#39;</span>, </a>
-<a class="sourceLine" id="cb111-15" title="15">          <span class="dt">x=</span><span class="st">&#39;Residuals&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Count&#39;</span>)</a></code></pre></div>
-<p><img src="s245-notes_files/figure-html/frog-assess2-1.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/frog-assess2-2.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/frog-assess2-3.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/frog-assess2-4.png" width="336" style="display: block; margin: auto;" /></p>
-<p>The two “lines” in the residuals vs fitted plots correspond with the two possible values of the response variable in the data.</p>
-<p>And remember - there is not a strict distributional assumption about the residuals (in other words, they don’t have to follow, say, a normal distribution), so we don’t really have to make a histogram of them. The one here is shown just to help you remember that you don’t <em>have</em> to check it, and if you do, it will look “strange” (bimodal like this) yet it is nothing to worry about.</p>
+<div id="already-in-our-tool-box-models-that-estimate-dispersion-parameters" class="section level3">
+<h3><span class="header-section-number">13.0.2</span> Already in Our Tool Box: Models that estimate dispersion parameters</h3>
+<p>Negative binomial (and quasi-Poisson) models include estimation of a dispersion parameter that helps to account for over- or under-disperion (that is - the variance is larger, or smaller, than the mean value). If one of these models is being used (or is appropriate for the data) - NCV should be accounted for! (We can also verify this: If all is working well, the Pearson residuals will have constant variance.)</p>
 </div>
-<div id="odds-ratios" class="section level2">
-<h2><span class="header-section-number">9.8</span> Odds Ratios</h2>
-<p>The <strong>odds</strong> (or <em>odds ratio</em>) is <span class="math inline">\(\frac{p}{1-p}\)</span> – the ratio of success to failure. So if P(success) = 0.75, then the odds will be <span class="math inline">\(\frac{0.75}{0.25}\)</span> = 3 or “three to one” – you will usually succeed three times for every failure.</p>
-<p>Remember, the logit function was <span class="math inline">\(logit(x) = log(\frac{p}{1-p})\)</span>? In other words, the logit is the log of the odds ratio. This means that the coefficients of a binary regression model with logit link function have special interpretations in terms of odds ratios.</p>
-<p>Let’s consider a simplified version of our model (just to make it easier to write out the model equation):</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb112-1" title="1">simple &lt;-<span class="st"> </span><span class="kw">glm</span>(Abnormal <span class="op">~</span><span class="st"> </span>Stage, <span class="dt">data =</span> frogs, <span class="dt">family=</span><span class="kw">binomial</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>))</a>
-<a class="sourceLine" id="cb112-2" title="2"><span class="kw">coef</span>(simple)</a></code></pre></div>
-<pre><code>##   (Intercept) StageStage 43 StageStage 44 StageStage 45 StageStage 46 
-##    -1.4618893     0.1001146    -0.1094112    -0.4527238    -0.5119712</code></pre>
-<p>So our model equation is:</p>
-<p><span class="math display">\[ logit(p_i) = -1.46 + 0.10I_{s43} - 0.11I_{s44} - 0.45I_{s45} - 0.51I_{s46}\]</span></p>
-<p>According to this model, the log-odds (logit(p)) for a Stage 42 frog is -1.46, so the odds of being Abnormal for a Stage 42 frog are <span class="math inline">\(e^{-1.46} = 0.23\)</span>.</p>
-<p>The log-odds for a Stage 46 frog are -1.46 - 0.51 = -1.97, so the odds of it being Abnormal are <span class="math inline">\(e^{-1.97} = 0.14\)</span>.</p>
-<p>The <em>change</em> in odds going from Stage 42 to 46 is then <span class="math inline">\(\frac{0.14}{0.23} = 0.61\)</span> – the odds of a Stage 42 frog being abnormal are nearly double those of a Stage 46 frog.</p>
-<p>Notice – we didn’t actually have to compute all that to find the 0.6 value!</p>
-<p>We know that for Stage 46</p>
-<p><span class="math display">\[ log(\frac{p}{1-p}) = -1.46 -0.51\]</span>
-so</p>
-<p><span class="math display">\[ \frac{p}{1-p} = e^{-1.46 - 0.51} = e^{-1.46}e^{-0.51}\]</span></p>
-<p>And <span class="math inline">\(e^{-1.46}\)</span> is the odds for Stage 42…aha! So, <span class="math inline">\(e^{-0.51} = 0.60\)</span> is the <em>multiplier</em> on the odds ratio to go from stage 42 to 46. And in general, <span class="math inline">\(e^{\beta}\)</span> is the multiplier on the odds ratio for a one-unit change in the predictor variable for which <span class="math inline">\(\beta\)</span> is the model coefficient.</p>
+<div id="gamma-glms" class="section level3">
+<h3><span class="header-section-number">13.0.3</span> Gamma GLMs</h3>
+<p><strong>If</strong> you are fitting a linear regression and:</p>
+<ul>
+<li>The response variable of interest is non-negative, <strong>and</strong></li>
+<li>There is right skew in residuals <strong>and/or</strong></li>
+<li>There is non-constant variance of residuals…</li>
+</ul>
+<p>You may want to try fitting a model using the <strong>Gamma</strong> family (<code>link = 'log'</code> or <code>link = 'inverse'</code> link functions are the most common). If needed you can use model assessment plots and/or model selection criteria (AIC, BIC…) to decide between link functions. For example:</p>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" title="1">gamma.mod &lt;-<span class="st"> </span><span class="kw">glm</span>(resp <span class="op">~</span><span class="st"> </span>pred1 <span class="op">+</span><span class="st"> </span>pred2, <span class="dt">data=</span>dataset,</a>
+<a class="sourceLine" id="cb181-2" title="2">                 <span class="dt">family=</span><span class="kw">Gamma</span>(<span class="dt">link=</span><span class="st">&#39;log&#39;</span>)) <span class="co"># or can use link=&#39;inverse&#39;</span></a></code></pre></div>
 </div>
-<div id="model-selection" class="section level2">
-<h2><span class="header-section-number">9.9</span> Model Selection</h2>
-<p>As usual:</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb114-1" title="1"><span class="kw">require</span>(MuMIn)</a>
-<a class="sourceLine" id="cb114-2" title="2">frog.logr &lt;-<span class="st"> </span><span class="kw">update</span>(frog.logr, <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>)</a>
-<a class="sourceLine" id="cb114-3" title="3">mod.sel &lt;-<span class="st"> </span><span class="kw">dredge</span>(frog.logr, <span class="dt">rank=</span><span class="st">&#39;AIC&#39;</span>)</a>
-<a class="sourceLine" id="cb114-4" title="4"><span class="kw">head</span>(mod.sel,<span class="dv">5</span>)</a></code></pre></div>
-<pre><code>## Global model call: glm(formula = Abnormal ~ Stage + factor(Year) + RoadType + RoadDistance, 
-##     family = binomial(link = &quot;logit&quot;), data = frogs, na.action = &quot;na.fail&quot;)
-## ---
-## Model selection table 
-##      (Int) fct(Yer)       RdD RdT Stg df    logLik    AIC delta weight
-## 16 -0.3509        + 0.0005653   +   + 16 -2350.719 4733.4  0.00  0.590
-## 12 -0.3426        + 0.0005161       + 15 -2352.740 4735.5  2.04  0.213
-## 14 -0.3749        +             +   + 15 -2353.232 4736.5  3.03  0.130
-## 10 -0.3653        +                 + 14 -2354.889 4737.8  4.34  0.067
-## 15 -1.4510          0.0004694   +   +  7 -2368.278 4750.6 17.12  0.000
-## Models ranked by AIC(x)</code></pre>
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" title="1">afm &lt;-<span class="st"> </span><span class="kw">model.avg</span>(mod.sel, <span class="dt">fit=</span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb116-2" title="2"><span class="kw">coef</span>(afm)</a></code></pre></div>
-<pre><code>##      (Intercept) factor(Year)2001 factor(Year)2002 factor(Year)2003 
-##    -0.3535582013    -1.4237089763    -1.3808976121    -0.9748675931 
-## factor(Year)2004 factor(Year)2005 factor(Year)2006 factor(Year)2010 
-##    -1.4331851168    -1.1210426509    -1.1258664109    -0.5125316516 
-## factor(Year)2011 factor(Year)2012     RoadDistance    RoadTypePaved 
-##    -1.1735417137    -1.0548360421     0.0005522245    -0.1658639112 
-##    StageStage 43    StageStage 44    StageStage 45    StageStage 46 
-##     0.1093083878    -0.1003833764    -0.4577677670    -0.5886749698</code></pre>
+<div id="beta-glms" class="section level3">
+<h3><span class="header-section-number">13.0.4</span> Beta GLMs</h3>
+<p>If your response variable happens to be bounded between 0-1 (but NOT a probability, so that a binary data regression would not be appropriate), you can also try a Beta regression (using the beta distribution). Since the shape of the distribution is extremely flexible, it will help with residuals whose distribution is not as expected. The variance of the beta distribution also <em>does</em> depend on its mean, so it is likely to be better than a linear model at addressing NCV. A code example is below. You must use <code>glmmTMB()</code> to fit this model.</p>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" title="1">beta_model &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(response <span class="op">~</span><span class="st"> </span>predictor1 <span class="op">+</span><span class="st"> </span>predictor2,</a>
+<a class="sourceLine" id="cb182-2" title="2">                      <span class="dt">data=</span>my_data,</a>
+<a class="sourceLine" id="cb182-3" title="3">                      <span class="dt">family=</span><span class="kw">beta_family</span>(<span class="dt">link=</span><span class="st">&#39;logit&#39;</span>))</a></code></pre></div>
 </div>
-<div id="prediction-plots-1" class="section level2">
-<h2><span class="header-section-number">9.10</span> Prediction Plots</h2>
-<p>Shown here are example prediction plots for Stage and RoadDistance. First, check out a summary table for the variables in the model to help determine fixed values.</p>
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" title="1">frogs<span class="op">$</span>Year &lt;-<span class="st"> </span><span class="kw">factor</span>(frogs<span class="op">$</span>Year)</a>
-<a class="sourceLine" id="cb118-2" title="2"><span class="kw">summary</span>(frogs[,<span class="kw">c</span>(<span class="st">&#39;RoadDistance&#39;</span>, <span class="st">&#39;RoadType&#39;</span>, <span class="st">&#39;Stage&#39;</span>,</a>
-<a class="sourceLine" id="cb118-3" title="3">                 <span class="st">&#39;Year&#39;</span>)])</a></code></pre></div>
-<pre><code>##   RoadDistance      RoadType         Stage           Year     
-##  Min.   :  3.00   Gravel:3293   Stage 42: 829   2012   :1561  
-##  1st Qu.: 15.00   Paved :2078   Stage 43:1417   2011   :1433  
-##  Median : 31.00                 Stage 44: 901   2005   : 683  
-##  Mean   : 99.38                 Stage 45:1191   2006   : 647  
-##  3rd Qu.: 83.00                 Stage 46:1033   2004   : 605  
-##  Max.   :781.00                                 2010   : 300  
-##                                                 (Other): 142</code></pre>
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" title="1"><span class="kw">require</span>(s245)</a>
-<a class="sourceLine" id="cb120-2" title="2"><span class="kw">pred_plot</span>(afm, <span class="st">&#39;Stage&#39;</span>, <span class="dt">data =</span> frogs)</a></code></pre></div>
-<p><img src="s245-notes_files/figure-html/unnamed-chunk-67-1.png" width="624" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" title="1"><span class="kw">pred_plot</span>(afm, <span class="st">&#39;RoadDistance&#39;</span>, <span class="dt">data =</span> frogs)</a></code></pre></div>
-<p><img src="s245-notes_files/figure-html/unnamed-chunk-68-1.png" width="624" style="display: block; margin: auto;" /></p>
-<p>How does this compare to the raw data?</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" title="1"><span class="kw">tally</span>(<span class="op">~</span>Abnormal<span class="op">|</span>Stage, <span class="dt">data=</span>frogs, <span class="dt">format=</span><span class="st">&#39;prop&#39;</span>)</a></code></pre></div>
-<pre><code>##         Stage
-## Abnormal  Stage 42  Stage 43  Stage 44  Stage 45  Stage 46
-##      No  0.8118215 0.7960480 0.8279689 0.8715365 0.8780252
-##      Yes 0.1881785 0.2039520 0.1720311 0.1284635 0.1219748</code></pre>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" title="1">bins &lt;-<span class="st"> </span><span class="kw">cut</span>(frogs<span class="op">$</span>RoadDistance,<span class="dt">breaks=</span><span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">25</span>, <span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">250</span>,<span class="dv">800</span>))</a>
-<a class="sourceLine" id="cb124-2" title="2"><span class="kw">prop</span>(<span class="op">~</span>Abnormal<span class="op">==</span><span class="st">&#39;Yes&#39;</span><span class="op">|</span>bins, <span class="dt">data=</span>frogs)</a></code></pre></div>
-<pre><code>##    prop_TRUE.(0,25]   prop_TRUE.(25,50]  prop_TRUE.(50,100] 
-##           0.1516080           0.1925424           0.1379747 
-## prop_TRUE.(100,250] prop_TRUE.(250,800] 
-##           0.1694215           0.1613876</code></pre>
-<p>But…remember, in the raw data, other predictors may also be influencing the patterns that you see in the data. In addition, we can look at the width of the confidence bands on the model estimates, and look at the model selection results to get an idea of whether this predictor is really important in the model or not. This is just an example to get you thinking about what prediction plots are showing you and what you can do with them!</p>
+<div id="transformations" class="section level3">
+<h3><span class="header-section-number">13.0.5</span> Transformations</h3>
+<p>In some cases, a logarithmic or square-root transformation of the <strong>response variable</strong> can correct a problem with the variance of the residuals. This is most sensible as a solution if the <code>log(variable)</code> or <code>sqrt(variable)</code> makes some “sense” to a human…for example, if the response variable is <code>wages</code> in dollars, then <code>log10(wages)</code> is kind of the order of magnitude of the salary, which makes some sense as a measure of income. Another example: sound pressure is measured in <span class="math inline">\(\mu Pa\)</span>, but we perceive sound logarithmically, so that a sound that has 10 times greater pressure “sounds” about twice as loud. So <code>log10(sound_pressure)</code> could be a sensible metric.</p>
+<p>Why does this work? These transformations don’t affect the magnitude of <em>small</em> residual values very much, but they make <em>large</em> residuals get <em>a lot</em> smaller. The result is that the histogram of residuals has less right skew and the large-magnitude residuals (the ones causing the “flare” of the “trumpet” in the residuals vs. fitted plot) get much smaller.</p>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-98-1.png" width="211.2" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-98-2.png" width="211.2" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-98-3.png" width="211.2" style="display: block; margin: auto;" /></p>
+</div>
+<div id="modelling-non-constant-variance" class="section level3">
+<h3><span class="header-section-number">13.0.6</span> Modelling non-constant variance</h3>
+<p>If your model is a linear regression, then there are a few specialized fitting functions that can allow you to fit models with non-constant variance of the residuals.</p>
+<p>For multiple linear regression (original fit with <strong>lm()</strong>), you can use <strong>gls()</strong> from package <strong>nlme</strong> and add input <em>weights=varPower()</em> – inputs are otherwise the same as for <strong>lm()</strong>.</p>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" title="1"><span class="kw">require</span>(nlme)</a>
+<a class="sourceLine" id="cb183-2" title="2"><span class="kw">nls</span>(response <span class="op">~</span><span class="st"> </span>pred1 <span class="op">+</span><span class="st"> </span>pred2, <span class="dt">data=</span>dataset,</a>
+<a class="sourceLine" id="cb183-3" title="3">    <span class="dt">weights=</span><span class="kw">varPower</span>())</a></code></pre></div>
+<!-- For random effects models fitted via **lmer()**, similar options are available, setting input *weights=varPower()* or (to allow different variance in each random effect group, or each group of another categorical variable) *weights = varIdent(form= ~1|categorical.variable)*. -->
+<!-- ```{r, eval=FALSE, echo=TRUE} -->
+<!-- require(lme4) -->
+<!-- # variance increases with some power of fitted value -->
+<!-- lmer(response ~ pred1 + pred2 + (~1|ID), data=dataset, -->
+<!--     weights=varPower()) -->
+<!-- # variance is different for each level of random effect: -->
+<!-- lmer(response ~ pred1 + pred2 + (~1|ID), data=dataset, -->
+<!--     weights=varIdent(form=~1|ID)) -->
+<!-- ``` -->
+<p><em>If you’re interested in learning more about this method (and other options for specification of the form of the non-constant variance), see the references below in R (you will not be held responsible for the information contained in these help files for STAT 245 - just provided for further reference.)</em></p>
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" title="1">?nlme<span class="op">::</span>nls</a>
+<a class="sourceLine" id="cb184-2" title="2">?nlme<span class="op">::</span>varClasses</a></code></pre></div>
 
 </div>
 </div>
@@ -537,8 +388,8 @@ so</p>
           </div>
         </div>
       </div>
-<a href="interactions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="binary-regression-data-with-more-than-one-trial-per-row.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="zero-inflation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -570,7 +421,7 @@ gitbook.start({
 "size": 2
 },
 "edit": {
-"link": "https://github.com/rstudio/bookdown-demo/edit/master/09-BinaryRegression1.Rmd",
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/13-NCV.Rmd",
 "text": "Edit"
 },
 "history": {
