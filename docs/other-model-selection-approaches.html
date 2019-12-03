@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 17 Other Model Selection Approaches | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 17 Other Model Selection Approaches | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 17 Other Model Selection Approaches | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-12-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="correlation-structures.html"/>
+<link rel="next" href="gams-generalized-additive-models.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT 245 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#why-are-we-doing-this-again"><i class="fa fa-check"></i><b>2.7</b> Why are we doing this again?</a></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#shortcut-method---with-uncertainty"><i class="fa fa-check"></i><b>2.8</b> Shortcut Method - With Uncertainty</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="linear-regression.html"><a href="linear-regression.html#anatomy-of-a-confidence-interval"><i class="fa fa-check"></i><b>2.8.1</b> Anatomy of a Confidence Interval</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#diy-method"><i class="fa fa-check"></i><b>2.9</b> DIY Method</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-a-hypothetical-dataset"><i class="fa fa-check"></i><b>2.9.1</b> Creating a hypothetical dataset</a></li>
+<li class="chapter" data-level="2.9.2" data-path="linear-regression.html"><a href="linear-regression.html#making-the-plot"><i class="fa fa-check"></i><b>2.9.2</b> Making the plot</a></li>
+<li class="chapter" data-level="2.9.3" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors"><i class="fa fa-check"></i><b>2.9.3</b> Categorical predictors</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html"><i class="fa fa-check"></i><b>3</b> Model Selection Using Information Criteria</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#data-and-model"><i class="fa fa-check"></i><b>3.1</b> Data and Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#calculations"><i class="fa fa-check"></i><b>3.2</b> Calculations</a></li>
+<li class="chapter" data-level="3.3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#decisions-with-ics"><i class="fa fa-check"></i><b>3.3</b> Decisions with ICs</a></li>
+<li class="chapter" data-level="3.4" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#all-possible-subsets-selection"><i class="fa fa-check"></i><b>3.4</b> All-possible-subsets Selection</a></li>
+<li class="chapter" data-level="3.5" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#which-ic-should-i-use"><i class="fa fa-check"></i><b>3.5</b> Which IC should I use?</a></li>
+<li class="chapter" data-level="3.6" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#quantities-derived-from-aic"><i class="fa fa-check"></i><b>3.6</b> Quantities derived from AIC</a></li>
+<li class="chapter" data-level="3.7" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#important-caution"><i class="fa fa-check"></i><b>3.7</b> Important Caution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="likelihood.html"><a href="likelihood.html"><i class="fa fa-check"></i><b>4</b> Likelihood</a><ul>
+<li class="chapter" data-level="4.1" data-path="likelihood.html"><a href="likelihood.html#data-1"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="likelihood.html"><a href="likelihood.html#review---the-normal-probability-density-function-pdf"><i class="fa fa-check"></i><b>4.2</b> Review - the Normal probability density function (PDF)</a></li>
+<li class="chapter" data-level="4.3" data-path="likelihood.html"><a href="likelihood.html#a-simple-model"><i class="fa fa-check"></i><b>4.3</b> A simple model</a></li>
+<li class="chapter" data-level="4.4" data-path="likelihood.html"><a href="likelihood.html#using-the-model-to-make-predictions"><i class="fa fa-check"></i><b>4.4</b> Using the Model to Make Predictions</a></li>
+<li class="chapter" data-level="4.5" data-path="likelihood.html"><a href="likelihood.html#likelihood-to-the-rescue"><i class="fa fa-check"></i><b>4.5</b> Likelihood to the Rescue!</a></li>
+<li class="chapter" data-level="4.6" data-path="likelihood.html"><a href="likelihood.html#how-does-this-relate-to-linear-regression"><i class="fa fa-check"></i><b>4.6</b> How does this relate to linear regression?</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="likelihood.html"><a href="likelihood.html#model-equation"><i class="fa fa-check"></i><b>4.6.1</b> Model Equation:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="likelihood.html"><a href="likelihood.html#likelihood-of-a-dataset-given-a-model"><i class="fa fa-check"></i><b>4.7</b> Likelihood of a dataset, given a model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html"><i class="fa fa-check"></i><b>5</b> PDFs and PMFs</a><ul>
+<li class="chapter" data-level="5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beyond-normal"><i class="fa fa-check"></i><b>5.1</b> Beyond Normal</a></li>
+<li class="chapter" data-level="5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#types-of-probability-distributions"><i class="fa fa-check"></i><b>5.2</b> Types of probability distributions</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#continuous-distributions"><i class="fa fa-check"></i><b>5.2.1</b> Continuous distributions</a></li>
+<li class="chapter" data-level="5.2.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#discrete-distributions"><i class="fa fa-check"></i><b>5.2.2</b> Discrete Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#relevant-features-of-distributions"><i class="fa fa-check"></i><b>5.3</b> Relevant Features of Distributions</a></li>
+<li class="chapter" data-level="5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-continuous-distributions"><i class="fa fa-check"></i><b>5.4</b> Examples of Continuous Distributions</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#normal"><i class="fa fa-check"></i><b>5.4.1</b> Normal</a></li>
+<li class="chapter" data-level="5.4.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#gamma"><i class="fa fa-check"></i><b>5.4.2</b> Gamma</a></li>
+<li class="chapter" data-level="5.4.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beta"><i class="fa fa-check"></i><b>5.4.3</b> Beta</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-discrete-distributions"><i class="fa fa-check"></i><b>5.5</b> Examples of Discrete Distributions</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#binomial"><i class="fa fa-check"></i><b>5.5.1</b> Binomial</a></li>
+<li class="chapter" data-level="5.5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#poisson"><i class="fa fa-check"></i><b>5.5.2</b> Poisson</a></li>
+<li class="chapter" data-level="5.5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#negative-binomial"><i class="fa fa-check"></i><b>5.5.3</b> Negative Binomial</a></li>
+<li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-averaging.html"><a href="model-averaging.html"><i class="fa fa-check"></i><b>7</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.1" data-path="model-averaging.html"><a href="model-averaging.html#data-school-survey-on-crime-and-safety"><i class="fa fa-check"></i><b>7.1</b> Data: School Survey on Crime and Safety</a></li>
+<li class="chapter" data-level="7.2" data-path="model-averaging.html"><a href="model-averaging.html#modelling-number-of-violent-incidents-per-school"><i class="fa fa-check"></i><b>7.2</b> Modelling number of violent incidents per school</a></li>
+<li class="chapter" data-level="7.3" data-path="model-averaging.html"><a href="model-averaging.html#model-averaging-1"><i class="fa fa-check"></i><b>7.3</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="model-averaging.html"><a href="model-averaging.html#getting-the-averaged-model"><i class="fa fa-check"></i><b>7.3.1</b> Getting the Averaged Model</a></li>
+<li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interactions.html"><a href="interactions.html"><i class="fa fa-check"></i><b>8</b> Interactions</a><ul>
+<li class="chapter" data-level="8.1" data-path="interactions.html"><a href="interactions.html#example-quantitative-categorical-interaction"><i class="fa fa-check"></i><b>8.1</b> Example: Quantitative-Categorical Interaction</a></li>
+<li class="chapter" data-level="8.2" data-path="interactions.html"><a href="interactions.html#categorical-categorical-interaction-example"><i class="fa fa-check"></i><b>8.2</b> Categorical-Categorical Interaction Example</a></li>
+<li class="chapter" data-level="8.3" data-path="interactions.html"><a href="interactions.html#quant-quant-interactions"><i class="fa fa-check"></i><b>8.3</b> Quant-Quant interactions?</a></li>
+<li class="chapter" data-level="8.4" data-path="interactions.html"><a href="interactions.html#r-code"><i class="fa fa-check"></i><b>8.4</b> R code</a></li>
+<li class="chapter" data-level="8.5" data-path="interactions.html"><a href="interactions.html#cautionary-note"><i class="fa fa-check"></i><b>8.5</b> Cautionary note</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="binary-regression.html"><a href="binary-regression.html"><i class="fa fa-check"></i><b>9</b> Binary Regression</a><ul>
+<li class="chapter" data-level="9.1" data-path="binary-regression.html"><a href="binary-regression.html#data-source-1"><i class="fa fa-check"></i><b>9.1</b> Data Source</a></li>
+<li class="chapter" data-level="9.2" data-path="binary-regression.html"><a href="binary-regression.html#logistic-regression"><i class="fa fa-check"></i><b>9.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="9.3" data-path="binary-regression.html"><a href="binary-regression.html#checking-the-data-setup"><i class="fa fa-check"></i><b>9.3</b> Checking the data setup</a></li>
+<li class="chapter" data-level="9.4" data-path="binary-regression.html"><a href="binary-regression.html#fitting-a-saturated-model"><i class="fa fa-check"></i><b>9.4</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="9.5" data-path="binary-regression.html"><a href="binary-regression.html#link-functions"><i class="fa fa-check"></i><b>9.5</b> Link Functions</a></li>
+<li class="chapter" data-level="9.6" data-path="binary-regression.html"><a href="binary-regression.html#conditions-1"><i class="fa fa-check"></i><b>9.6</b> Conditions</a></li>
+<li class="chapter" data-level="9.7" data-path="binary-regression.html"><a href="binary-regression.html#model-assessment-plots"><i class="fa fa-check"></i><b>9.7</b> Model Assessment Plots</a></li>
+<li class="chapter" data-level="9.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>9.8</b> Odds Ratios</a></li>
+<li class="chapter" data-level="9.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>9.9</b> Model Selection</a></li>
+<li class="chapter" data-level="9.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>9.10</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html"><i class="fa fa-check"></i><b>10</b> Binary regression: Data with more than one trial per row</a><ul>
+<li class="chapter" data-level="10.1" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#data-2"><i class="fa fa-check"></i><b>10.1</b> Data</a></li>
+<li class="chapter" data-level="10.2" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#checking-the-data-setup-1"><i class="fa fa-check"></i><b>10.2</b> Checking the data setup</a></li>
+<li class="chapter" data-level="10.3" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#fitting-a-saturated-model-1"><i class="fa fa-check"></i><b>10.3</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="10.4" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#checking-linearity"><i class="fa fa-check"></i><b>10.4</b> Checking linearity</a></li>
+<li class="chapter" data-level="10.5" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#model-assessment-1"><i class="fa fa-check"></i><b>10.5</b> Model Assessment</a></li>
+<li class="chapter" data-level="10.6" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#model-selection-1"><i class="fa fa-check"></i><b>10.6</b> Model Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html"><i class="fa fa-check"></i><b>11</b> Collinearity and Multicollinearity</a><ul>
+<li class="chapter" data-level="11.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#graphical-checks"><i class="fa fa-check"></i><b>11.1</b> Graphical Checks</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#preferred-option-correlation-scatter-plot"><i class="fa fa-check"></i><b>11.1.1</b> Preferred option: Correlation Scatter Plot</a></li>
+<li class="chapter" data-level="11.1.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#another-option-heat-map-of-correlation-coefficients"><i class="fa fa-check"></i><b>11.1.2</b> Another option: Heat map of correlation coefficients</a></li>
+<li class="chapter" data-level="11.1.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#how-to-use-this-information"><i class="fa fa-check"></i><b>11.1.3</b> How to use this information</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#variance-inflation-factors"><i class="fa fa-check"></i><b>11.2</b> Variance Inflation Factors</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#quantitative-predictors-vifs"><i class="fa fa-check"></i><b>11.2.1</b> Quantitative predictors (VIFs)</a></li>
+<li class="chapter" data-level="11.2.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#some-categorical-predictors-gvifs"><i class="fa fa-check"></i><b>11.2.2</b> (Some) Categorical Predictors (GVIFs)</a></li>
+<li class="chapter" data-level="11.2.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#rules-of-thumb"><i class="fa fa-check"></i><b>11.2.3</b> Rules of Thumb</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#was-it-worth-it"><i class="fa fa-check"></i><b>11.3</b> Was it worth it?</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="zero-inflation.html"><a href="zero-inflation.html"><i class="fa fa-check"></i><b>12</b> Zero-Inflation</a><ul>
+<li class="chapter" data-level="12.1" data-path="zero-inflation.html"><a href="zero-inflation.html#reference-material"><i class="fa fa-check"></i><b>12.1</b> Reference material</a></li>
+<li class="chapter" data-level="12.2" data-path="zero-inflation.html"><a href="zero-inflation.html#data-for-example"><i class="fa fa-check"></i><b>12.2</b> Data for Example</a></li>
+<li class="chapter" data-level="12.3" data-path="zero-inflation.html"><a href="zero-inflation.html#visualization"><i class="fa fa-check"></i><b>12.3</b> Visualization?</a></li>
+<li class="chapter" data-level="12.4" data-path="zero-inflation.html"><a href="zero-inflation.html#collinearitymulticollinearity"><i class="fa fa-check"></i><b>12.4</b> Collinearity/Multicollinearity?</a></li>
+<li class="chapter" data-level="12.5" data-path="zero-inflation.html"><a href="zero-inflation.html#fitting-models"><i class="fa fa-check"></i><b>12.5</b> Fitting models</a><ul>
+<li class="chapter" data-level="12.5.1" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-poisson"><i class="fa fa-check"></i><b>12.5.1</b> Zero-inflated Poisson</a></li>
+<li class="chapter" data-level="12.5.2" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-nb-one-way"><i class="fa fa-check"></i><b>12.5.2</b> Zero-inflated NB: one way</a></li>
+<li class="chapter" data-level="12.5.3" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-negative-binomial-other-way"><i class="fa fa-check"></i><b>12.5.3</b> Zero-inflated negative binomial (other way)</a></li>
+<li class="chapter" data-level="12.5.4" data-path="zero-inflation.html"><a href="zero-inflation.html#tweedie-model"><i class="fa fa-check"></i><b>12.5.4</b> Tweedie Model</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="zero-inflation.html"><a href="zero-inflation.html#model-assessment-2"><i class="fa fa-check"></i><b>12.6</b> Model Assessment</a></li>
+<li class="chapter" data-level="12.7" data-path="zero-inflation.html"><a href="zero-inflation.html#model-selection-2"><i class="fa fa-check"></i><b>12.7</b> Model Selection?</a><ul>
+<li class="chapter" data-level="12.7.1" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflation-covariates"><i class="fa fa-check"></i><b>12.7.1</b> Zero inflation covariates</a></li>
+<li class="chapter" data-level="12.7.2" data-path="zero-inflation.html"><a href="zero-inflation.html#interaction-terms"><i class="fa fa-check"></i><b>12.7.2</b> Interaction terms</a></li>
+<li class="chapter" data-level="12.7.3" data-path="zero-inflation.html"><a href="zero-inflation.html#dredge"><i class="fa fa-check"></i><b>12.7.3</b> Dredge</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="zero-inflation.html"><a href="zero-inflation.html#prediction-plots-2"><i class="fa fa-check"></i><b>12.8</b> Prediction Plots</a></li>
+<li class="chapter" data-level="12.9" data-path="zero-inflation.html"><a href="zero-inflation.html#acknowledgements"><i class="fa fa-check"></i><b>12.9</b> Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html"><i class="fa fa-check"></i><b>13</b> Non-constant variance (and other unresolved problems)</a><ul>
+<li class="chapter" data-level="13.0.1" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#already-in-our-tool-box-make-sure-the-model-is-right"><i class="fa fa-check"></i><b>13.0.1</b> Already in Our Tool Box: Make sure the model is “right”</a></li>
+<li class="chapter" data-level="13.0.2" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#already-in-our-tool-box-models-that-estimate-dispersion-parameters"><i class="fa fa-check"></i><b>13.0.2</b> Already in Our Tool Box: Models that estimate dispersion parameters</a></li>
+<li class="chapter" data-level="13.0.3" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#gamma-glms"><i class="fa fa-check"></i><b>13.0.3</b> Gamma GLMs</a></li>
+<li class="chapter" data-level="13.0.4" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#beta-glms"><i class="fa fa-check"></i><b>13.0.4</b> Beta GLMs</a></li>
+<li class="chapter" data-level="13.0.5" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#transformations"><i class="fa fa-check"></i><b>13.0.5</b> Transformations</a></li>
+<li class="chapter" data-level="13.0.6" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#modelling-non-constant-variance"><i class="fa fa-check"></i><b>13.0.6</b> Modelling non-constant variance</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="random-effects.html"><a href="random-effects.html"><i class="fa fa-check"></i><b>14</b> Random Effects</a><ul>
+<li class="chapter" data-level="14.1" data-path="random-effects.html"><a href="random-effects.html#dataset"><i class="fa fa-check"></i><b>14.1</b> Dataset</a></li>
+<li class="chapter" data-level="14.2" data-path="random-effects.html"><a href="random-effects.html#data-exploration"><i class="fa fa-check"></i><b>14.2</b> Data Exploration</a></li>
+<li class="chapter" data-level="14.3" data-path="random-effects.html"><a href="random-effects.html#a-base-linear-model"><i class="fa fa-check"></i><b>14.3</b> A Base Linear Model</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="random-effects.html"><a href="random-effects.html#model-assessment-3"><i class="fa fa-check"></i><b>14.3.1</b> Model assessment</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="random-effects.html"><a href="random-effects.html#a-random-effects-model"><i class="fa fa-check"></i><b>14.4</b> A Random Effects model</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="random-effects.html"><a href="random-effects.html#the-formula"><i class="fa fa-check"></i><b>14.4.1</b> The Formula</a></li>
+<li class="chapter" data-level="14.4.2" data-path="random-effects.html"><a href="random-effects.html#the-results"><i class="fa fa-check"></i><b>14.4.2</b> The Results</a></li>
+<li class="chapter" data-level="14.4.3" data-path="random-effects.html"><a href="random-effects.html#model-assessment-4"><i class="fa fa-check"></i><b>14.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="14.4.4" data-path="random-effects.html"><a href="random-effects.html#refinement"><i class="fa fa-check"></i><b>14.4.4</b> Refinement</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="random-effects.html"><a href="random-effects.html#model-selection-for-mixed-models"><i class="fa fa-check"></i><b>14.5</b> Model Selection for Mixed Models</a><ul>
+<li class="chapter" data-level="14.5.1" data-path="random-effects.html"><a href="random-effects.html#reml-or-ml"><i class="fa fa-check"></i><b>14.5.1</b> REML or ML?</a></li>
+<li class="chapter" data-level="14.5.2" data-path="random-effects.html"><a href="random-effects.html#best-model-so-far"><i class="fa fa-check"></i><b>14.5.2</b> Best model so far:</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="random-effects.html"><a href="random-effects.html#random-slopes"><i class="fa fa-check"></i><b>14.6</b> Random Slopes?</a></li>
+<li class="chapter" data-level="14.7" data-path="random-effects.html"><a href="random-effects.html#prediction-plots-3"><i class="fa fa-check"></i><b>14.7</b> Prediction Plots</a><ul>
+<li class="chapter" data-level="14.7.1" data-path="random-effects.html"><a href="random-effects.html#parametric-bootstrap-to-the-rescue"><i class="fa fa-check"></i><b>14.7.1</b> Parametric bootstrap to the rescue!</a></li>
+</ul></li>
+<li class="chapter" data-level="14.8" data-path="random-effects.html"><a href="random-effects.html#random-effects-with-glmmtmb-and-standardized-residuals"><i class="fa fa-check"></i><b>14.8</b> Random effects with glmmTMB and standardized residuals</a></li>
+<li class="chapter" data-level="14.9" data-path="random-effects.html"><a href="random-effects.html#model-for-whale-dive-duration"><i class="fa fa-check"></i><b>14.9</b> Model for whale dive duration</a></li>
+<li class="chapter" data-level="14.10" data-path="random-effects.html"><a href="random-effects.html#glmmtmb"><i class="fa fa-check"></i><b>14.10</b> glmmTMB</a></li>
+<li class="chapter" data-level="14.11" data-path="random-effects.html"><a href="random-effects.html#model-assessment-with-scaled-residuals"><i class="fa fa-check"></i><b>14.11</b> Model assessment with scaled residuals</a><ul>
+<li class="chapter" data-level="14.11.1" data-path="random-effects.html"><a href="random-effects.html#glmmtmb-version"><i class="fa fa-check"></i><b>14.11.1</b> glmmTMB version</a></li>
+<li class="chapter" data-level="14.11.2" data-path="random-effects.html"><a href="random-effects.html#you-now-have-the-power"><i class="fa fa-check"></i><b>14.11.2</b> You now have the power!</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="gees.html"><a href="gees.html"><i class="fa fa-check"></i><b>15</b> GEEs</a><ul>
+<li class="chapter" data-level="15.1" data-path="gees.html"><a href="gees.html#data-source-2"><i class="fa fa-check"></i><b>15.1</b> Data Source</a></li>
+<li class="chapter" data-level="15.2" data-path="gees.html"><a href="gees.html#data-exploration-1"><i class="fa fa-check"></i><b>15.2</b> Data Exploration</a></li>
+<li class="chapter" data-level="15.3" data-path="gees.html"><a href="gees.html#linear-regression-1"><i class="fa fa-check"></i><b>15.3</b> Linear Regression</a></li>
+<li class="chapter" data-level="15.4" data-path="gees.html"><a href="gees.html#model-assessment-5"><i class="fa fa-check"></i><b>15.4</b> Model Assessment</a></li>
+<li class="chapter" data-level="15.5" data-path="gees.html"><a href="gees.html#linear-regression-2"><i class="fa fa-check"></i><b>15.5</b> Linear Regression</a></li>
+<li class="chapter" data-level="15.6" data-path="gees.html"><a href="gees.html#generalized-estimating-equations-gees"><i class="fa fa-check"></i><b>15.6</b> Generalized Estimating Equations (GEEs)</a><ul>
+<li class="chapter" data-level="15.6.1" data-path="gees.html"><a href="gees.html#fitting-gees-with-different-correlation-structures"><i class="fa fa-check"></i><b>15.6.1</b> Fitting GEEs with different correlation structures</a></li>
+<li class="chapter" data-level="15.6.2" data-path="gees.html"><a href="gees.html#comparing-different-correlation-structures"><i class="fa fa-check"></i><b>15.6.2</b> Comparing different correlation structures}</a></li>
+</ul></li>
+<li class="chapter" data-level="15.7" data-path="gees.html"><a href="gees.html#gee-model-assessment"><i class="fa fa-check"></i><b>15.7</b> GEE model assessment</a></li>
+<li class="chapter" data-level="15.8" data-path="gees.html"><a href="gees.html#model-selection---which-variables"><i class="fa fa-check"></i><b>15.8</b> Model Selection - Which variables?</a></li>
+<li class="chapter" data-level="15.9" data-path="gees.html"><a href="gees.html#prediction-plots-4"><i class="fa fa-check"></i><b>15.9</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="correlation-structures.html"><a href="correlation-structures.html"><i class="fa fa-check"></i><b>16</b> Correlation Structures</a><ul>
+<li class="chapter" data-level="16.0.1" data-path="correlation-structures.html"><a href="correlation-structures.html#variancecovariance-or-correlation"><i class="fa fa-check"></i><b>16.0.1</b> Variance/Covariance or Correlation?</a></li>
+<li class="chapter" data-level="16.0.2" data-path="correlation-structures.html"><a href="correlation-structures.html#example-case"><i class="fa fa-check"></i><b>16.0.2</b> Example Case</a></li>
+<li class="chapter" data-level="16.0.3" data-path="correlation-structures.html"><a href="correlation-structures.html#independence"><i class="fa fa-check"></i><b>16.0.3</b> Independence</a></li>
+<li class="chapter" data-level="16.0.4" data-path="correlation-structures.html"><a href="correlation-structures.html#acf-example"><i class="fa fa-check"></i><b>16.0.4</b> ACF Example</a></li>
+<li class="chapter" data-level="16.0.5" data-path="correlation-structures.html"><a href="correlation-structures.html#exchangeable-block-diagonal"><i class="fa fa-check"></i><b>16.0.5</b> Exchangeable = Block Diagonal</a></li>
+<li class="chapter" data-level="16.0.6" data-path="correlation-structures.html"><a href="correlation-structures.html#ar1-first-order-autoregressive-process"><i class="fa fa-check"></i><b>16.0.6</b> AR1 (first-order autoregressive process)</a></li>
+<li class="chapter" data-level="16.0.7" data-path="correlation-structures.html"><a href="correlation-structures.html#unstructured"><i class="fa fa-check"></i><b>16.0.7</b> Unstructured</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html"><i class="fa fa-check"></i><b>17</b> Other Model Selection Approaches</a><ul>
+<li class="chapter" data-level="17.0.1" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#rationale"><i class="fa fa-check"></i><b>17.0.1</b> Rationale</a></li>
+<li class="chapter" data-level="17.0.2" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#hypotheses"><i class="fa fa-check"></i><b>17.0.2</b> Hypotheses</a></li>
+<li class="chapter" data-level="17.1" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#backward-selection"><i class="fa fa-check"></i><b>17.1</b> Backward selection</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#algorithm"><i class="fa fa-check"></i><b>17.1.1</b> Algorithm</a></li>
+<li class="chapter" data-level="17.1.2" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#example"><i class="fa fa-check"></i><b>17.1.2</b> Example</a></li>
+<li class="chapter" data-level="17.1.3" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#cant-this-be-automated"><i class="fa fa-check"></i><b>17.1.3</b> Can’t this be automated?</a></li>
+<li class="chapter" data-level="17.1.4" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#stepwise-ic-based-selection"><i class="fa fa-check"></i><b>17.1.4</b> Stepwise IC-based selection</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#summary-tables"><i class="fa fa-check"></i><b>17.2</b> Summary tables</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#mean-or-sd-median-iqr-etc.-by-groups"><i class="fa fa-check"></i><b>17.2.1</b> Mean (or sd, median, IQR, etc.) by groups</a></li>
+<li class="chapter" data-level="17.2.2" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#proportions-in-categories-by-groups"><i class="fa fa-check"></i><b>17.2.2</b> Proportions in categories by groups</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#figures"><i class="fa fa-check"></i><b>17.3</b> Figures</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html"><i class="fa fa-check"></i><b>18</b> GAMs: Generalized Additive Models</a><ul>
+<li class="chapter" data-level="18.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#non-linear-non-monotonic-relationships"><i class="fa fa-check"></i><b>18.1</b> Non-linear, non-monotonic relationships</a></li>
+<li class="chapter" data-level="18.2" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#smooth-terms"><i class="fa fa-check"></i><b>18.2</b> Smooth terms</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#basis-functions"><i class="fa fa-check"></i><b>18.2.1</b> Basis functions</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#fitting-gams"><i class="fa fa-check"></i><b>18.3</b> Fitting GAMs</a><ul>
+<li class="chapter" data-level="18.3.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#choosing-model-formulation"><i class="fa fa-check"></i><b>18.3.1</b> Choosing model formulation</a></li>
+<li class="chapter" data-level="18.3.2" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#model-formula"><i class="fa fa-check"></i><b>18.3.2</b> Model formula</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#model-assessment-6"><i class="fa fa-check"></i><b>18.4</b> Model Assessment</a><ul>
+<li class="chapter" data-level="18.4.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#concurvity"><i class="fa fa-check"></i><b>18.4.1</b> Concurvity</a></li>
+</ul></li>
+<li class="chapter" data-level="18.5" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#model-selection-3"><i class="fa fa-check"></i><b>18.5</b> Model Selection</a><ul>
+<li class="chapter" data-level="18.5.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#shrinkage-and-penalties"><i class="fa fa-check"></i><b>18.5.1</b> Shrinkage and Penalties</a></li>
+<li class="chapter" data-level="18.5.2" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#p-value-selection"><i class="fa fa-check"></i><b>18.5.2</b> P-value selection</a></li>
+<li class="chapter" data-level="18.5.3" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#information-criteria"><i class="fa fa-check"></i><b>18.5.3</b> Information criteria</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="other-model-selection-approaches" class="section level1">
+<h1><span class="header-section-number">Chapter 17</span> Other Model Selection Approaches</h1>
+<p>The way we have been doing model selection thus far is <em>definitely</em> not the only way. What other options are out there? Many - let’s consider a few.</p>
+<p>This section also includes some miscellaneous R notes (making summary tables, and sources of inspiration for cool figures).</p>
+<div id="rationale" class="section level3">
+<h3><span class="header-section-number">17.0.1</span> Rationale</h3>
+<p>Until now, we have focused on using information criteria for model selection, in order to get very familiar with one coherent framework for choosing variables across model types. But:</p>
+<ul>
+<li>In some fields, using hypothesis tests for variable selection is preferred</li>
+<li>For datasets that are large and/or models that are complex, <code>dredge()</code> can be a challenge (taking a very long time to run and perhaps timing out on the server)</li>
+<li>Using hypothesis tests for selection is quite common, so we should know how it’s done!</li>
+</ul>
+</div>
+<div id="hypotheses" class="section level3">
+<h3><span class="header-section-number">17.0.2</span> Hypotheses</h3>
+<p>Basically, for each (fixed effect) variable in a model, we’d like to test:</p>
+<p><span class="math display">\[H_0: \text{all } \beta\text{s for this variable are 0; it&#39;s not a good predictor}\]</span>
+<span class="math display">\[H_1: \text{ at least one } \beta\text{ is non-zero; it&#39;s a good predictor}\]</span></p>
+<p>We want to test these hypotheses <em>given that all the other predictors in the current full model are included</em>. Because of this condition, and because there are <em>multiple <span class="math inline">\(\beta\)</span>s</em> for categorical predictors with more than 2 categories, we can <strong>not</strong> generally just use the p-values from the model <code>summary()</code> output.</p>
+<p>Instead, we use <code>Anova()</code> from the package <code>car</code>. <code>lm()</code> example:</p>
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb237-1" title="1">iris_mod &lt;-<span class="st"> </span><span class="kw">lm</span>(Petal.Length <span class="op">~</span><span class="st"> </span>Petal.Width <span class="op">+</span><span class="st"> </span>Species <span class="op">+</span><span class="st"> </span>Sepal.Length, <span class="dt">data =</span> iris)</a>
+<a class="sourceLine" id="cb237-2" title="2"><span class="kw">summary</span>(iris_mod)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Petal.Length ~ Petal.Width + Species + Sepal.Length, 
+##     data = iris)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -0.765 -0.158  0.011  0.134  0.665 
+## 
+## Coefficients:
+##                   Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)        -1.4596     0.2239   -6.52  1.1e-09 ***
+## Petal.Width         0.5064     0.1153    4.39  2.1e-05 ***
+## Speciesversicolor   1.7315     0.1276   13.57  &lt; 2e-16 ***
+## Speciesvirginica    2.3047     0.1984   11.62  &lt; 2e-16 ***
+## Sepal.Length        0.5587     0.0458   12.19  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.266 on 145 degrees of freedom
+## Multiple R-squared:  0.978,  Adjusted R-squared:  0.977 
+## F-statistic: 1.6e+03 on 4 and 145 DF,  p-value: &lt;2e-16</code></pre>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb239-1" title="1"><span class="kw">require</span>(car)</a>
+<a class="sourceLine" id="cb239-2" title="2"><span class="kw">Anova</span>(iris_mod)</a></code></pre></div>
+<pre><code>## Anova Table (Type II tests)
+## 
+## Response: Petal.Length
+##              Sum Sq  Df F value  Pr(&gt;F)    
+## Petal.Width    1.37   1    19.3 2.1e-05 ***
+## Species       13.61   2    95.9 &lt; 2e-16 ***
+## Sepal.Length  10.55   1   148.6 &lt; 2e-16 ***
+## Residuals     10.29 145                    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Notice that <code>Anova()</code> reports <em>one</em> p-value for each predictor (excellent!). If the p-value is small, that gives evidence against <span class="math inline">\(H_0\)</span>, and we’d conclude we should keep the predictor in the model. Many people use <span class="math inline">\(\alpha = 0.05\)</span> as the “dividing line” between “small” and “large” p-values and thus “statistically significant” and “non-significant” test results, but remember the p-value is a probability - there’s no magical difference between 0.049 and 0.051.</p>
+<p><em>Warning: be careful with your capitalization! The R function <code>anova()</code> does someting kind of similar to <code>Anova()</code> but</em> <strong>NOT</strong> <em>the same and should be avoided – it does sequential rather than marginal tests.</em></p>
+</div>
+<div id="backward-selection" class="section level2">
+<h2><span class="header-section-number">17.1</span> Backward selection</h2>
+<p>How do we use p-value-based selection to arrive at a best model? There are many options and much controversy about different approaches; here I’ll suggest one. None of these methods are guaranteed to arrive at a model that is theoretically “best” in some specific way, but they do give a framework to guide decision-making and are computationally quick. The premise is that we’d like a simple algorithm to implement, and we will begin with a full model including all the predictors that we think <em>should</em> or <em>could</em> reasonably be important (not just throwing in everything possible).</p>
+<div id="algorithm" class="section level3">
+<h3><span class="header-section-number">17.1.1</span> Algorithm</h3>
+<ul>
+<li>Obtain p-values for all predictors in full model</li>
+<li>Remove the predictor with the largest p-value that you judge to be “not small” or “not significant”</li>
+<li>Re-compute p-values for the new, smaller model</li>
+<li>Repeat until all p-values are “significant”</li>
+</ul>
+</div>
+<div id="example" class="section level3">
+<h3><span class="header-section-number">17.1.2</span> Example</h3>
+<p>Let’s consider a logistic regression to predict whether a person in substance-abuse treatment is homeless.</p>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb241-1" title="1">home_mod0 &lt;-<span class="st"> </span><span class="kw">glm</span>(homeless <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>substance <span class="op">+</span><span class="st"> </span>i1 <span class="op">+</span><span class="st"> </span>cesd <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb241-2" title="2"><span class="st">                  </span>racegrp <span class="op">+</span><span class="st"> </span>age,</a>
+<a class="sourceLine" id="cb241-3" title="3">                <span class="dt">data =</span> HELPrct, <span class="dt">family =</span> <span class="kw">binomial</span>(<span class="dt">link =</span> <span class="st">&#39;logit&#39;</span>))</a>
+<a class="sourceLine" id="cb241-4" title="4"><span class="kw">Anova</span>(home_mod0)</a></code></pre></div>
+<pre><code>## Analysis of Deviance Table (Type II tests)
+## 
+## Response: homeless
+##           LR Chisq Df Pr(&gt;Chisq)   
+## sex           3.38  1     0.0658 . 
+## substance     2.23  2     0.3275   
+## i1           10.63  1     0.0011 **
+## cesd          1.18  1     0.2784   
+## racegrp       3.18  3     0.3645   
+## age           0.44  1     0.5075   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Removing <code>age</code>:</p>
+<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb243-1" title="1">home_mod &lt;-<span class="st"> </span><span class="kw">update</span>(home_mod0, .<span class="op">~</span>. <span class="op">-</span><span class="st"> </span>age)</a>
+<a class="sourceLine" id="cb243-2" title="2"><span class="kw">Anova</span>(home_mod)</a></code></pre></div>
+<pre><code>## Analysis of Deviance Table (Type II tests)
+## 
+## Response: homeless
+##           LR Chisq Df Pr(&gt;Chisq)    
+## sex           3.22  1    0.07282 .  
+## substance     2.69  2    0.26088    
+## i1           11.08  1    0.00087 ***
+## cesd          1.13  1    0.28777    
+## racegrp       3.16  3    0.36818    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Removing <code>racegrp</code></p>
+<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb245-1" title="1">home_mod &lt;-<span class="st"> </span><span class="kw">update</span>(home_mod, .<span class="op">~</span>. <span class="op">-</span><span class="st"> </span>racegrp)</a>
+<a class="sourceLine" id="cb245-2" title="2"><span class="kw">Anova</span>(home_mod)</a></code></pre></div>
+<pre><code>## Analysis of Deviance Table (Type II tests)
+## 
+## Response: homeless
+##           LR Chisq Df Pr(&gt;Chisq)    
+## sex           3.59  1     0.0582 .  
+## substance     3.63  2     0.1625    
+## i1           11.02  1     0.0009 ***
+## cesd          1.61  1     0.2051    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Remove <code>cesd</code> (a score indicating depression level)</p>
+<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb247-1" title="1">home_mod &lt;-<span class="st"> </span><span class="kw">update</span>(home_mod, .<span class="op">~</span>. <span class="op">-</span><span class="st"> </span>cesd)</a>
+<a class="sourceLine" id="cb247-2" title="2"><span class="kw">Anova</span>(home_mod)</a></code></pre></div>
+<pre><code>## Analysis of Deviance Table (Type II tests)
+## 
+## Response: homeless
+##           LR Chisq Df Pr(&gt;Chisq)    
+## sex           2.79  1    0.09512 .  
+## substance     3.67  2    0.15927    
+## i1           13.24  1    0.00027 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Remove <code>substance</code></p>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb249-1" title="1">home_mod &lt;-<span class="st"> </span><span class="kw">update</span>(home_mod, .<span class="op">~</span>. <span class="op">-</span><span class="st"> </span>substance)</a>
+<a class="sourceLine" id="cb249-2" title="2"><span class="kw">Anova</span>(home_mod)</a></code></pre></div>
+<pre><code>## Analysis of Deviance Table (Type II tests)
+## 
+## Response: homeless
+##     LR Chisq Df Pr(&gt;Chisq)    
+## sex     2.96  1      0.085 .  
+## i1     25.79  1    3.8e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Remove <code>sex</code></p>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb251-1" title="1">home_mod &lt;-<span class="st"> </span><span class="kw">update</span>(home_mod, .<span class="op">~</span>. <span class="op">-</span><span class="st"> </span>sex)</a>
+<a class="sourceLine" id="cb251-2" title="2"><span class="kw">Anova</span>(home_mod)</a></code></pre></div>
+<pre><code>## Analysis of Deviance Table (Type II tests)
+## 
+## Response: homeless
+##    LR Chisq Df Pr(&gt;Chisq)    
+## i1     27.2  1    1.8e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+<div id="cant-this-be-automated" class="section level3">
+<h3><span class="header-section-number">17.1.3</span> Can’t this be automated?</h3>
+<p>Strangely…functions are not widely available.</p>
+</div>
+<div id="stepwise-ic-based-selection" class="section level3">
+<h3><span class="header-section-number">17.1.4</span> Stepwise IC-based selection</h3>
+<p>Another option may be to use <strong>backward stepwise selection</strong> (same algorithm as above), but using AIC or BIC as the criterion at each stage instead of p-values. If the IC value is better (by <em>any</em> amount) without a variable, it gets dropped. Variables are dropped one by one until no further IC improvement is possible.</p>
+<p>This evaluates many fewer models than <code>dredge</code> so should be much faster, but may not find the best of all possible models.</p>
+<p>For example, for our model using AIC (<em>note: this may or may not work for all model types.</em>):</p>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb253-1" title="1"><span class="kw">require</span>(MASS)</a>
+<a class="sourceLine" id="cb253-2" title="2"><span class="kw">stepAIC</span>(home_mod0)</a></code></pre></div>
+<pre><code>## Start:  AIC=606
+## homeless ~ sex + substance + i1 + cesd + racegrp + age
+## 
+##             Df Deviance AIC
+## - racegrp    3      589 603
+## - substance  2      588 604
+## - age        1      587 605
+## - cesd       1      587 605
+## &lt;none&gt;              586 606
+## - sex        1      590 608
+## - i1         1      597 615
+## 
+## Step:  AIC=603
+## homeless ~ sex + substance + i1 + cesd + age
+## 
+##             Df Deviance AIC
+## - age        1      590 602
+## - substance  2      592 602
+## - cesd       1      591 603
+## &lt;none&gt;              589 603
+## - sex        1      593 605
+## - i1         1      600 612
+## 
+## Step:  AIC=602
+## homeless ~ sex + substance + i1 + cesd
+## 
+##             Df Deviance AIC
+## - cesd       1      591 601
+## - substance  2      593 601
+## &lt;none&gt;              590 602
+## - sex        1      593 603
+## - i1         1      601 611
+## 
+## Step:  AIC=601
+## homeless ~ sex + substance + i1
+## 
+##             Df Deviance AIC
+## - substance  2      595 601
+## &lt;none&gt;              591 601
+## - sex        1      594 602
+## - i1         1      605 613
+## 
+## Step:  AIC=601
+## homeless ~ sex + i1
+## 
+##        Df Deviance AIC
+## &lt;none&gt;         595 601
+## - sex   1      598 602
+## - i1    1      621 625</code></pre>
+<pre><code>## 
+## Call:  glm(formula = homeless ~ sex + i1, family = binomial(link = &quot;logit&quot;), 
+##     data = HELPrct)
+## 
+## Coefficients:
+## (Intercept)      sexmale           i1  
+##      0.9297      -0.3998      -0.0266  
+## 
+## Degrees of Freedom: 452 Total (i.e. Null);  450 Residual
+## Null Deviance:       625 
+## Residual Deviance: 595   AIC: 601</code></pre>
+<p>Note that we might want to still remove <em>one more</em> variable than <code>stepAIC()</code> does! Above, you see that if you were to remove <code>age</code>, the AIC would only go up by about 1 unit. So according to our <span class="math inline">\(\Delta AIC \sim 3\)</span> threshold, we would take <code>age</code> out too.</p>
+<p>Using BIC instead, we need to specify the input <code>k = log(nrow(data))</code> (the BIC penalty multiplier):</p>
+<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb256-1" title="1"><span class="kw">stepAIC</span>(home_mod0, <span class="dt">k =</span> <span class="kw">log10</span>(<span class="kw">nrow</span>(HELPrct)))</a></code></pre></div>
+<pre><code>## Start:  AIC=613
+## homeless ~ sex + substance + i1 + cesd + racegrp + age
+## 
+##             Df Deviance AIC
+## - racegrp    3      589 608
+## - substance  2      588 610
+## - age        1      587 611
+## - cesd       1      587 611
+## &lt;none&gt;              586 613
+## - sex        1      590 614
+## - i1         1      597 621
+## 
+## Step:  AIC=608
+## homeless ~ sex + substance + i1 + cesd + age
+## 
+##             Df Deviance AIC
+## - substance  2      592 606
+## - age        1      590 606
+## - cesd       1      591 607
+## &lt;none&gt;              589 608
+## - sex        1      593 609
+## - i1         1      600 616
+## 
+## Step:  AIC=606
+## homeless ~ sex + i1 + cesd + age
+## 
+##        Df Deviance AIC
+## - age   1      593 604
+## - cesd  1      594 605
+## &lt;none&gt;         592 606
+## - sex   1      596 607
+## - i1    1      612 623
+## 
+## Step:  AIC=604
+## homeless ~ sex + i1 + cesd
+## 
+##        Df Deviance AIC
+## - cesd  1      595 603
+## &lt;none&gt;         593 604
+## - sex   1      597 605
+## - i1    1      616 624
+## 
+## Step:  AIC=603
+## homeless ~ sex + i1
+## 
+##        Df Deviance AIC
+## &lt;none&gt;         595 603
+## - sex   1      598 603
+## - i1    1      621 626</code></pre>
+<pre><code>## 
+## Call:  glm(formula = homeless ~ sex + i1, family = binomial(link = &quot;logit&quot;), 
+##     data = HELPrct)
+## 
+## Coefficients:
+## (Intercept)      sexmale           i1  
+##      0.9297      -0.3998      -0.0266  
+## 
+## Degrees of Freedom: 452 Total (i.e. Null);  450 Residual
+## Null Deviance:       625 
+## Residual Deviance: 595   AIC: 601</code></pre>
+<p>To get less verbose output, set <code>trace = 0</code> – but then you won’t know whether it would make sense to perhaps remove additional variables…</p>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb259-1" title="1"><span class="kw">stepAIC</span>(home_mod0, <span class="dt">k =</span> <span class="kw">log10</span>(<span class="kw">nrow</span>(HELPrct)), <span class="dt">trace =</span> <span class="dv">0</span>)</a></code></pre></div>
+<pre><code>## 
+## Call:  glm(formula = homeless ~ sex + i1, family = binomial(link = &quot;logit&quot;), 
+##     data = HELPrct)
+## 
+## Coefficients:
+## (Intercept)      sexmale           i1  
+##      0.9297      -0.3998      -0.0266  
+## 
+## Degrees of Freedom: 452 Total (i.e. Null);  450 Residual
+## Null Deviance:       625 
+## Residual Deviance: 595   AIC: 601</code></pre>
+</div>
+</div>
+<div id="summary-tables" class="section level2">
+<h2><span class="header-section-number">17.2</span> Summary tables</h2>
+<p>You may want to compute and display summary tables for your projects. Here are a few examples of how to do it.</p>
+<div id="mean-or-sd-median-iqr-etc.-by-groups" class="section level3">
+<h3><span class="header-section-number">17.2.1</span> Mean (or sd, median, IQR, etc.) by groups</h3>
+<p>Compute the mean and sd (could use any other summary stats you want, though) for several quantitative variables, by groups.</p>
+<p>Example: find mean and sd of iris flower <code>Petal.Length</code> and <code>Petal.Width</code> by <code>Species</code> and display results in a pretty table. The dataset is called <code>iris</code>.</p>
+<p>Make a little one-row table for each variable being summarized, then stick them together.</p>
+<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb261-1" title="1"><span class="kw">require</span>(knitr)</a>
+<a class="sourceLine" id="cb261-2" title="2"></a>
+<a class="sourceLine" id="cb261-3" title="3">length_stats &lt;-<span class="st"> </span>iris <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb261-4" title="4"><span class="st">  </span><span class="kw">df_stats</span>(Petal.Length <span class="op">~</span><span class="st"> </span>Species, mean, sd, <span class="dt">long_names =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb261-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">variable =</span> <span class="st">&#39;Petal Length&#39;</span>)</a>
+<a class="sourceLine" id="cb261-6" title="6"></a>
+<a class="sourceLine" id="cb261-7" title="7">width_stats &lt;-<span class="st"> </span>iris <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb261-8" title="8"><span class="st">  </span><span class="kw">df_stats</span>(Petal.Width <span class="op">~</span><span class="st"> </span>Species, mean, sd, <span class="dt">long_names =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb261-9" title="9"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">variable =</span> <span class="st">&#39;Petal Width&#39;</span>)</a>
+<a class="sourceLine" id="cb261-10" title="10"></a>
+<a class="sourceLine" id="cb261-11" title="11">my_table &lt;-<span class="st"> </span><span class="kw">bind_rows</span>(length_stats, width_stats)</a>
+<a class="sourceLine" id="cb261-12" title="12"></a>
+<a class="sourceLine" id="cb261-13" title="13"><span class="kw">kable</span>(my_table)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Species</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="left">variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">setosa</td>
+<td align="right">1.462</td>
+<td align="right">0.174</td>
+<td align="left">Petal Length</td>
+</tr>
+<tr class="even">
+<td align="left">versicolor</td>
+<td align="right">4.260</td>
+<td align="right">0.470</td>
+<td align="left">Petal Length</td>
+</tr>
+<tr class="odd">
+<td align="left">virginica</td>
+<td align="right">5.552</td>
+<td align="right">0.552</td>
+<td align="left">Petal Length</td>
+</tr>
+<tr class="even">
+<td align="left">setosa</td>
+<td align="right">0.246</td>
+<td align="right">0.105</td>
+<td align="left">Petal Width</td>
+</tr>
+<tr class="odd">
+<td align="left">versicolor</td>
+<td align="right">1.326</td>
+<td align="right">0.198</td>
+<td align="left">Petal Width</td>
+</tr>
+<tr class="even">
+<td align="left">virginica</td>
+<td align="right">2.026</td>
+<td align="right">0.275</td>
+<td align="left">Petal Width</td>
+</tr>
+</tbody>
+</table>
+<p>What if we want to round all table entries to 2 digits after the decimal?</p>
+<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb262-1" title="1"><span class="kw">kable</span>(my_table, <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Species</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="left">variable</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">setosa</td>
+<td align="right">1.46</td>
+<td align="right">0.17</td>
+<td align="left">Petal Length</td>
+</tr>
+<tr class="even">
+<td align="left">versicolor</td>
+<td align="right">4.26</td>
+<td align="right">0.47</td>
+<td align="left">Petal Length</td>
+</tr>
+<tr class="odd">
+<td align="left">virginica</td>
+<td align="right">5.55</td>
+<td align="right">0.55</td>
+<td align="left">Petal Length</td>
+</tr>
+<tr class="even">
+<td align="left">setosa</td>
+<td align="right">0.25</td>
+<td align="right">0.11</td>
+<td align="left">Petal Width</td>
+</tr>
+<tr class="odd">
+<td align="left">versicolor</td>
+<td align="right">1.33</td>
+<td align="right">0.20</td>
+<td align="left">Petal Width</td>
+</tr>
+<tr class="even">
+<td align="left">virginica</td>
+<td align="right">2.03</td>
+<td align="right">0.27</td>
+<td align="left">Petal Width</td>
+</tr>
+</tbody>
+</table>
+<p>What if we want the column order to be Variable, Species, mean, sd, and sort by Species and then Variable?</p>
+<div class="sourceCode" id="cb263"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb263-1" title="1">my_table &lt;-<span class="st"> </span>my_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb263-2" title="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(variable, Species, mean, sd) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb263-3" title="3"><span class="st">  </span><span class="kw">arrange</span>(Species, variable)</a>
+<a class="sourceLine" id="cb263-4" title="4"><span class="kw">kable</span>(my_table, <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left">variable</th>
+<th align="left">Species</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Petal Length</td>
+<td align="left">setosa</td>
+<td align="right">1.46</td>
+<td align="right">0.17</td>
+</tr>
+<tr class="even">
+<td align="left">Petal Width</td>
+<td align="left">setosa</td>
+<td align="right">0.25</td>
+<td align="right">0.11</td>
+</tr>
+<tr class="odd">
+<td align="left">Petal Length</td>
+<td align="left">versicolor</td>
+<td align="right">4.26</td>
+<td align="right">0.47</td>
+</tr>
+<tr class="even">
+<td align="left">Petal Width</td>
+<td align="left">versicolor</td>
+<td align="right">1.33</td>
+<td align="right">0.20</td>
+</tr>
+<tr class="odd">
+<td align="left">Petal Length</td>
+<td align="left">virginica</td>
+<td align="right">5.55</td>
+<td align="right">0.55</td>
+</tr>
+<tr class="even">
+<td align="left">Petal Width</td>
+<td align="left">virginica</td>
+<td align="right">2.03</td>
+<td align="right">0.27</td>
+</tr>
+</tbody>
+</table>
+<p>What if we actually want a column for mean length, sd length, etc. and one row per species?</p>
+<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb264-1" title="1"><span class="kw">require</span>(tidyverse)</a>
+<a class="sourceLine" id="cb264-2" title="2">my_table2 &lt;-<span class="st"> </span>my_table <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb264-3" title="3"><span class="st">  </span><span class="kw">pivot_wider</span>(<span class="dt">names_from =</span> variable, </a>
+<a class="sourceLine" id="cb264-4" title="4">              <span class="dt">values_from =</span> <span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;sd&quot;</span>),</a>
+<a class="sourceLine" id="cb264-5" title="5">              <span class="dt">names_sep =</span> <span class="st">&#39; &#39;</span>)</a>
+<a class="sourceLine" id="cb264-6" title="6"><span class="kw">kable</span>(my_table2, <span class="dt">digits =</span> <span class="dv">2</span>, <span class="dt">align =</span> <span class="st">&#39;c&#39;</span>)</a></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Species</th>
+<th align="center">mean Petal Length</th>
+<th align="center">mean Petal Width</th>
+<th align="center">sd Petal Length</th>
+<th align="center">sd Petal Width</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">setosa</td>
+<td align="center">1.46</td>
+<td align="center">0.25</td>
+<td align="center">0.17</td>
+<td align="center">0.11</td>
+</tr>
+<tr class="even">
+<td align="center">versicolor</td>
+<td align="center">4.26</td>
+<td align="center">1.33</td>
+<td align="center">0.47</td>
+<td align="center">0.20</td>
+</tr>
+<tr class="odd">
+<td align="center">virginica</td>
+<td align="center">5.55</td>
+<td align="center">2.03</td>
+<td align="center">0.55</td>
+<td align="center">0.27</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="proportions-in-categories-by-groups" class="section level3">
+<h3><span class="header-section-number">17.2.2</span> Proportions in categories by groups</h3>
+<p>You may also want to make a table of proportion observations in each category by groups, potentially for many variables.</p>
+<p>For just one variable, we can use tally:</p>
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb265-1" title="1"><span class="kw">tally</span>(<span class="op">~</span>substance <span class="op">|</span><span class="st"> </span>sex, <span class="dt">data =</span> HELPrct, <span class="dt">format =</span> <span class="st">&#39;prop&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb265-2" title="2"><span class="st">  </span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Proportion using each substance&#39;</span>, <span class="dt">digits =</span> <span class="dv">2</span>)</a></code></pre></div>
+<table>
+<caption><span id="tab:unnamed-chunk-155">Table 17.1: </span>Proportion using each substance</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">female</th>
+<th align="right">male</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>alcohol</td>
+<td align="right">0.34</td>
+<td align="right">0.41</td>
+</tr>
+<tr class="even">
+<td>cocaine</td>
+<td align="right">0.38</td>
+<td align="right">0.32</td>
+</tr>
+<tr class="odd">
+<td>heroin</td>
+<td align="right">0.28</td>
+<td align="right">0.27</td>
+</tr>
+</tbody>
+</table>
+<p>For many variables we can use a loop. For example, we might want to know the proportion homeless and housed <strong>and</strong> proportion using each substance, both by sex, from the <code>HELPrct</code> dataset. Above we were using the function <code>knitr::kable()</code> to make tables, but we can use <code>pander::pander()</code> too:</p>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb266-1" title="1"><span class="co"># select only variables needed for the table</span></a>
+<a class="sourceLine" id="cb266-2" title="2"><span class="co"># make the first variable the groups one</span></a>
+<a class="sourceLine" id="cb266-3" title="3">cat_data &lt;-<span class="st"> </span>HELPrct <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(sex, substance, homeless) </a>
+<a class="sourceLine" id="cb266-4" title="4"></a>
+<a class="sourceLine" id="cb266-5" title="5"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(cat_data))){</a>
+<a class="sourceLine" id="cb266-6" title="6"><span class="kw">tally</span>(<span class="op">~</span>cat_data[,i] <span class="op">|</span><span class="st"> </span>cat_data[,<span class="dv">1</span>], <span class="dt">format =</span> <span class="st">&#39;prop&#39;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb266-7" title="7"><span class="st">    </span>pander<span class="op">::</span><span class="kw">pander</span>(<span class="dt">caption =</span> <span class="kw">paste</span>(<span class="st">&#39;Proportion in each &#39;</span>,</a>
+<a class="sourceLine" id="cb266-8" title="8">                                   <span class="kw">names</span>(cat_data)[i]))</a>
+<a class="sourceLine" id="cb266-9" title="9">  <span class="co"># can rename variables in cat_data if you want better captions</span></a>
+<a class="sourceLine" id="cb266-10" title="10">  }</a></code></pre></div>
+</div>
+</div>
+<div id="figures" class="section level2">
+<h2><span class="header-section-number">17.3</span> Figures</h2>
+<p>We’ve made a lot of figures in this class, and almost all have been kind of mediocre. To aim for awesome, here are a couple of great references for inspiration, ideas, and best practices:</p>
+<ul>
+<li><em>Fundamentals of Data Visualization</em> by Claus Wilke. <a href="https://serialmentor.com/dataviz/" class="uri">https://serialmentor.com/dataviz/</a></li>
+<li><a href="https://infogram.com/blog/20-best-data-visualizations-of-2018/" class="uri">https://infogram.com/blog/20-best-data-visualizations-of-2018/</a></li>
+<li>visualizingdata.com blog
+<ul>
+<li><a href="https://www.visualisingdata.com/2019/08/10-significant-visualisation-developments-january-to-june-2019/" class="uri">https://www.visualisingdata.com/2019/08/10-significant-visualisation-developments-january-to-june-2019/</a></li>
+<li><a href="https://www.visualisingdata.com/2016/03/little-visualisation-design/" class="uri">https://www.visualisingdata.com/2016/03/little-visualisation-design/</a></li>
+</ul></li>
+</ul>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="correlation-structures.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="gams-generalized-additive-models.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/18-anova-plus.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["s245-notes.pdf", "s245-notes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

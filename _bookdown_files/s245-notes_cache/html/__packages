@@ -25,3 +25,10 @@ GGally
 carData
 car
 pscl
+lme4
+RColorBrewer
+DHARMa
+geepack
+knitr
+nlme
+mgcv

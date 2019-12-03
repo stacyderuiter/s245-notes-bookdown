@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 14 Random Effects | STAT 245 Course Notes</title>
+  <meta name="description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 14 Random Effects | STAT 245 Course Notes" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  <meta name="github-repo" content="stacyderuiter/s245-notes-bookdown" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 14 Random Effects | STAT 245 Course Notes" />
+  
+  <meta name="twitter:description" content="Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)" />
+  
+
+<meta name="author" content="Stacy DeRuiter, Calvin University" />
+
+
+<meta name="date" content="2019-12-02" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="non-constant-variance-and-other-unresolved-problems.html"/>
+<link rel="next" href="gees.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">STAT 245 Notes</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Description</a></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html#data"><i class="fa fa-check"></i><b>2.1</b> Data</a></li>
+<li class="chapter" data-level="2.2" data-path="linear-regression.html"><a href="linear-regression.html#simple-linear-regression-residuals-least-squares"><i class="fa fa-check"></i><b>2.2</b> Simple linear regression, Residuals &amp; Least squares</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="linear-regression.html"><a href="linear-regression.html#using-lm-to-fit-a-linear-regression-in-r"><i class="fa fa-check"></i><b>2.2.1</b> Using <code>lm()</code> to fit a linear regression in R</a></li>
+<li class="chapter" data-level="2.2.2" data-path="linear-regression.html"><a href="linear-regression.html#equation-of-the-fitted-regression-line"><i class="fa fa-check"></i><b>2.2.2</b> Equation of the fitted regression line</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="linear-regression.html"><a href="linear-regression.html#multiple-regression"><i class="fa fa-check"></i><b>2.3</b> Multiple regression</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="linear-regression.html"><a href="linear-regression.html#is-it-really-better"><i class="fa fa-check"></i><b>2.3.1</b> Is it really better?</a></li>
+<li class="chapter" data-level="2.3.2" data-path="linear-regression.html"><a href="linear-regression.html#regression-residuals-errors"><i class="fa fa-check"></i><b>2.3.2</b> Regression residuals = “errors”</a></li>
+<li class="chapter" data-level="2.3.3" data-path="linear-regression.html"><a href="linear-regression.html#computing-predictions"><i class="fa fa-check"></i><b>2.3.3</b> Computing Predictions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-two-categories"><i class="fa fa-check"></i><b>2.4</b> Predictors with two categories</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="linear-regression.html"><a href="linear-regression.html#predictors-with-more-categories"><i class="fa fa-check"></i><b>2.4.1</b> Predictors with more categories</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="linear-regression.html"><a href="linear-regression.html#returning-to-the-r-model-summary"><i class="fa fa-check"></i><b>2.5</b> Returning to the R Model Summary</a></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html#predictions-from-the-model"><i class="fa fa-check"></i><b>2.6</b> Predictions from the model</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#by-hand"><i class="fa fa-check"></i><b>2.6.1</b> By Hand</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#prediction-plots-in-r"><i class="fa fa-check"></i><b>2.6.2</b> Prediction Plots in R</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="linear-regression.html"><a href="linear-regression.html#why-are-we-doing-this-again"><i class="fa fa-check"></i><b>2.7</b> Why are we doing this again?</a></li>
+<li class="chapter" data-level="2.8" data-path="linear-regression.html"><a href="linear-regression.html#shortcut-method---with-uncertainty"><i class="fa fa-check"></i><b>2.8</b> Shortcut Method - With Uncertainty</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="linear-regression.html"><a href="linear-regression.html#anatomy-of-a-confidence-interval"><i class="fa fa-check"></i><b>2.8.1</b> Anatomy of a Confidence Interval</a></li>
+</ul></li>
+<li class="chapter" data-level="2.9" data-path="linear-regression.html"><a href="linear-regression.html#diy-method"><i class="fa fa-check"></i><b>2.9</b> DIY Method</a><ul>
+<li class="chapter" data-level="2.9.1" data-path="linear-regression.html"><a href="linear-regression.html#creating-a-hypothetical-dataset"><i class="fa fa-check"></i><b>2.9.1</b> Creating a hypothetical dataset</a></li>
+<li class="chapter" data-level="2.9.2" data-path="linear-regression.html"><a href="linear-regression.html#making-the-plot"><i class="fa fa-check"></i><b>2.9.2</b> Making the plot</a></li>
+<li class="chapter" data-level="2.9.3" data-path="linear-regression.html"><a href="linear-regression.html#categorical-predictors"><i class="fa fa-check"></i><b>2.9.3</b> Categorical predictors</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html"><i class="fa fa-check"></i><b>3</b> Model Selection Using Information Criteria</a><ul>
+<li class="chapter" data-level="3.1" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#data-and-model"><i class="fa fa-check"></i><b>3.1</b> Data and Model</a></li>
+<li class="chapter" data-level="3.2" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#calculations"><i class="fa fa-check"></i><b>3.2</b> Calculations</a></li>
+<li class="chapter" data-level="3.3" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#decisions-with-ics"><i class="fa fa-check"></i><b>3.3</b> Decisions with ICs</a></li>
+<li class="chapter" data-level="3.4" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#all-possible-subsets-selection"><i class="fa fa-check"></i><b>3.4</b> All-possible-subsets Selection</a></li>
+<li class="chapter" data-level="3.5" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#which-ic-should-i-use"><i class="fa fa-check"></i><b>3.5</b> Which IC should I use?</a></li>
+<li class="chapter" data-level="3.6" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#quantities-derived-from-aic"><i class="fa fa-check"></i><b>3.6</b> Quantities derived from AIC</a></li>
+<li class="chapter" data-level="3.7" data-path="model-selection-using-information-criteria.html"><a href="model-selection-using-information-criteria.html#important-caution"><i class="fa fa-check"></i><b>3.7</b> Important Caution</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="likelihood.html"><a href="likelihood.html"><i class="fa fa-check"></i><b>4</b> Likelihood</a><ul>
+<li class="chapter" data-level="4.1" data-path="likelihood.html"><a href="likelihood.html#data-1"><i class="fa fa-check"></i><b>4.1</b> Data</a></li>
+<li class="chapter" data-level="4.2" data-path="likelihood.html"><a href="likelihood.html#review---the-normal-probability-density-function-pdf"><i class="fa fa-check"></i><b>4.2</b> Review - the Normal probability density function (PDF)</a></li>
+<li class="chapter" data-level="4.3" data-path="likelihood.html"><a href="likelihood.html#a-simple-model"><i class="fa fa-check"></i><b>4.3</b> A simple model</a></li>
+<li class="chapter" data-level="4.4" data-path="likelihood.html"><a href="likelihood.html#using-the-model-to-make-predictions"><i class="fa fa-check"></i><b>4.4</b> Using the Model to Make Predictions</a></li>
+<li class="chapter" data-level="4.5" data-path="likelihood.html"><a href="likelihood.html#likelihood-to-the-rescue"><i class="fa fa-check"></i><b>4.5</b> Likelihood to the Rescue!</a></li>
+<li class="chapter" data-level="4.6" data-path="likelihood.html"><a href="likelihood.html#how-does-this-relate-to-linear-regression"><i class="fa fa-check"></i><b>4.6</b> How does this relate to linear regression?</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="likelihood.html"><a href="likelihood.html#model-equation"><i class="fa fa-check"></i><b>4.6.1</b> Model Equation:</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="likelihood.html"><a href="likelihood.html#likelihood-of-a-dataset-given-a-model"><i class="fa fa-check"></i><b>4.7</b> Likelihood of a dataset, given a model</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html"><i class="fa fa-check"></i><b>5</b> PDFs and PMFs</a><ul>
+<li class="chapter" data-level="5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beyond-normal"><i class="fa fa-check"></i><b>5.1</b> Beyond Normal</a></li>
+<li class="chapter" data-level="5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#types-of-probability-distributions"><i class="fa fa-check"></i><b>5.2</b> Types of probability distributions</a><ul>
+<li class="chapter" data-level="5.2.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#continuous-distributions"><i class="fa fa-check"></i><b>5.2.1</b> Continuous distributions</a></li>
+<li class="chapter" data-level="5.2.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#discrete-distributions"><i class="fa fa-check"></i><b>5.2.2</b> Discrete Distributions</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#relevant-features-of-distributions"><i class="fa fa-check"></i><b>5.3</b> Relevant Features of Distributions</a></li>
+<li class="chapter" data-level="5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-continuous-distributions"><i class="fa fa-check"></i><b>5.4</b> Examples of Continuous Distributions</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#normal"><i class="fa fa-check"></i><b>5.4.1</b> Normal</a></li>
+<li class="chapter" data-level="5.4.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#gamma"><i class="fa fa-check"></i><b>5.4.2</b> Gamma</a></li>
+<li class="chapter" data-level="5.4.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#beta"><i class="fa fa-check"></i><b>5.4.3</b> Beta</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#examples-of-discrete-distributions"><i class="fa fa-check"></i><b>5.5</b> Examples of Discrete Distributions</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#binomial"><i class="fa fa-check"></i><b>5.5.1</b> Binomial</a></li>
+<li class="chapter" data-level="5.5.2" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#poisson"><i class="fa fa-check"></i><b>5.5.2</b> Poisson</a></li>
+<li class="chapter" data-level="5.5.3" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#negative-binomial"><i class="fa fa-check"></i><b>5.5.3</b> Negative Binomial</a></li>
+<li class="chapter" data-level="5.5.4" data-path="pdfs-and-pmfs.html"><a href="pdfs-and-pmfs.html#a-mixture-distribution-tweedie"><i class="fa fa-check"></i><b>5.5.4</b> A Mixture Distribution: Tweedie</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html"><i class="fa fa-check"></i><b>6</b> Regression for Count Data</a><ul>
+<li class="chapter" data-level="6.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#data-source"><i class="fa fa-check"></i><b>6.1</b> Data Source</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#a-bad-idea-multiple-linear-regression-model"><i class="fa fa-check"></i><b>6.2</b> A bad idea: multiple linear regression model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#problems-with-the-linear-model"><i class="fa fa-check"></i><b>6.3</b> Problems with the linear model</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#poisson-regression"><i class="fa fa-check"></i><b>6.4</b> Poisson Regression</a><ul>
+<li class="chapter" data-level="6.4.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#fitting-the-model"><i class="fa fa-check"></i><b>6.4.1</b> Fitting the Model</a></li>
+<li class="chapter" data-level="6.4.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#conditions"><i class="fa fa-check"></i><b>6.4.2</b> Conditions</a></li>
+<li class="chapter" data-level="6.4.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-assessment"><i class="fa fa-check"></i><b>6.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="6.4.4" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#checking-for-overdispersion-using-overdispersion-factor"><i class="fa fa-check"></i><b>6.4.4</b> Checking for overdispersion using overdispersion factor</a></li>
+</ul></li>
+<li class="chapter" data-level="6.5" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-negative-binomial-models"><i class="fa fa-check"></i><b>6.5</b> Accounting for overdispersion: Negative Binomial Models</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#accounting-for-overdispersion-quasi-poisson-model"><i class="fa fa-check"></i><b>6.6</b> Accounting for overdispersion: quasi-Poisson Model</a></li>
+<li class="chapter" data-level="6.7" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#model-selection-with-dredge-and-qaic-bic"><i class="fa fa-check"></i><b>6.7</b> Model selection with dredge() and (Q)AIC, BIC</a><ul>
+<li class="chapter" data-level="6.7.1" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-all-subsets-selection-with-dredge"><i class="fa fa-check"></i><b>6.7.1</b> Review: all subsets selection with dredge()</a></li>
+<li class="chapter" data-level="6.7.2" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#review-ic-weights"><i class="fa fa-check"></i><b>6.7.2</b> Review: IC “weights”</a></li>
+<li class="chapter" data-level="6.7.3" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#extending-dredge-to-quasi-likelihood"><i class="fa fa-check"></i><b>6.7.3</b> Extending dredge() to quasi-Likelihood</a></li>
+</ul></li>
+<li class="chapter" data-level="6.8" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#offsets"><i class="fa fa-check"></i><b>6.8</b> Offsets</a></li>
+<li class="chapter" data-level="6.9" data-path="regression-for-count-data.html"><a href="regression-for-count-data.html#prediction-plots"><i class="fa fa-check"></i><b>6.9</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="model-averaging.html"><a href="model-averaging.html"><i class="fa fa-check"></i><b>7</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.1" data-path="model-averaging.html"><a href="model-averaging.html#data-school-survey-on-crime-and-safety"><i class="fa fa-check"></i><b>7.1</b> Data: School Survey on Crime and Safety</a></li>
+<li class="chapter" data-level="7.2" data-path="model-averaging.html"><a href="model-averaging.html#modelling-number-of-violent-incidents-per-school"><i class="fa fa-check"></i><b>7.2</b> Modelling number of violent incidents per school</a></li>
+<li class="chapter" data-level="7.3" data-path="model-averaging.html"><a href="model-averaging.html#model-averaging-1"><i class="fa fa-check"></i><b>7.3</b> Model Averaging</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="model-averaging.html"><a href="model-averaging.html#getting-the-averaged-model"><i class="fa fa-check"></i><b>7.3.1</b> Getting the Averaged Model</a></li>
+<li class="chapter" data-level="7.3.2" data-path="model-averaging.html"><a href="model-averaging.html#getting-predictions-from-the-averaged-model"><i class="fa fa-check"></i><b>7.3.2</b> Getting Predictions from the Averaged Model</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="interactions.html"><a href="interactions.html"><i class="fa fa-check"></i><b>8</b> Interactions</a><ul>
+<li class="chapter" data-level="8.1" data-path="interactions.html"><a href="interactions.html#example-quantitative-categorical-interaction"><i class="fa fa-check"></i><b>8.1</b> Example: Quantitative-Categorical Interaction</a></li>
+<li class="chapter" data-level="8.2" data-path="interactions.html"><a href="interactions.html#categorical-categorical-interaction-example"><i class="fa fa-check"></i><b>8.2</b> Categorical-Categorical Interaction Example</a></li>
+<li class="chapter" data-level="8.3" data-path="interactions.html"><a href="interactions.html#quant-quant-interactions"><i class="fa fa-check"></i><b>8.3</b> Quant-Quant interactions?</a></li>
+<li class="chapter" data-level="8.4" data-path="interactions.html"><a href="interactions.html#r-code"><i class="fa fa-check"></i><b>8.4</b> R code</a></li>
+<li class="chapter" data-level="8.5" data-path="interactions.html"><a href="interactions.html#cautionary-note"><i class="fa fa-check"></i><b>8.5</b> Cautionary note</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="binary-regression.html"><a href="binary-regression.html"><i class="fa fa-check"></i><b>9</b> Binary Regression</a><ul>
+<li class="chapter" data-level="9.1" data-path="binary-regression.html"><a href="binary-regression.html#data-source-1"><i class="fa fa-check"></i><b>9.1</b> Data Source</a></li>
+<li class="chapter" data-level="9.2" data-path="binary-regression.html"><a href="binary-regression.html#logistic-regression"><i class="fa fa-check"></i><b>9.2</b> Logistic Regression</a></li>
+<li class="chapter" data-level="9.3" data-path="binary-regression.html"><a href="binary-regression.html#checking-the-data-setup"><i class="fa fa-check"></i><b>9.3</b> Checking the data setup</a></li>
+<li class="chapter" data-level="9.4" data-path="binary-regression.html"><a href="binary-regression.html#fitting-a-saturated-model"><i class="fa fa-check"></i><b>9.4</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="9.5" data-path="binary-regression.html"><a href="binary-regression.html#link-functions"><i class="fa fa-check"></i><b>9.5</b> Link Functions</a></li>
+<li class="chapter" data-level="9.6" data-path="binary-regression.html"><a href="binary-regression.html#conditions-1"><i class="fa fa-check"></i><b>9.6</b> Conditions</a></li>
+<li class="chapter" data-level="9.7" data-path="binary-regression.html"><a href="binary-regression.html#model-assessment-plots"><i class="fa fa-check"></i><b>9.7</b> Model Assessment Plots</a></li>
+<li class="chapter" data-level="9.8" data-path="binary-regression.html"><a href="binary-regression.html#odds-ratios"><i class="fa fa-check"></i><b>9.8</b> Odds Ratios</a></li>
+<li class="chapter" data-level="9.9" data-path="binary-regression.html"><a href="binary-regression.html#model-selection"><i class="fa fa-check"></i><b>9.9</b> Model Selection</a></li>
+<li class="chapter" data-level="9.10" data-path="binary-regression.html"><a href="binary-regression.html#prediction-plots-1"><i class="fa fa-check"></i><b>9.10</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html"><i class="fa fa-check"></i><b>10</b> Binary regression: Data with more than one trial per row</a><ul>
+<li class="chapter" data-level="10.1" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#data-2"><i class="fa fa-check"></i><b>10.1</b> Data</a></li>
+<li class="chapter" data-level="10.2" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#checking-the-data-setup-1"><i class="fa fa-check"></i><b>10.2</b> Checking the data setup</a></li>
+<li class="chapter" data-level="10.3" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#fitting-a-saturated-model-1"><i class="fa fa-check"></i><b>10.3</b> Fitting a saturated model</a></li>
+<li class="chapter" data-level="10.4" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#checking-linearity"><i class="fa fa-check"></i><b>10.4</b> Checking linearity</a></li>
+<li class="chapter" data-level="10.5" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#model-assessment-1"><i class="fa fa-check"></i><b>10.5</b> Model Assessment</a></li>
+<li class="chapter" data-level="10.6" data-path="binary-regression-data-with-more-than-one-trial-per-row.html"><a href="binary-regression-data-with-more-than-one-trial-per-row.html#model-selection-1"><i class="fa fa-check"></i><b>10.6</b> Model Selection</a></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html"><i class="fa fa-check"></i><b>11</b> Collinearity and Multicollinearity</a><ul>
+<li class="chapter" data-level="11.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#graphical-checks"><i class="fa fa-check"></i><b>11.1</b> Graphical Checks</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#preferred-option-correlation-scatter-plot"><i class="fa fa-check"></i><b>11.1.1</b> Preferred option: Correlation Scatter Plot</a></li>
+<li class="chapter" data-level="11.1.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#another-option-heat-map-of-correlation-coefficients"><i class="fa fa-check"></i><b>11.1.2</b> Another option: Heat map of correlation coefficients</a></li>
+<li class="chapter" data-level="11.1.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#how-to-use-this-information"><i class="fa fa-check"></i><b>11.1.3</b> How to use this information</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#variance-inflation-factors"><i class="fa fa-check"></i><b>11.2</b> Variance Inflation Factors</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#quantitative-predictors-vifs"><i class="fa fa-check"></i><b>11.2.1</b> Quantitative predictors (VIFs)</a></li>
+<li class="chapter" data-level="11.2.2" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#some-categorical-predictors-gvifs"><i class="fa fa-check"></i><b>11.2.2</b> (Some) Categorical Predictors (GVIFs)</a></li>
+<li class="chapter" data-level="11.2.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#rules-of-thumb"><i class="fa fa-check"></i><b>11.2.3</b> Rules of Thumb</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="collinearity-and-multicollinearity.html"><a href="collinearity-and-multicollinearity.html#was-it-worth-it"><i class="fa fa-check"></i><b>11.3</b> Was it worth it?</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="zero-inflation.html"><a href="zero-inflation.html"><i class="fa fa-check"></i><b>12</b> Zero-Inflation</a><ul>
+<li class="chapter" data-level="12.1" data-path="zero-inflation.html"><a href="zero-inflation.html#reference-material"><i class="fa fa-check"></i><b>12.1</b> Reference material</a></li>
+<li class="chapter" data-level="12.2" data-path="zero-inflation.html"><a href="zero-inflation.html#data-for-example"><i class="fa fa-check"></i><b>12.2</b> Data for Example</a></li>
+<li class="chapter" data-level="12.3" data-path="zero-inflation.html"><a href="zero-inflation.html#visualization"><i class="fa fa-check"></i><b>12.3</b> Visualization?</a></li>
+<li class="chapter" data-level="12.4" data-path="zero-inflation.html"><a href="zero-inflation.html#collinearitymulticollinearity"><i class="fa fa-check"></i><b>12.4</b> Collinearity/Multicollinearity?</a></li>
+<li class="chapter" data-level="12.5" data-path="zero-inflation.html"><a href="zero-inflation.html#fitting-models"><i class="fa fa-check"></i><b>12.5</b> Fitting models</a><ul>
+<li class="chapter" data-level="12.5.1" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-poisson"><i class="fa fa-check"></i><b>12.5.1</b> Zero-inflated Poisson</a></li>
+<li class="chapter" data-level="12.5.2" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-nb-one-way"><i class="fa fa-check"></i><b>12.5.2</b> Zero-inflated NB: one way</a></li>
+<li class="chapter" data-level="12.5.3" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflated-negative-binomial-other-way"><i class="fa fa-check"></i><b>12.5.3</b> Zero-inflated negative binomial (other way)</a></li>
+<li class="chapter" data-level="12.5.4" data-path="zero-inflation.html"><a href="zero-inflation.html#tweedie-model"><i class="fa fa-check"></i><b>12.5.4</b> Tweedie Model</a></li>
+</ul></li>
+<li class="chapter" data-level="12.6" data-path="zero-inflation.html"><a href="zero-inflation.html#model-assessment-2"><i class="fa fa-check"></i><b>12.6</b> Model Assessment</a></li>
+<li class="chapter" data-level="12.7" data-path="zero-inflation.html"><a href="zero-inflation.html#model-selection-2"><i class="fa fa-check"></i><b>12.7</b> Model Selection?</a><ul>
+<li class="chapter" data-level="12.7.1" data-path="zero-inflation.html"><a href="zero-inflation.html#zero-inflation-covariates"><i class="fa fa-check"></i><b>12.7.1</b> Zero inflation covariates</a></li>
+<li class="chapter" data-level="12.7.2" data-path="zero-inflation.html"><a href="zero-inflation.html#interaction-terms"><i class="fa fa-check"></i><b>12.7.2</b> Interaction terms</a></li>
+<li class="chapter" data-level="12.7.3" data-path="zero-inflation.html"><a href="zero-inflation.html#dredge"><i class="fa fa-check"></i><b>12.7.3</b> Dredge</a></li>
+</ul></li>
+<li class="chapter" data-level="12.8" data-path="zero-inflation.html"><a href="zero-inflation.html#prediction-plots-2"><i class="fa fa-check"></i><b>12.8</b> Prediction Plots</a></li>
+<li class="chapter" data-level="12.9" data-path="zero-inflation.html"><a href="zero-inflation.html#acknowledgements"><i class="fa fa-check"></i><b>12.9</b> Acknowledgements</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html"><i class="fa fa-check"></i><b>13</b> Non-constant variance (and other unresolved problems)</a><ul>
+<li class="chapter" data-level="13.0.1" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#already-in-our-tool-box-make-sure-the-model-is-right"><i class="fa fa-check"></i><b>13.0.1</b> Already in Our Tool Box: Make sure the model is “right”</a></li>
+<li class="chapter" data-level="13.0.2" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#already-in-our-tool-box-models-that-estimate-dispersion-parameters"><i class="fa fa-check"></i><b>13.0.2</b> Already in Our Tool Box: Models that estimate dispersion parameters</a></li>
+<li class="chapter" data-level="13.0.3" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#gamma-glms"><i class="fa fa-check"></i><b>13.0.3</b> Gamma GLMs</a></li>
+<li class="chapter" data-level="13.0.4" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#beta-glms"><i class="fa fa-check"></i><b>13.0.4</b> Beta GLMs</a></li>
+<li class="chapter" data-level="13.0.5" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#transformations"><i class="fa fa-check"></i><b>13.0.5</b> Transformations</a></li>
+<li class="chapter" data-level="13.0.6" data-path="non-constant-variance-and-other-unresolved-problems.html"><a href="non-constant-variance-and-other-unresolved-problems.html#modelling-non-constant-variance"><i class="fa fa-check"></i><b>13.0.6</b> Modelling non-constant variance</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="random-effects.html"><a href="random-effects.html"><i class="fa fa-check"></i><b>14</b> Random Effects</a><ul>
+<li class="chapter" data-level="14.1" data-path="random-effects.html"><a href="random-effects.html#dataset"><i class="fa fa-check"></i><b>14.1</b> Dataset</a></li>
+<li class="chapter" data-level="14.2" data-path="random-effects.html"><a href="random-effects.html#data-exploration"><i class="fa fa-check"></i><b>14.2</b> Data Exploration</a></li>
+<li class="chapter" data-level="14.3" data-path="random-effects.html"><a href="random-effects.html#a-base-linear-model"><i class="fa fa-check"></i><b>14.3</b> A Base Linear Model</a><ul>
+<li class="chapter" data-level="14.3.1" data-path="random-effects.html"><a href="random-effects.html#model-assessment-3"><i class="fa fa-check"></i><b>14.3.1</b> Model assessment</a></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="random-effects.html"><a href="random-effects.html#a-random-effects-model"><i class="fa fa-check"></i><b>14.4</b> A Random Effects model</a><ul>
+<li class="chapter" data-level="14.4.1" data-path="random-effects.html"><a href="random-effects.html#the-formula"><i class="fa fa-check"></i><b>14.4.1</b> The Formula</a></li>
+<li class="chapter" data-level="14.4.2" data-path="random-effects.html"><a href="random-effects.html#the-results"><i class="fa fa-check"></i><b>14.4.2</b> The Results</a></li>
+<li class="chapter" data-level="14.4.3" data-path="random-effects.html"><a href="random-effects.html#model-assessment-4"><i class="fa fa-check"></i><b>14.4.3</b> Model Assessment</a></li>
+<li class="chapter" data-level="14.4.4" data-path="random-effects.html"><a href="random-effects.html#refinement"><i class="fa fa-check"></i><b>14.4.4</b> Refinement</a></li>
+</ul></li>
+<li class="chapter" data-level="14.5" data-path="random-effects.html"><a href="random-effects.html#model-selection-for-mixed-models"><i class="fa fa-check"></i><b>14.5</b> Model Selection for Mixed Models</a><ul>
+<li class="chapter" data-level="14.5.1" data-path="random-effects.html"><a href="random-effects.html#reml-or-ml"><i class="fa fa-check"></i><b>14.5.1</b> REML or ML?</a></li>
+<li class="chapter" data-level="14.5.2" data-path="random-effects.html"><a href="random-effects.html#best-model-so-far"><i class="fa fa-check"></i><b>14.5.2</b> Best model so far:</a></li>
+</ul></li>
+<li class="chapter" data-level="14.6" data-path="random-effects.html"><a href="random-effects.html#random-slopes"><i class="fa fa-check"></i><b>14.6</b> Random Slopes?</a></li>
+<li class="chapter" data-level="14.7" data-path="random-effects.html"><a href="random-effects.html#prediction-plots-3"><i class="fa fa-check"></i><b>14.7</b> Prediction Plots</a><ul>
+<li class="chapter" data-level="14.7.1" data-path="random-effects.html"><a href="random-effects.html#parametric-bootstrap-to-the-rescue"><i class="fa fa-check"></i><b>14.7.1</b> Parametric bootstrap to the rescue!</a></li>
+</ul></li>
+<li class="chapter" data-level="14.8" data-path="random-effects.html"><a href="random-effects.html#random-effects-with-glmmtmb-and-standardized-residuals"><i class="fa fa-check"></i><b>14.8</b> Random effects with glmmTMB and standardized residuals</a></li>
+<li class="chapter" data-level="14.9" data-path="random-effects.html"><a href="random-effects.html#model-for-whale-dive-duration"><i class="fa fa-check"></i><b>14.9</b> Model for whale dive duration</a></li>
+<li class="chapter" data-level="14.10" data-path="random-effects.html"><a href="random-effects.html#glmmtmb"><i class="fa fa-check"></i><b>14.10</b> glmmTMB</a></li>
+<li class="chapter" data-level="14.11" data-path="random-effects.html"><a href="random-effects.html#model-assessment-with-scaled-residuals"><i class="fa fa-check"></i><b>14.11</b> Model assessment with scaled residuals</a><ul>
+<li class="chapter" data-level="14.11.1" data-path="random-effects.html"><a href="random-effects.html#glmmtmb-version"><i class="fa fa-check"></i><b>14.11.1</b> glmmTMB version</a></li>
+<li class="chapter" data-level="14.11.2" data-path="random-effects.html"><a href="random-effects.html#you-now-have-the-power"><i class="fa fa-check"></i><b>14.11.2</b> You now have the power!</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="gees.html"><a href="gees.html"><i class="fa fa-check"></i><b>15</b> GEEs</a><ul>
+<li class="chapter" data-level="15.1" data-path="gees.html"><a href="gees.html#data-source-2"><i class="fa fa-check"></i><b>15.1</b> Data Source</a></li>
+<li class="chapter" data-level="15.2" data-path="gees.html"><a href="gees.html#data-exploration-1"><i class="fa fa-check"></i><b>15.2</b> Data Exploration</a></li>
+<li class="chapter" data-level="15.3" data-path="gees.html"><a href="gees.html#linear-regression-1"><i class="fa fa-check"></i><b>15.3</b> Linear Regression</a></li>
+<li class="chapter" data-level="15.4" data-path="gees.html"><a href="gees.html#model-assessment-5"><i class="fa fa-check"></i><b>15.4</b> Model Assessment</a></li>
+<li class="chapter" data-level="15.5" data-path="gees.html"><a href="gees.html#linear-regression-2"><i class="fa fa-check"></i><b>15.5</b> Linear Regression</a></li>
+<li class="chapter" data-level="15.6" data-path="gees.html"><a href="gees.html#generalized-estimating-equations-gees"><i class="fa fa-check"></i><b>15.6</b> Generalized Estimating Equations (GEEs)</a><ul>
+<li class="chapter" data-level="15.6.1" data-path="gees.html"><a href="gees.html#fitting-gees-with-different-correlation-structures"><i class="fa fa-check"></i><b>15.6.1</b> Fitting GEEs with different correlation structures</a></li>
+<li class="chapter" data-level="15.6.2" data-path="gees.html"><a href="gees.html#comparing-different-correlation-structures"><i class="fa fa-check"></i><b>15.6.2</b> Comparing different correlation structures}</a></li>
+</ul></li>
+<li class="chapter" data-level="15.7" data-path="gees.html"><a href="gees.html#gee-model-assessment"><i class="fa fa-check"></i><b>15.7</b> GEE model assessment</a></li>
+<li class="chapter" data-level="15.8" data-path="gees.html"><a href="gees.html#model-selection---which-variables"><i class="fa fa-check"></i><b>15.8</b> Model Selection - Which variables?</a></li>
+<li class="chapter" data-level="15.9" data-path="gees.html"><a href="gees.html#prediction-plots-4"><i class="fa fa-check"></i><b>15.9</b> Prediction Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="correlation-structures.html"><a href="correlation-structures.html"><i class="fa fa-check"></i><b>16</b> Correlation Structures</a><ul>
+<li class="chapter" data-level="16.0.1" data-path="correlation-structures.html"><a href="correlation-structures.html#variancecovariance-or-correlation"><i class="fa fa-check"></i><b>16.0.1</b> Variance/Covariance or Correlation?</a></li>
+<li class="chapter" data-level="16.0.2" data-path="correlation-structures.html"><a href="correlation-structures.html#example-case"><i class="fa fa-check"></i><b>16.0.2</b> Example Case</a></li>
+<li class="chapter" data-level="16.0.3" data-path="correlation-structures.html"><a href="correlation-structures.html#independence"><i class="fa fa-check"></i><b>16.0.3</b> Independence</a></li>
+<li class="chapter" data-level="16.0.4" data-path="correlation-structures.html"><a href="correlation-structures.html#acf-example"><i class="fa fa-check"></i><b>16.0.4</b> ACF Example</a></li>
+<li class="chapter" data-level="16.0.5" data-path="correlation-structures.html"><a href="correlation-structures.html#exchangeable-block-diagonal"><i class="fa fa-check"></i><b>16.0.5</b> Exchangeable = Block Diagonal</a></li>
+<li class="chapter" data-level="16.0.6" data-path="correlation-structures.html"><a href="correlation-structures.html#ar1-first-order-autoregressive-process"><i class="fa fa-check"></i><b>16.0.6</b> AR1 (first-order autoregressive process)</a></li>
+<li class="chapter" data-level="16.0.7" data-path="correlation-structures.html"><a href="correlation-structures.html#unstructured"><i class="fa fa-check"></i><b>16.0.7</b> Unstructured</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html"><i class="fa fa-check"></i><b>17</b> Other Model Selection Approaches</a><ul>
+<li class="chapter" data-level="17.0.1" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#rationale"><i class="fa fa-check"></i><b>17.0.1</b> Rationale</a></li>
+<li class="chapter" data-level="17.0.2" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#hypotheses"><i class="fa fa-check"></i><b>17.0.2</b> Hypotheses</a></li>
+<li class="chapter" data-level="17.1" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#backward-selection"><i class="fa fa-check"></i><b>17.1</b> Backward selection</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#algorithm"><i class="fa fa-check"></i><b>17.1.1</b> Algorithm</a></li>
+<li class="chapter" data-level="17.1.2" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#example"><i class="fa fa-check"></i><b>17.1.2</b> Example</a></li>
+<li class="chapter" data-level="17.1.3" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#cant-this-be-automated"><i class="fa fa-check"></i><b>17.1.3</b> Can’t this be automated?</a></li>
+<li class="chapter" data-level="17.1.4" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#stepwise-ic-based-selection"><i class="fa fa-check"></i><b>17.1.4</b> Stepwise IC-based selection</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#summary-tables"><i class="fa fa-check"></i><b>17.2</b> Summary tables</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#mean-or-sd-median-iqr-etc.-by-groups"><i class="fa fa-check"></i><b>17.2.1</b> Mean (or sd, median, IQR, etc.) by groups</a></li>
+<li class="chapter" data-level="17.2.2" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#proportions-in-categories-by-groups"><i class="fa fa-check"></i><b>17.2.2</b> Proportions in categories by groups</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="other-model-selection-approaches.html"><a href="other-model-selection-approaches.html#figures"><i class="fa fa-check"></i><b>17.3</b> Figures</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html"><i class="fa fa-check"></i><b>18</b> GAMs: Generalized Additive Models</a><ul>
+<li class="chapter" data-level="18.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#non-linear-non-monotonic-relationships"><i class="fa fa-check"></i><b>18.1</b> Non-linear, non-monotonic relationships</a></li>
+<li class="chapter" data-level="18.2" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#smooth-terms"><i class="fa fa-check"></i><b>18.2</b> Smooth terms</a><ul>
+<li class="chapter" data-level="18.2.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#basis-functions"><i class="fa fa-check"></i><b>18.2.1</b> Basis functions</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#fitting-gams"><i class="fa fa-check"></i><b>18.3</b> Fitting GAMs</a><ul>
+<li class="chapter" data-level="18.3.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#choosing-model-formulation"><i class="fa fa-check"></i><b>18.3.1</b> Choosing model formulation</a></li>
+<li class="chapter" data-level="18.3.2" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#model-formula"><i class="fa fa-check"></i><b>18.3.2</b> Model formula</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#model-assessment-6"><i class="fa fa-check"></i><b>18.4</b> Model Assessment</a><ul>
+<li class="chapter" data-level="18.4.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#concurvity"><i class="fa fa-check"></i><b>18.4.1</b> Concurvity</a></li>
+</ul></li>
+<li class="chapter" data-level="18.5" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#model-selection-3"><i class="fa fa-check"></i><b>18.5</b> Model Selection</a><ul>
+<li class="chapter" data-level="18.5.1" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#shrinkage-and-penalties"><i class="fa fa-check"></i><b>18.5.1</b> Shrinkage and Penalties</a></li>
+<li class="chapter" data-level="18.5.2" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#p-value-selection"><i class="fa fa-check"></i><b>18.5.2</b> P-value selection</a></li>
+<li class="chapter" data-level="18.5.3" data-path="gams-generalized-additive-models.html"><a href="gams-generalized-additive-models.html#information-criteria"><i class="fa fa-check"></i><b>18.5.3</b> Information criteria</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">STAT 245 Course Notes</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="random-effects" class="section level1">
+<h1><span class="header-section-number">Chapter 14</span> Random Effects</h1>
+<p>We have seen a number of cases where model residuals were not independent, violation regression model conditions. What kind of model can address this kind of <em>dependent</em> data? Hierarchical models - here, models including <em>random effects</em> - are one way to approach this problem. These kinds of models go by many names, including hierarchical models, multi-level models, random effects models,or mixed effects models.</p>
+<div id="dataset" class="section level2">
+<h2><span class="header-section-number">14.1</span> Dataset</h2>
+<p>From: Falcone et al. 2017, <a href="http://rsos.royalsocietypublishing.org/content/royopensci/4/8/170629.full.pdf" class="uri">http://rsos.royalsocietypublishing.org/content/royopensci/4/8/170629.full.pdf</a></p>
+<p>Satellite tags were used to record dive data and movements of 16 Cuvier’s beaked whales for up to 88 days each. The whales were incidentally exposed to different types of naval sonar exercises during the study period. How did characteristics of their dives change during sonar exposure? We will look specifically at shallow dive duration as a response variable.</p>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" title="1">d &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&#39;http://sldr.netlify.com/data/zshal.csv&#39;</span>)</a>
+<a class="sourceLine" id="cb185-2" title="2">d<span class="op">$</span>SonarA &lt;-<span class="st"> </span><span class="kw">factor</span>(d<span class="op">$</span>SonarA)</a>
+<a class="sourceLine" id="cb185-3" title="3">d<span class="op">$</span>SonarB &lt;-<span class="st"> </span><span class="kw">factor</span>(d<span class="op">$</span>SonarB)</a></code></pre></div>
+</div>
+<div id="data-exploration" class="section level2">
+<h2><span class="header-section-number">14.2</span> Data Exploration</h2>
+<p>For these data, we are especially interested in how dive duration depends on sonar exposure. We also need to control for effects of other variables like depth and time of day.</p>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" title="1"><span class="kw">gf_boxplot</span>(DurAvg <span class="op">~</span><span class="st"> </span><span class="kw">factor</span>(SonarA), <span class="dt">data=</span>d) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb186-2" title="2"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Sonar A Presence&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Dive Duration (min.)&#39;</span>)</a>
+<a class="sourceLine" id="cb186-3" title="3"><span class="kw">gf_boxplot</span>(DurAvg <span class="op">~</span><span class="st"> </span><span class="kw">factor</span>(SonarB), <span class="dt">data=</span>d) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb186-4" title="4"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Sonar B Presence&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Dive Duration (min.)&#39;</span>)</a>
+<a class="sourceLine" id="cb186-5" title="5"><span class="kw">gf_boxplot</span>(DurAvg <span class="op">~</span><span class="st"> </span>TransClass, <span class="dt">data=</span>d) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb186-6" title="6"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Time of Day&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Dive Duration (min.)&#39;</span>)</a>
+<a class="sourceLine" id="cb186-7" title="7"><span class="kw">gf_point</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg, <span class="dt">data=</span>d, <span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb186-8" title="8"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Max. Depth (m)&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Dive Duration (min.)&#39;</span>)</a>
+<a class="sourceLine" id="cb186-9" title="9"><span class="kw">gf_point</span>(DurAvg <span class="op">~</span><span class="st"> </span>SonarAPercOL.fill, <span class="dt">data=</span>d, <span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb186-10" title="10"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Percent Sonar A Overlap&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Dive Duration (min.)&#39;</span>)</a>
+<a class="sourceLine" id="cb186-11" title="11"><span class="kw">gf_point</span>(DurAvg <span class="op">~</span><span class="st"> </span>SonarBPercOL.fill, <span class="dt">data=</span>d, <span class="dt">alpha=</span><span class="fl">0.5</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb186-12" title="12"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Percent Sonar B Overlap&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Dive Duration (min.)&#39;</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-102-1.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-102-2.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-102-3.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-102-4.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-102-5.png" width="336" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-102-6.png" width="336" style="display: block; margin: auto;" /></p>
+</div>
+<div id="a-base-linear-model" class="section level2">
+<h2><span class="header-section-number">14.3</span> A Base Linear Model</h2>
+<p>A starting point for these data would be a basic linear regression, because the response variable is continuous, and we don’t have strong indication of nonlinear predictor-response relationships.</p>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" title="1">base.model &lt;-<span class="st"> </span><span class="kw">lm</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg <span class="op">+</span><span class="st"> </span>TransClass <span class="op">+</span><span class="st">   </span>SonarA <span class="op">+</span></a>
+<a class="sourceLine" id="cb187-2" title="2"><span class="st">                   </span>SonarB <span class="op">+</span>SonarAPercOL.fill <span class="op">+</span></a>
+<a class="sourceLine" id="cb187-3" title="3"><span class="st">                   </span>SonarBPercOL.fill, <span class="dt">data=</span>d)</a>
+<a class="sourceLine" id="cb187-4" title="4"><span class="kw">summary</span>(base.model)</a></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = DurAvg ~ DepthAvg + TransClass + SonarA + SonarB + 
+##     SonarAPercOL.fill + SonarBPercOL.fill, data = d)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -34.344  -3.174  -0.148   2.891  40.732 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)       11.0774181  0.3056179  36.246  &lt; 2e-16 ***
+## DepthAvg           0.0384292  0.0005743  66.920  &lt; 2e-16 ***
+## TransClassDay     -0.8195877  0.2718055  -3.015  0.00258 ** 
+## TransClassDusk    -2.1080411  0.3536873  -5.960 2.66e-09 ***
+## TransClassNight   -2.4488002  0.2708857  -9.040  &lt; 2e-16 ***
+## SonarA1            2.6646627  1.8160219   1.467  0.14234    
+## SonarB1            5.1562595  0.8556973   6.026 1.78e-09 ***
+## SonarAPercOL.fill  0.7555749  2.1077356   0.358  0.72000    
+## SonarBPercOL.fill  0.8554161  2.2865382   0.374  0.70834    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 5.242 on 6174 degrees of freedom
+## Multiple R-squared:  0.4844, Adjusted R-squared:  0.4837 
+## F-statistic: 725.1 on 8 and 6174 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div id="model-assessment-3" class="section level3">
+<h3><span class="header-section-number">14.3.1</span> Model assessment</h3>
+<p>Let’s take a look right away at the model assessment plot that we suspect will be problematic for time-series data like ours. As we fear…</p>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(base.model), <span class="dt">main=</span><span class="st">&#39;Residual ACF for base lm&#39;</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-104-1.png" width="624" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="a-random-effects-model" class="section level2">
+<h2><span class="header-section-number">14.4</span> A Random Effects model</h2>
+<p>This time we will try to account for the correlation over time within individuals using something called a <em>random effect</em> model (also known as a <em>mixed effects model</em>, <em>multilevel level</em>, among others). How does this model change our regression equation?</p>
+<p>Recall that the form of a base linear model (with just 2 predictors) would be:</p>
+<p><span class="math display">\[ y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \epsilon\]</span></p>
+<p>Where <span class="math inline">\(\epsilon \sim N(0,\sigma)\)</span> are the normally distributed residuals with mean 0.</p>
+<p>Now…
+</p>
+<div id="the-formula" class="section level3">
+<h3><span class="header-section-number">14.4.1</span> The Formula</h3>
+<p>The function to fit a linear random effect model is <code>lmer()</code>. For a Poisson or Logistic regression with random effects, it’s <code>glmer()</code>. Both are from the package <code>lme4</code>. We add random effects to the model formula with:</p>
+<p><span class="math display">\[ + (1|variable)\]</span></p>
+<p>or nested:</p>
+<p><span class="math display">\[ + (1|variable1/variable2)\]</span></p>
+<p>Let’s try a random effect of individual whale first. We have:</p>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" title="1">rem1 &lt;-<span class="st"> </span><span class="kw">lmer</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg <span class="op">+</span><span class="st"> </span>TransClass <span class="op">+</span></a>
+<a class="sourceLine" id="cb190-2" title="2"><span class="st">  </span>SonarA <span class="op">+</span><span class="st"> </span>SonarB <span class="op">+</span>SonarAPercOL.fill<span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb190-3" title="3"><span class="st">    </span>SonarBPercOL.fill <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>TagID), </a>
+<a class="sourceLine" id="cb190-4" title="4">  <span class="dt">data=</span>d)</a></code></pre></div>
+<p>Why yes - we <em>should</em> consider rescaling…what/why/how?
+</p>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" title="1">d<span class="op">$</span>SonarAPercScale &lt;-<span class="st"> </span><span class="kw">scale</span>(d<span class="op">$</span>SonarAPercOL.fill)</a>
+<a class="sourceLine" id="cb191-2" title="2">d<span class="op">$</span>SonarBPercScale &lt;-<span class="st"> </span><span class="kw">scale</span>(d<span class="op">$</span>SonarBPercOL.fill)</a>
+<a class="sourceLine" id="cb191-3" title="3">rem2 &lt;-<span class="st"> </span><span class="kw">lmer</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg <span class="op">+</span><span class="st"> </span>TransClass <span class="op">+</span></a>
+<a class="sourceLine" id="cb191-4" title="4"><span class="st">  </span>SonarA <span class="op">+</span><span class="st"> </span>SonarB <span class="op">+</span><span class="st"> </span>SonarAPercScale <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb191-5" title="5"><span class="st">    </span>SonarBPercScale <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>TagID), </a>
+<a class="sourceLine" id="cb191-6" title="6">  <span class="dt">data=</span>d)</a></code></pre></div>
+</div>
+<div id="the-results" class="section level3">
+<h3><span class="header-section-number">14.4.2</span> The Results</h3>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" title="1"><span class="kw">summary</span>(rem2)</a></code></pre></div>
+<pre><code>## Linear mixed model fit by REML [&#39;lmerMod&#39;]
+## Formula: 
+## DurAvg ~ DepthAvg + TransClass + SonarA + SonarB + SonarAPercScale +  
+##     SonarBPercScale + (1 | TagID)
+##    Data: d
+## 
+## REML criterion at convergence: 36982.5
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -7.1028 -0.5632 -0.0081  0.5297  7.8183 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  TagID    (Intercept)  3.401   1.844   
+##  Residual             22.928   4.788   
+## Number of obs: 6183, groups:  TagID, 15
+## 
+## Fixed effects:
+##                   Estimate Std. Error t value
+## (Intercept)     11.0158506  0.5547015  19.859
+## DepthAvg         0.0391448  0.0005327  73.490
+## TransClassDay   -0.6416909  0.2490852  -2.576
+## TransClassDusk  -1.9171752  0.3235698  -5.925
+## TransClassNight -2.3456311  0.2479312  -9.461
+## SonarA1          3.4520183  1.6608961   2.078
+## SonarB1          4.5271312  0.7842742   5.772
+## SonarAPercScale  0.0362979  0.1716890   0.211
+## SonarBPercScale  0.1119528  0.0991365   1.129
+## 
+## Correlation of Fixed Effects:
+##             (Intr) DpthAv TrnsClssDy TrnsClssDs TrnsCN SonrA1 SonrB1
+## DepthAvg    -0.282                                                  
+## TransClssDy -0.365 -0.055                                           
+## TrnsClssDsk -0.308  0.051  0.650                                    
+## TrnsClssNgh -0.410  0.097  0.844      0.658                         
+## SonarA1     -0.029 -0.011 -0.011      0.004     -0.001              
+## SonarB1     -0.006 -0.026 -0.037     -0.026     -0.006 -0.032       
+## SonrAPrcScl  0.029  0.009  0.001      0.001      0.001 -0.933 -0.002
+## SonrBPrcScl  0.017  0.005 -0.005      0.011      0.003  0.020 -0.785
+##             SnrAPS
+## DepthAvg          
+## TransClssDy       
+## TrnsClssDsk       
+## TrnsClssNgh       
+## SonarA1           
+## SonarB1           
+## SonrAPrcScl       
+## SonrBPrcScl  0.000</code></pre>
+<p>How does this model compare to the original linear regression model? (Coefficient estimates? SEs? Additional stuff in the summary output?)</p>
+
+</div>
+<div id="model-assessment-4" class="section level3">
+<h3><span class="header-section-number">14.4.3</span> Model Assessment</h3>
+<p>How have the model assessment plots changed? Here we’ll focus mainly on the problem ACF.</p>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" title="1"><span class="kw">gf_point</span>(<span class="kw">resid</span>(rem2)<span class="op">~</span><span class="kw">fitted</span>(rem2), <span class="dt">alpha=</span><span class="fl">0.5</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-108-1.png" width="624" style="display: block; margin: auto;" /></p>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(rem2))</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-109-1.png" width="624" style="display: block; margin: auto;" /></p>
+</div>
+<div id="refinement" class="section level3">
+<h3><span class="header-section-number">14.4.4</span> Refinement</h3>
+<p>What can we try next?
+</p>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" title="1"><span class="kw">head</span>(d, <span class="dv">3</span>)</a></code></pre></div>
+<pre><code>##   TagID DurAvg           StartTime DepthAvg TransClass SonarA SonarB
+## 1    14  17.58 2011-01-06 20:45:30    335.5        Day      0      0
+## 2    14  19.71 2011-01-06 22:13:23    351.5        Day      0      0
+## 3    14  18.11 2011-01-06 22:34:48    287.5        Day      0      0
+##   SonarAMinKm.fill SonarBMinKm.fill SonarAPercOL.fill SonarBPercOL.fill
+## 1              500              500                 0                 0
+## 2              500              500                 0                 0
+## 3              500              500                 0                 0
+##       TagDay  Period       TagDayPeriod SonarAPercScale SonarBPercScale
+## 1 2011-01-06 (18,20] 2011-01-06.(18,20]     -0.09784411      -0.1020368
+## 2 2011-01-06 (20,22] 2011-01-06.(20,22]     -0.09784411      -0.1020368
+## 3 2011-01-06 (20,22] 2011-01-06.(20,22]     -0.09784411      -0.1020368</code></pre>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" title="1">rem3 &lt;-<span class="st"> </span><span class="kw">lmer</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg <span class="op">+</span><span class="st"> </span>TransClass <span class="op">+</span><span class="st"> </span>SonarA <span class="op">+</span></a>
+<a class="sourceLine" id="cb198-2" title="2"><span class="st">               </span>SonarB <span class="op">+</span>SonarAPercScale <span class="op">+</span><span class="st"> </span>SonarBPercScale <span class="op">+</span></a>
+<a class="sourceLine" id="cb198-3" title="3"><span class="st">               </span>(<span class="dv">1</span><span class="op">|</span>TagID<span class="op">/</span>TagDayPeriod), <span class="dt">data=</span>d)</a></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" title="1"><span class="kw">acf</span>(<span class="kw">resid</span>(rem3))</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-111-1.png" width="624" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="model-selection-for-mixed-models" class="section level2">
+<h2><span class="header-section-number">14.5</span> Model Selection for Mixed Models</h2>
+<p>Can we use our standard likelihood-based model selection criteria with random effects models?</p>
+<p>Well…yes, and no.</p>
+<div id="reml-or-ml" class="section level3">
+<h3><span class="header-section-number">14.5.1</span> REML or ML?</h3>
+<p>There are two different ways to fit these models to data:</p>
+<ul>
+<li>by maximizing the likelihood (ML, as we learned about earlier in the course). Unfortunately, it turns out that in this case, the ML estimates of the variance components (the random effects) is biased, toward underestimating variance, when sample size is small.</li>
+<li>by maximizing the restricted maximum likelihood (REML), which separates the likelhood into two parts (one with the fixed effects and one with the variance components). Maximizing parameters with respect to the second part only yields the REML estimators, which are unbiased and so preferred for smaller sample sizes. BUT there’s a catch…REML values can be used to compare models with different error and random effects structures, but <em>not</em> to determine which predictor variables should remain in a best model.</li>
+</ul>
+<p>Here, we do have a large sample size, so if we ensure our model is fitted by ML we can try using AIC or BIC for model selection. The default of <code>lmer()</code> and <code>glmer()</code> is to use REML, so if we want ML we have to add the input REML=FALSE to our call.</p>
+<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb200-1" title="1">rem4 &lt;-<span class="st"> </span><span class="kw">lmer</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg <span class="op">+</span><span class="st"> </span>TransClass <span class="op">+</span><span class="st"> </span>SonarA <span class="op">+</span><span class="st"> </span>SonarB <span class="op">+</span></a>
+<a class="sourceLine" id="cb200-2" title="2"><span class="st">               </span>SonarAPercScale <span class="op">+</span><span class="st">  </span>SonarBPercScale <span class="op">+</span></a>
+<a class="sourceLine" id="cb200-3" title="3"><span class="st">               </span>(<span class="dv">1</span><span class="op">|</span>TagID<span class="op">/</span>TagDayPeriod), <span class="dt">data=</span>d,</a>
+<a class="sourceLine" id="cb200-4" title="4">             <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>, <span class="dt">REML=</span><span class="ot">FALSE</span>)</a></code></pre></div>
+<p>In doing model selection for random effects models, <code>dredge()</code> knows to keep the random effects terms present in all models, so we don’t have to specify them as <em>fixed</em> terms.</p>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" title="1"><span class="kw">require</span>(MuMIn)</a>
+<a class="sourceLine" id="cb201-2" title="2">rem4_sel &lt;-<span class="st"> </span><span class="kw">dredge</span>(rem4, <span class="dt">rank=</span><span class="st">&#39;BIC&#39;</span>)</a>
+<a class="sourceLine" id="cb201-3" title="3"><span class="kw">head</span>(rem4_sel)</a></code></pre></div>
+<pre><code>## Global model call: lmer(formula = DurAvg ~ DepthAvg + TransClass + SonarA + SonarB + 
+##     SonarAPercScale + SonarBPercScale + (1 | TagID/TagDayPeriod), 
+##     data = d, REML = FALSE, na.action = &quot;na.fail&quot;)
+## ---
+## Model selection table 
+##    (Intrc)   DpthA SonrA  SnAPS SonrB   SnBPS TrnsC df    logLik     BIC
+## 44   10.66 0.03985     +            +             + 10 -18081.06 36249.4
+## 46   10.69 0.03986       0.2679     +             + 10 -18081.52 36250.3
+## 42   10.68 0.03987                  +             +  9 -18088.50 36255.6
+## 48   10.67 0.03985     + 0.1051     +             + 11 -18080.83 36257.7
+## 60   10.66 0.03985     +            + 0.02154     + 11 -18081.03 36258.1
+## 62   10.69 0.03986       0.2688     + 0.02007     + 11 -18081.50 36259.0
+##    delta weight
+## 44  0.00  0.583
+## 46  0.92  0.368
+## 42  6.15  0.027
+## 48  8.28  0.009
+## 60  8.67  0.008
+## 62  9.60  0.005
+## Models ranked by BIC(x) 
+## Random terms (all models): 
+## &#39;1 | TagID/TagDayPeriod&#39;</code></pre>
+</div>
+<div id="best-model-so-far" class="section level3">
+<h3><span class="header-section-number">14.5.2</span> Best model so far:</h3>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" title="1">rem5 &lt;-<span class="st"> </span><span class="kw">lmer</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg <span class="op">+</span><span class="st"> </span>TransClass <span class="op">+</span><span class="st"> </span>SonarA <span class="op">+</span><span class="st"> </span>SonarB <span class="op">+</span></a>
+<a class="sourceLine" id="cb203-2" title="2"><span class="st">               </span>(<span class="dv">1</span><span class="op">|</span>TagID<span class="op">/</span>TagDayPeriod), <span class="dt">data=</span>d,</a>
+<a class="sourceLine" id="cb203-3" title="3">             <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>, <span class="dt">REML=</span><span class="ot">FALSE</span>)</a></code></pre></div>
+</div>
+</div>
+<div id="random-slopes" class="section level2">
+<h2><span class="header-section-number">14.6</span> Random Slopes?</h2>
+<p>What we just practiced and called a “random effect” is sometimes also called a “random intercept” model because, although we allowed for an offset between the overall average predicted response value and that of an individual, we did not allow the <em>slope</em> of the relationship with any of the predictor variables to vary randomly with individual. It is possible to do this, although in my experience it often makes interpretation difficult.</p>
+<p>Before you do it, think to yourself: do you really think that there is random variation in the relationship of the predictor with the response? One case where random slopes will work well is where there is a strong, clear overall effect and small variations in its magnitude between individuals. Another might be where the relationship with a certain predictor has very strong and very different slopes for different individuals, and you want to account for the added variability this adds to the model.</p>
+<p>In the <code>(g)lmer()</code> formula, a model with a random slope <em>and</em> intercept in relation to a particular predictor is specified with the form:</p>
+<p><span class="math display">\[ ... + (PredictorVariable | GroupingVariable)\]</span>
+or equivalently
+<span class="math display">\[ ... + (1 + PredictorVariable | GroupingVariable)\]</span></p>
+<p>If you want to have a random slope for a certain predictor <em>without</em> the corresponding random intercept ( I can’t think of an example where this would be a good idea but you can do it), then use:</p>
+<p><span class="math display">\[ ... + (0 + PredictorVariable | GroupingVariable)\]</span></p>
+</div>
+<div id="prediction-plots-3" class="section level2">
+<h2><span class="header-section-number">14.7</span> Prediction Plots</h2>
+<p>There is a bit of added work involved in making prediction plots for some random effects models.</p>
+<p>Unlike GEEs, which provide <em>marginal</em> predictions (predictions of the population average value for any combination of predictor variable values), random effects models provide predictions for an <em>average individual</em>. <strong>For a linear regression model (or any model with the identity link function, that is, no link function), the predicted values for the population average and average individual are the same</strong>. But with a link function in the mix, <strong>it’s different</strong>. Consider a (hypothetical) example of a logistic regression modelling probability of passing a test as a function of hours of instruction spent before the test.
+<img src="s245-notes_files/figure-html/unnamed-chunk-115-1.png" width="336" style="display: block; margin: auto;" /><img src="LogRegIndAve.png" style="display: block; margin: auto;" /></p>
+<div id="parametric-bootstrap-to-the-rescue" class="section level3">
+<h3><span class="header-section-number">14.7.1</span> Parametric bootstrap to the rescue!</h3>
+<p>How can we get around this problem? We can make predictions from our model for many, many (simulated) individuals to get a ``population" of predictions. Then, we can take a point-wise average over all those individuals (and also use them to find a CI), to get population average predictions and confidence intervals.</p>
+<p>We can do this with help from the function <code>bootMer()</code> from the <code>lme4</code> package.</p>
+<p>To make this work, we first need a <strong>function</strong> that makes <strong>predictions from our model</strong>.</p>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb204-1" title="1"><span class="co"># function to make predictions from a fitted model</span></a>
+<a class="sourceLine" id="cb204-2" title="2"><span class="kw">require</span>(s245)</a>
+<a class="sourceLine" id="cb204-3" title="3">predict_rem4 &lt;-<span class="st"> </span><span class="cf">function</span>(model){</a>
+<a class="sourceLine" id="cb204-4" title="4">  orig_dat &lt;-<span class="st"> </span>model<span class="op">@</span>frame</a>
+<a class="sourceLine" id="cb204-5" title="5">  fixed_vals &lt;-<span class="st"> </span><span class="kw">get_fixed</span>(orig_dat[,<span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(orig_dat))])</a>
+<a class="sourceLine" id="cb204-6" title="6">  new_dat &lt;-<span class="st"> </span><span class="kw">get_new_data</span>(orig_dat, <span class="dt">predictor=</span><span class="st">&#39;SonarA&#39;</span>, fixed_vals)</a>
+<a class="sourceLine" id="cb204-7" title="7">  <span class="kw">return</span>(<span class="kw">predict</span>(model, <span class="dt">newdata =</span> new_dat, </a>
+<a class="sourceLine" id="cb204-8" title="8">                 <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>, <span class="dt">allow.new.levels=</span><span class="ot">TRUE</span>))</a>
+<a class="sourceLine" id="cb204-9" title="9">}</a></code></pre></div>
+<p><code>bootMer()</code> does parametric bootstrap simulations and each time, computes some function of the fitted model (here, predictions.) We can then examine the quantiles of these bootstrap predictions (the median or mean is our <em>estimate</em> or best-guess predicted value, and the <em>2.5 and 97.5 percentiles</em> are the <em>bounds of a 95 percent CI</em>).</p>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb205-1" title="1">boot_rem4 &lt;-<span class="st"> </span><span class="kw">bootMer</span>(rem4, <span class="dt">FUN =</span> predict_rem4, <span class="dt">nsim =</span> <span class="dv">1000</span>, </a>
+<a class="sourceLine" id="cb205-2" title="2">                     <span class="dt">type =</span> <span class="st">&quot;parametric&quot;</span>, <span class="dt">use.u =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb206-1" title="1"><span class="kw">glimpse</span>(boot_rem4<span class="op">$</span>t )</a></code></pre></div>
+<pre><code>##  num [1:1000, 1:2] 17.1 16.8 20.3 19.6 21.4 ...
+##  - attr(*, &quot;dimnames&quot;)=List of 2
+##   ..$ : NULL
+##   ..$ : chr [1:2] &quot;1&quot; &quot;2&quot;</code></pre>
+<div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb208-1" title="1">orig_dat &lt;-<span class="st"> </span>rem4<span class="op">@</span>frame</a>
+<a class="sourceLine" id="cb208-2" title="2">fixed_vals &lt;-<span class="st"> </span><span class="kw">get_fixed</span>(orig_dat[,<span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="kw">ncol</span>(orig_dat))])</a>
+<a class="sourceLine" id="cb208-3" title="3">new_dat &lt;-<span class="st"> </span><span class="kw">get_new_data</span>(orig_dat, <span class="dt">predictor=</span><span class="st">&#39;SonarA&#39;</span>,</a>
+<a class="sourceLine" id="cb208-4" title="4">                          fixed_vals)</a>
+<a class="sourceLine" id="cb208-5" title="5">new_dat &lt;-<span class="st"> </span>new_dat <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb208-6" title="6"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">pred =</span> <span class="kw">apply</span>(boot_rem4<span class="op">$</span>t, <span class="dv">2</span>, mean),</a>
+<a class="sourceLine" id="cb208-7" title="7">         <span class="dt">CIlow =</span> <span class="kw">apply</span>(boot_rem4<span class="op">$</span>t, <span class="dv">2</span>, quantile, <span class="dt">probs=</span><span class="fl">0.025</span>),</a>
+<a class="sourceLine" id="cb208-8" title="8">         <span class="dt">CIhigh =</span> <span class="kw">apply</span>(boot_rem4<span class="op">$</span>t, <span class="dv">2</span>, quantile, <span class="dt">probs=</span><span class="fl">0.975</span>)</a>
+<a class="sourceLine" id="cb208-9" title="9">         )</a>
+<a class="sourceLine" id="cb208-10" title="10"></a>
+<a class="sourceLine" id="cb208-11" title="11"><span class="kw">gf_point</span>(pred <span class="op">~</span><span class="st"> </span>SonarA, <span class="dt">data=</span>new_dat) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb208-12" title="12"><span class="st">  </span><span class="kw">gf_labs</span>(<span class="dt">x=</span><span class="st">&#39;Sonar A Presence&#39;</span>, <span class="dt">y=</span><span class="st">&#39;Dive Duration (min.)&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb208-13" title="13"><span class="st">  </span><span class="kw">gf_errorbar</span>(CIlow <span class="op">+</span><span class="st"> </span>CIhigh <span class="op">~</span><span class="st"> </span>SonarA, <span class="dt">data=</span>new_dat, <span class="dt">width=</span><span class="fl">0.3</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-119-1.png" width="624" style="display: block; margin: auto;" /></p>
+<p>(Because…)</p>
+<div class="sourceCode" id="cb209"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb209-1" title="1"><span class="kw">pred_plot</span>(rem4, <span class="st">&#39;SonarA&#39;</span>)</a></code></pre></div>
+<pre><code>## Error in predict.merMod(model, newdata = new_data, type = &quot;response&quot;, : cannot calculate predictions with both standard errors and random effects</code></pre>
+
+</div>
+</div>
+<div id="random-effects-with-glmmtmb-and-standardized-residuals" class="section level2">
+<h2><span class="header-section-number">14.8</span> Random effects with glmmTMB and standardized residuals</h2>
+<p>In the previous chapter we considered fitting mixed-effects models with <code>lme4</code>. What about fitting the same models with package <code>glmmTMB</code>? And how can we assess expectations about residual variance for models like these?</p>
+</div>
+<div id="model-for-whale-dive-duration" class="section level2">
+<h2><span class="header-section-number">14.9</span> Model for whale dive duration</h2>
+<p>We start with our previous model for whale dive duration.</p>
+<div class="sourceCode" id="cb211"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb211-1" title="1">rem5 &lt;-<span class="st"> </span><span class="kw">lmer</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg <span class="op">+</span><span class="st"> </span>TransClass <span class="op">+</span><span class="st"> </span>SonarA <span class="op">+</span><span class="st"> </span>SonarB <span class="op">+</span></a>
+<a class="sourceLine" id="cb211-2" title="2"><span class="st">               </span>(<span class="dv">1</span><span class="op">|</span>TagID<span class="op">/</span>TagDayPeriod), <span class="dt">data=</span>d,</a>
+<a class="sourceLine" id="cb211-3" title="3">             <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>, <span class="dt">REML=</span><span class="ot">FALSE</span>)</a></code></pre></div>
+</div>
+<div id="glmmtmb" class="section level2">
+<h2><span class="header-section-number">14.10</span> glmmTMB</h2>
+<p>We fitted these models using <code>lmer()</code> and <code>glmer()</code> from package <code>lme4</code>, which is probably the most commonly used R package to fit these models. But we’ve also used <code>glmmTMB</code> in this course, and <em>it</em> can also fit random effects models. The syntax to add random effects to a <code>glmmTMB()</code> model is <em>exactly the same</em> as for the <code>lme4</code> functions.</p>
+<p>One difference is that for <code>glmmTMB()</code> <strong>REML = FALSE is the default</strong>.</p>
+<p><code>glmmTMB</code> may be faster in some cases.</p>
+<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" title="1"><span class="kw">require</span>(glmmTMB)</a>
+<a class="sourceLine" id="cb212-2" title="2">rem6 &lt;-<span class="st"> </span><span class="kw">glmmTMB</span>(DurAvg <span class="op">~</span><span class="st"> </span>DepthAvg <span class="op">+</span><span class="st"> </span>TransClass <span class="op">+</span><span class="st"> </span>SonarA <span class="op">+</span><span class="st"> </span>SonarB <span class="op">+</span></a>
+<a class="sourceLine" id="cb212-3" title="3"><span class="st">               </span>(<span class="dv">1</span><span class="op">|</span>TagID<span class="op">/</span>TagDayPeriod), <span class="dt">data=</span>d,</a>
+<a class="sourceLine" id="cb212-4" title="4">             <span class="dt">na.action=</span><span class="st">&#39;na.fail&#39;</span>, <span class="dt">REML=</span><span class="ot">FALSE</span>)</a></code></pre></div>
+<p>If you view the summaries, you will see that <code>rem5</code> and <code>rem6</code> are basically identical (in terms of model coefficients and variance estimates).</p>
+</div>
+<div id="model-assessment-with-scaled-residuals" class="section level2">
+<h2><span class="header-section-number">14.11</span> Model assessment with scaled residuals</h2>
+<p>For models where Pearson residuals are not helpful/can not be computed, one option is <strong>scaled residuals</strong> via simulation.</p>
+<ul>
+<li>Simulate many replicates from the fitted model corresponding to each data observation</li>
+<li>Examine the distribution of the simulated data, and use it to scale the observed value to get a “scaled residual” such that a residual of 0 means that <em>all simulated values are larger than the observed value</em>, and a <em>residual of 0.5 means half of the simulated values are larger than the observed value</em>, and a <em>residual of 1 means that the observed value is larger than all the simulated values.</em></li>
+</ul>
+<p><strong>These scaled residuals should be uniformly distributed between 0 and 1, if the model is correct.</strong></p>
+<p>There is a much more detailed explanation in the <a href="https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html#calculating-scaled-residuals">DHARMa package documentation</a> online.</p>
+<p>Example: computing scaled residuals, creating 1000 simulated datasets (don’t lower it much below this to get good estimates). Note: use R chunk setting “message = FALSE” to print messages during simulation to your screen, rather than your knitted file.</p>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" title="1"><span class="kw">require</span>(DHARMa)</a>
+<a class="sourceLine" id="cb213-2" title="2">sims &lt;-<span class="st"> </span><span class="kw">simulateResiduals</span>(<span class="dt">fittedModel =</span> rem5, <span class="dt">n =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb213-3" title="3">d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb213-4" title="4"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">scaled_resids =</span> sims<span class="op">$</span>scaledResiduals,</a>
+<a class="sourceLine" id="cb213-5" title="5">         <span class="dt">fitted =</span> <span class="kw">fitted</span>(rem5))</a></code></pre></div>
+<p>If our model is perfectly correct, we would expect:</p>
+<ul>
+<li>Histogram of scaled residuals looks uniform between 0 and 1</li>
+<li>Plot of scaled residual vs. fitted, or vs. any predictor, look uniform (evenly spread, no trends, constant in variance).</li>
+</ul>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb214-1" title="1"><span class="kw">gf_histogram</span>(<span class="op">~</span>scaled_resids, <span class="dt">data =</span>d)</a>
+<a class="sourceLine" id="cb214-2" title="2"><span class="kw">gf_point</span>(scaled_resids <span class="op">~</span><span class="st"> </span>fitted, <span class="dt">data =</span> d, <span class="dt">alpha =</span> <span class="fl">0.5</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-125-1.png" width="576" style="display: block; margin: auto;" /><img src="s245-notes_files/figure-html/unnamed-chunk-125-2.png" width="576" style="display: block; margin: auto;" /></p>
+<div id="glmmtmb-version" class="section level3">
+<h3><span class="header-section-number">14.11.1</span> glmmTMB version</h3>
+<div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb215-1" title="1">sims2 &lt;-<span class="st"> </span><span class="kw">simulateResiduals</span>(<span class="dt">fittedModel =</span> rem6, <span class="dt">n =</span> <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb215-2" title="2">d &lt;-<span class="st"> </span>d <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb215-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">scaled_resids_TMB =</span> sims2<span class="op">$</span>scaledResiduals,</a>
+<a class="sourceLine" id="cb215-4" title="4">         <span class="dt">fitted_TMB =</span> <span class="kw">fitted</span>(rem6))</a></code></pre></div>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb216-1" title="1"><span class="kw">gf_point</span>(scaled_resids_TMB <span class="op">~</span><span class="st"> </span>fitted_TMB, <span class="dt">data =</span> d, <span class="dt">alpha =</span> <span class="fl">0.5</span>)</a></code></pre></div>
+<p><img src="s245-notes_files/figure-html/unnamed-chunk-127-1.png" width="576" style="display: block; margin: auto;" /></p>
+</div>
+<div id="you-now-have-the-power" class="section level3">
+<h3><span class="header-section-number">14.11.2</span> You now have the power!</h3>
+<p>You may use these scaled residuals for any of the models considered so far this semester. It is basically an alternative method of scaling residuals so that we know “how they should look” in residual plots.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="non-constant-variance-and-other-unresolved-problems.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="gees.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/14-random-effects.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["s245-notes.pdf", "s245-notes.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
