@@ -9,13 +9,14 @@ bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
 github-repo: stacyderuiter/s245-notes-bookdown
-description: "Course notes for the Calvin University course STAT 245, Advanced Data Analysis (a course in applied regression)"
+description: "Course notes for the Calvin University course STAT 245, Applied Data Analysis (a course in applied regression)"
 ---
 
 ```{r, setup, include=FALSE}
 require(mosaic)   
 require(tidyverse)
 require(ggformula)
+require(broom)
 require(s245)
 theme_set(theme_bw(base_size=14))
 knitr::opts_chunk$set(
@@ -27,7 +28,7 @@ knitr::opts_chunk$set(
 
 # Description
 
-This is a set of course notes distributed in STAT 245 at Calvin University in Fall 2019. Contact sld33 at calvin.edu with comments, corrections or suggestions.
+This is a set of course notes distributed in STAT 245 at Calvin University in Fall 2020. Contact sld33 at calvin.edu with comments, corrections or suggestions.
 
 ```{r include=FALSE}
 # automatically create a bib database for R packages

@@ -1,0 +1,3375 @@
+--- 
+title: "STAT 245 Course Notes"
+author: "Stacy DeRuiter, Calvin University"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: stacyderuiter/s245-notes-bookdown
+description: "Course notes for the Calvin University course STAT 245, Applied Data Analysis (a course in applied regression)"
+---
+
+```{r, setup, include=FALSE}
+require(mosaic)   
+require(tidyverse)
+require(ggformula)
+require(broom)
+require(s245)
+theme_set(theme_bw(base_size=14))
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small",
+  message = FALSE,
+  warning = FALSE)   # slightly smaller font for code
+```
+
+# Description
+
+This is a set of course notes distributed in STAT 245 at Calvin University in Fall 2020. Contact sld33 at calvin.edu with comments, corrections or suggestions.
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+<!--chapter:end:index.Rmd-->
+
+
+# Linear Regression
+You probably learned something about linear regression in a previous course. Here, we briefly review the main concepts of simple linear regression and quickly expand our tool box to multiple regression (with both quantitative and categorical predictors).
+
+## Data
+We will consider a small dataset from an article by J.S. Martin and colleagues, titled [*Facial width-to-height ratio is associated with agonistic and affiliative dominance in bonobos (**Pan paniscus**)*](https://royalsocietypublishing.org/doi/suppl/10.1098/rsbl.2019.0232)
+
+```{r data-in, include=FALSE}
+bonobos <- read_csv(file='http://sldr.netlify.com/data/bonobo_faces.csv')
+```
+
+Notes: variable `fWHR` is the facial width-height ratio and `AssR` is the Assertiveness score of affiliative dominance. `normDS` is another dominance score.
+
+What figures should we consider, to get a sense of the dataset and think about how we might model `fWHR`?
+
+```{r view-data, echo=FALSE, fig.width = 3.5, fig.height = 3, fig.show = 'hide'}
+glimpse(bonobos)
+gf_histogram(~fWHR, data=bonobos, bins=15)
+gf_point(fWHR ~ AssR, data=bonobos) 
+```
+
+## Preliminary Considerations
+
+Just as we imagine before we start coding to create graphics, we ought to think before we start fitting models.
+
+Traditional ways of interpreting statistical results are premised on the idea that you made a plan, got some data, fitted the model you planned, and want to draw conclusions. 
+
+If, instead, you got data, scrutinized the data, fitted lots of different models, and now want to report results from the one that fitted best...well, generally things tend to go wrong. This is especially true if you use the data to lead you from a more complex to a simpler model. As Harrell (2015) points out in section 4.3,
+
+- Uncertainty *underestimated* (overconfidence: standard errors and confidence intervals too small; $R^2$ too big)
+- Spurious relationships look important and slope estimates are biased high
+- If testing hypotheses, p-values *too small* 
+
+How can we avoid these problems? Some more insight will come when we consider model assessment and selection in future sections. For now, we need to remember:
+
+> Fitting and interpreting **one** well-considered, sensible model is prefereable to trying many things and then trying to choose among them later.
+
+## Response and Predictors
+
+A regression model is our attempt to quantify how a **response variable** of interest changes when a set of **predictor variables** change.
+
+So, to begin, we need to identify our (one) response variable -- the thing we are most interested in measuring or predicting or describing or understanding.
+
+Then, we need to identify a set of predictor variables that we expect to be associated with changes in the response. (If we are planning an experiment, they should be variables we can collect data on; if working with data already collected, they must be in or derived from the data available.)
+
+How do we choose which predictors to include, and how many?
+
+First, rely on experts and previous experience. If you know the context of the problem well, *you* have a good sense of the predictors that will be of interest. If you don't, then you should consult experts (or published work on the topic).
+
+There are also practical limits on the number of predictors you can reasonably consider, given a dataset.
+
+### Sample size and predictors
+
+One important consideration, when planning a regression model, is: *How many predictors can I reasonably include?*
+
+It depends on the size of the dataset: it takes several observations to get a good estimate of any statistics, so it makes sense that fitting a model with *lots* of predictors will require a bigger dataset. And if you try to fit too many, the chances of *overfitting* increase. *Overfitting* is when you model noise as well as signal, capturing in your model apparent relationships that actually exist only in the current dataset, not in reality. 
+
+For linear regression, Harrell (2015, Chapter 4.6) offers a rule of thumb: the number of parameters being estimated, $p$, should be less than $\frac{n}{10}$ or $\frac{n}{20}$. To give just one standard rule of thumb, we should aim for $p < \frac{n}{15}$. $n$ is the sample size (number of rows in the dataset).
+
+## Simple linear regression, Residuals & Least squares
+First, let's review and consider a simple (one-predictor) linear regression model. Fit the model 
+
+```{r, lm-fit, fig.width=6.5, fig.height=4, echo=TRUE}
+slr <- lm(fWHR ~ AssR, data=bonobos)
+```
+
+Extract the slope and intercept values:
+```{r, lm-coef, fig.width=6.5, fig.height=4, echo=TRUE}
+coef(slr)
+```
+
+Add the regression line to the plot:
+```{r, lm-scatter-with-line, fig.width=6.5, fig.height=4, echo=TRUE}
+gf_point(fWHR ~ AssR, data=bonobos) %>% 
+  gf_lm()
+summary(slr)
+```
+
+### Using `lm()` to fit a linear regression in R
+
+We use function `lm()` with a formula of the form `y ~ x` (and an input `data = _____`).
+
+To view the result, we ask for a `summary()`.
+
+```{r}
+slr <- lm(fWHR ~ AssR, data = bonobos)
+summary(slr)
+```
+
+From this traditional on-screen output, we can fetch the information and estimates we need.
+
+We can also "clean up" the output into a data table using `broom::tidy()`:
+
+```{r}
+broom::tidy(slr)
+```
+
+### Equation of the fitted regression line
+
+In the process above, we chose a *response* variable $y$, a *predictor* $x$, and estimated the slope and intercept of the line $\beta_0$ and $\beta_1$.
+
+$$ y = \beta_0 + \beta_1 x$$
+
+But the data don't lie perfectly on the line, and we have too include that in our model, too. There is some error $\epsilon$ in our model for the data, so we should keep track of it.
+
+$$ y = \beta_0 + \beta_1 x + \epsilon$$
+
+But $\epsilon$ is not *one number* to be estimated -- the amount of error is different for every data point! How can we express this mathematically?
+
+### Regression residuals = "errors"
+
+First, we need a way to measure how far the model line is from the data, for every observation in the dataset. The *residual* for the *i*th observation is the observed response variable value from the data ($y_i$) minus the *predicted response value* on the regression line ($\hat{y}_i$). This will be the response variable value for the point on the line whose predictor ($x$ value is the same as for the observed data point).  These "residuals" are shown in red on the figure. (The numeric value of each residual is the length of its red line segment.)
+
+```{r, echo = FALSE, fig.width = 7, fig.height = 3}
+bonobos <- bonobos %>%
+  mutate(sr = resid(slr),
+         sp = predict(slr))
+gf_point(fWHR ~ AssR, data=bonobos) %>% 
+  gf_lm(color = 'black', size = 2) %>%
+  gf_segment(fWHR + sp ~ AssR + AssR, color = 'brown2', size = 0.6)
+```
+
+How can we summarize this information?  Let's look at the distribution of the residuals:
+
+```{r}
+gf_histogram(~resid(slr), bins = 15)
+```
+
+Hmmm...looks pretty unimodal, and symmetric (except for a bit of right skew).  It almost has that familiar bell shape...like a Normal distribution. This is a hint.
+
+In linear regression, we model residuals with a normal distribution, with mean zero (the line should go through the "middle" of the points, and averaging over them all, our residual should be 0).
+
+The standard deviation of the residuals depends on how far away the points are, on average, from the line.  This value, the residual standard deviation $\sigma$, must be estimated in each case.  
+
+R `lm()` summary output calls it "residual standard error" and lists it near the bottom of the summary. (This is a somewhat inaccurate name but we're stuck with it.)
+
+So now we can give a *complete* model equation. In general,
+
+$$ y = \beta_0 + \beta_1 x + \epsilon,$$
+where 
+
+$$ \epsilon \sim N(0, \sigma)$$
+
+Or, in our specific case with the Bonobos,
+
+$$ y = 1.31 + 0.029 x + \epsilon, \text{ where } \epsilon \sim N(0, 0.169)$$
+
+
+## Multiple regression
+Rarely does our response variable **really** depend on only one predictor. Can we expand our formulation to include more predictors? In R, it's super easy:
+
+```{r, mult-reg, fig.show='hold'}
+mlr <- lm(fWHR ~ AssR + weight, data=bonobos)
+coef(mlr)
+```
+
+```{r, mult-reg-plots, echo=FALSE, warning = FALSE, fig.width = 3.25, fig.height=2, fig.show='hold'}
+my_points <- c(8,25,41,65)
+bonobos$three <- 'no'
+bonobos$three[my_points] <- 'yes'
+bonobos <- bonobos %>%
+  mutate(pt_size = ifelse(three == 'yes', 1.1, 1))
+gf_point(fWHR ~ AssR, data=bonobos, shape = ~three,
+         size = ~pt_size,
+         show.legend=FALSE) 
+gf_point(fWHR ~ weight, data=bonobos, shape = ~three,
+         size = ~pt_size,
+         show.legend=FALSE) 
+```
+
+### Choosing predictors
+
+Notice that in this chapter, we are building up from a simpler model to a more complex one with more predictors. This is to reveal to you the mathematical machinery that lets us specify and fit the more complex models.
+
+**But this is ** *not* **how to build a model in practice**.  Recall, we agreed to think carefully and choose a reasonable set of predictors to use at the outset, doing as much of the work as possible before even looking at the dataset. Our $p < \frac{n}{15}$ rule gives a rough limit to the maximum number of parameters we can estimate. If we do otherwise, we have to be cautious and know all our conclusions are on much shakier ground.
+
+How can we know if the model with more predictors is "better"? (For a more detailed answer, wait about a week...) But before we can define a "better" model: how did R find the "best" intercept and slopes?
+
+
+
+
+### Computing Predictions
+Use the regression equation to compute **predicted values** for the three data points below:
+
+```{r, three-points, echo=FALSE}
+bonobo3 <- bonobos[my_points,c('fWHR', 'AssR', 'weight')]
+bonobo3
+```
+
+<br>
+<br>
+<br>
+<br>
+
+## Predictors with two categories
+```{r, echo=FALSE, fig.width=6.5, fig.height=1.5}
+gf_boxplot(fWHR ~ Sex, data = bonobos) %>%
+  gf_refine(coord_flip())
+```
+
+```{r}
+mlr2 <- lm(fWHR ~ AssR + weight + Sex, data = bonobos)
+coef(mlr2)
+```
+
+How does the model incorporate this covariate mathematically?
+
+<br>
+<br>
+<br>
+<br>
+
+
+### Predictors with more categories
+
+```{r, fig.width=6.5, fig.height=2}
+gf_boxplot(fWHR ~ Group, data = bonobos)
+mlr3 <- lm(fWHR ~ AssR + weight + Sex + Group, data = bonobos)
+coef(mlr3)
+```
+
+How does the model incorporate **this** covariate mathematically?
+
+<br>
+<br>
+<br>
+
+## Returning to the R Model Summary
+There are several bits of information you should be able to extract from the `summary()` output R produces on a fitted linear regression model:
+
+- $\beta$s, Coefficient Estimates
+- $\sigma$, labeled "residual standard error" 
+<br>
+<br>
+<br>
+<br>
+
+- $R^2$ (adjusted)
+
+<br>
+<br>
+<br>
+<br>
+
+```{r}
+mlr3 <- lm(fWHR ~ AssR + weight + Sex + Group, data = bonobos)
+summary(mlr3)
+```
+
+## Predictions from the model
+
+### By Hand
+The equation for the fitted model above is:
+
+$$ y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \beta_3I_{Male} + \beta_4I_{Frankfurt} + \beta_5I_{Planckendael} + \beta_6I_{Twycross} + \beta_7I_{Wilhelma} + \beta_7I_{Wuppertal} + \epsilon$$
+
+where
+
+- $y =$
+- $\beta_0=$
+
+<br>
+<br>
+<br>
+<br>
+
+- $x_1=$
+- $x_2=$
+- $\beta_1, \beta_2, \beta_3 ...$ are:
+- $I_{Male} =$
+- $I_{Frankfurt} =$
+- $I_{Planckendael} =$ \hspace{3in}, etc.
+- $\epsilon=$
+
+#### Comprehension check: 
+What is the expected fWHR (according to this model) for a 30 kg female bonobo at the Wilhelma zoo?
+
+<br>
+<br>
+<br>
+<br>
+
+### Prediction Plots in R
+We can ask R to compute predictions for **all** the data points in the real dataset.
+
+```{r, echo=TRUE, error = TRUE}
+bonobos <- bonobos %>% 
+  mutate(preds = predict(mlr3))
+```
+
+Wait, what? This error is because the `lm()` function removes rows containing missing values from the dataset, so it computes only 68 residuals (for the complete cases in the data). This doesn't match the 117 rows in the original data. We can solve the problem by omitting rows with missing values first. To be safe, we first select only the variables we need, so we don't omit rows based on missing values in unused variables.
+
+```{r}
+b2 <- bonobos %>%
+  dplyr::select(fWHR, weight, AssR, Sex, Group) %>%
+  na.omit() %>%
+  mutate(preds = predict(mlr3))
+```
+
+*We have a full set of predictions!*
+
+But if we plot these predictions on a scatter plot of `fWHR` as a function of `AssR`, we *do not* get a straight line, because the predictions are also impacted by varying values of `weight`, `Sex`, and `Group`:
+
+```{r, fig.width=6, fig.height=2.5}
+gf_point(fWHR ~ AssR, data = b2) %>%
+  gf_line(preds ~ AssR, data=b2)
+```
+
+*But...we would really like a straight line that helps us visualize the meaning of the $\beta$ (slope coefficient) for `AssR`.* We can make predictions for a **hypothetical** dataset, in which `AssR` varies over a reasonable range, but the other predictors stay constant. This lets us see how `AssR` (and only `AssR`) affects the response, without contributions from other predictors. In choosing the values to include in hypothetical dataset, we often choose to hold variables constant at their most common or median values, but not blindly: also, avoid impossible or implausible variable combinations (for example, specifying that a person lives in the state of Michigan but the city of Chicago, or that they are a 5-year-old person with 4 children). *In this case, to match the figures in the published paper, we are also going to vary the `Sex` - but generally you'd only allow one predictor to vary.*
+
+```{r, echo=TRUE, fig.width=6, fig.height=2}
+fake_data <- expand.grid(AssR = seq(from=1.8, to=5.7, by=0.05),
+                         weight = 38.5,
+                         Sex = c('Female', 'Male'),
+                         Group = 'Wuppertal')
+
+fake_data <- fake_data %>% 
+  mutate(preds = predict(mlr3, newdata = fake_data))
+gf_line(preds ~ AssR, color = ~Sex, data=fake_data) %>% gf_labs(y='Predicted\nfWHR')
+```
+
+#### Comprehension checks:
+
+- Should we overlay prediction-plot line(s) on the data scatter plot?
+- How do you think the plot would look if we changed the constant predictor values?
+- What is missing from this picture?
+
+#### Shortcut
+
+```{r, fig.width=6.5, fig.height = 2.5}
+require(s245)
+pred_plot(mlr3, 'AssR')
+```
+
+
+## Why are we doing this again?
+Why make prediction plots?
+
+## Shortcut Method - With Uncertainty
+We saw before that `pred_plot()` makes it very easy for us to generate prediction plots showing what a (multiple regression) model says about the relationship between the response and *one* of the predictors:
+
+```{r, fig.width=6.5, fig.height = 1.75, message = FALSE}
+require(s245)
+pred_plot(mlr3, 'AssR') %>%
+  gf_labs(y = 'Predicted fWHR')
+```
+
+*Note the custom axis label - otherwise you get a long, unwieldy default "Predictions from fitted model"*
+
+```{r, fig.width=6.5, fig.height = 1.75, message = FALSE}
+require(s245)
+pred_plot(mlr3, 'Group') %>%
+  gf_labs(y = 'Predicted fWHR')
+```
+
+They look nice! But they should raise two questions:
+
+- Uncertainty:
+
+- Fixed values:
+
+
+```{r}
+get_fixed(bonobos)  %>% 
+  pander::pander()
+```
+
+### Anatomy of a Confidence Interval
+
+```{r, fig.width=3, fig.height = 1.5}
+pred_plot(mlr3, 'Sex') %>%
+  gf_labs(y = 'Predicted fWHR')
+```
+
+
+## DIY Method
+
+### Creating a hypothetical dataset
+We would like to create a hypothetical dataset where one predictor variable varies, and all the rest stay fixed. Let's choose `AssR`. We use `expand.grid()`:
+
+```{r}
+fake_data <- expand.grid(AssR = seq(from=1.8, to=5.7, by=0.05),
+                         weight = 40,
+                         Sex = 'Female',
+                         Group = 'Twycross')
+glimpse(fake_data)
+```
+
+
+Now, make predictions for our fake data.
+
+```{r}
+preds <- predict(mlr3, newdata = fake_data, se.fit = TRUE)
+fake_data <- fake_data %>%
+  mutate(fitted = preds$fit,
+         se.fit = preds$se.fit)
+glimpse(fake_data)
+```
+
+How do we go from *standard errors* to *confidence intervals*?  We can either do this before plotting, or while plotting. To do it before and add the results to the hypothetical dataset:
+
+```{r}
+fake_data <- fake_data %>%
+  mutate(CI_lower = fitted - 1.96*se.fit,
+         CI_upper = fitted + 1.96*se.fit)
+glimpse(fake_data)
+```
+
+### Making the plot
+Now, we just need to plot!
+
+```{r, echo=TRUE, fig.width=6, fig.height=1.5}
+gf_line(fitted ~ AssR, data=fake_data) %>% 
+  gf_labs(y='Predicted\nfWHR') %>%
+  gf_ribbon(CI_lower + CI_upper ~ AssR, data = fake_data)
+```
+
+If we wanted to figure out the CI bounds *while* plotting, we could calculate them on the fly like this:
+
+```{r, echo=TRUE, fig.width=6, fig.height=1.5, fig.show = 'hide'}
+gf_line(fitted ~ AssR, data=fake_data) %>% 
+  gf_labs(y='Predicted\nfWHR') %>%
+  gf_ribbon((fitted - 1.96*se.fit ) + (fitted + 1.96*se.fit) ~ AssR,
+            data = fake_data)
+```
+(which will look just the same).
+
+### Categorical predictors
+What will be different if the predictor of interest is *categorical*?
+
+- hypothetical data:
+
+- plot:
+
+
+```{r, fig.width = 3.5, fig.height = 1.75}
+fake_sex_data <- expand.grid(AssR = 4.51,
+                         weight = 40,
+                         Sex = c('Male', 'Female'),
+                         Group = 'Twycross')
+preds <- predict(mlr3, newdata = fake_sex_data, se.fit = TRUE)
+fake_sex_data <- fake_sex_data %>%
+  mutate(fitted = preds$fit,
+         se.fit = preds$se.fit)
+gf_point(fitted ~ Sex, data=fake_sex_data) %>% 
+  gf_labs(y='Predicted fWHR') %>%
+  gf_errorbar((fitted - 1.96*se.fit ) + (fitted + 1.96*se.fit) ~ Sex, 
+            data = fake_sex_data)
+```
+
+<!--chapter:end:01-lm1.Rmd-->
+
+# Model Selection Using Information Criteria
+So far, we have learned to fit models with multiple predictors, both quantitative and categorical, and to assess whether required conditions are met for linear regression to be an appropriate model for a dataset.
+
+One missing piece is: If I have an appropriate model with a set of multiple predictors, how can I choose which predictors are worth retaining in a "best" model for the data (and which ones have no relationship, or a weak relationship, with the response, so should be discarded)?
+
+## Data and Model
+Today we will recreate part of the analysis from [*Vertebrate community composition and diversity declines along a defaunation gradient radiating from rural villages in Gabon*](https://doi.org/10.1111/1365-2664.12798), by Sally Koerner and colleagues. They investigated the relationship between rural villages, hunting, and wildlife in Gabon. They asked how monkey abundance depends on distance from villages, village size, and vegetation characteristics. They shared their data at [Dryad.org](https://datadryad.org/stash/dataset/doi:10.5061/dryad.vs97g) and we can read it in and fit a regression model like this:
+
+
+```{r, gabon-data}
+defaun <- read.csv('http://sldr.netlify.com/data/koerner_gabon_defaunation.csv')
+```
+
+```{r, bee-models, echo=TRUE}
+ape_mod <- lm(RA_Apes ~ Veg_DBH + Veg_Canopy + Veg_Understory +
+                   Veg_Rich + Veg_Stems + Veg_liana +
+                   LandUse + Distance + NumHouseholds, data = defaun)
+summary(ape_mod)
+as.numeric(logLik(ape_mod))
+```
+
+```{r, include=FALSE}
+monkeyBIC <- BIC(ape_mod)
+```
+
+## Calculations
+
+- Information criteria allow us to **balance the conflicting goals** of having a model that *fits the data as well as possible* (which pushes us toward models with more predictors) and *parsimony* (choosing the simplest model, with the fewest predictors, that works for the data and research question).  The basic idea is that we **minimize** the quantity $-(2LogLikelihood - penalty) = -2LogLikelihood + penalty$
+
+- AIC is computed according to $-2LogLikelihood +2k$, where $k$ is the number of coefficients being estimated (don't forget $\sigma$!) **Smaller AIC is better.**
+- BIC is computed according to $-2LogLikelihood + ln(n)k$, where $n$ is the number of observations (rows) in the dataset and $k$ is the number of coefficients being estimated. **Smaller BIC is better.**
+
+- Verify that the BIC for this model is `r round(monkeyBIC, digits=2)`.
+
+## Decisions with ICs
+The following rules of thumb (**not** laws, just common rules of thumb) may help you make decisions with ICs:
+
+- A model with lower IC *by at least 3 units* is notably better.
+- If two or more models have ICs *within* 3 IC units of each other, there is not a lot of difference between them. Here, we usually choose the model with fewest predictors.
+- In some cases, if the research question is to measure the influence of some particular predictor on the response, but *the IC does not strongly support including that predictor* in the best model (IC difference less than 3), you might want to keep it in anyway and then discuss the situation honestly, for example, "AIC does not provide strong support for including predictor x in the best model, but the model including predictor x indicates that as x increases the response decreases slightly. More research would be needed..."
+
+## All-possible-subsets Selection
+The model we just fitted is our *full model*, with all predictors of potential interest included. How can we use information criteria to choose the best model from possible models with subsets of the predictors?
+
+We can use the `dredge()` function from the `MuMIn` package to get and display ICs for all these models.
+
+Before using dredge, we need to make sure our dataset has no missing values, and also set the "na.action" input for our model (can be done in call to `lm(..., na.action = 'na.fail')` also).
+
+```{r, getaicbic}
+require(MuMIn)
+ape_mod <- ape_mod %>% update(na.action = 'na.fail')
+ape_dredge <- dredge(ape_mod, rank='BIC')
+pander::pander(head(ape_dredge, 7))
+```
+
+- What is the best model according to BIC, for this dataset?
+
+## Which IC should I use?
+
+AIC and BIC may give different best models, especially if the dataset is large. You may want to just choose one to use *a priori* (before making calculations). You might prefer BIC if you want to err on the "conservative" side, as it is more likely to select a "smaller" model with fewer predictors. This is because of its larger penalty.
+
+## Quantities derived from AIC
+
+- $\Delta AIC$ is the AIC for a given model, minus the AIC of the best one in the dataset. (Same for $\Delta BIC$)
+- *Akaike weights* are values (ranging from 0-1) that measure the weight of evidence suggesting that a model is the best one (given that there is one best one in the set)
+
+## Important Caution
+
+**Very important**: IC can **ONLY** be compared for models with the same response variable, and the exact same rows of data.
+  
+
+<!--chapter:end:02-IC-based-selection.Rmd-->
+
+
+```{r, include=FALSE}
+library(haven)
+file <- 'C:/Users/Stacy DeRuiter/Dropbox/CalvinTeaching/STAT143/Fall2018/Tests/ch.sav'
+sch <- read_sav(file)
+set.seed(123)
+wt <- sch %>% dplyr::select(AN3) %>%
+  filter(AN3 < 80 | is.na(AN3))
+```
+
+# Likelihood
+In the last section, we said that "likelihood" is a measure of goodness-of-fit of a model to a dataset. But what is it *exactly* and just how do we compute it? 
+
+## Data
+Today's dataset was collected in Senegal in 2015-2016 in a survey carried out by UNICEF, of 5440 households in the urban area of Dakar, Senegal. Among these households, information was collected about 4453 children under 5 years old, including their \textbf{weights in kilograms.}
+
+```{r, echo=TRUE, fig.width=6.5, fig.height=2, message=FALSE, warning=FALSE}
+gf_dhistogram(~AN3, data=wt, binwidth=1) %>%
+  gf_labs(x='Weight (kg)', y='Probability\nDensity') %>%
+  gf_fitdistr(dist='dnorm', size=1.3) %>%
+  gf_refine(scale_x_continuous(breaks=seq(from=0, to=30, by=2)))
+```
+
+## Review - the Normal probability density function (PDF)
+$$ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $$
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+## A simple model
+The distribution of weights looks quite unimodal and symmetric, so we will model it with a normal distribution with mean `r round(mean(~AN3, data=wt, na.rm=TRUE),2)` and standard deviation `r round(sd(~AN3, data=wt, na.rm=TRUE),2)` (N( $\mu=$ `r round(mean(~AN3, data=wt, na.rm=TRUE),2)`, $\sigma=$ `r round(sd(~AN3, data=wt, na.rm=TRUE),2)`), black line).
+
+## Using the Model to Make Predictions
+If you had to predict the weight of one child from this population, what weight would you guess?
+\vspace{0.05in}
+
+Is it more likely for a child in Dakar to weigh 10kg, or 20kg? How much more likely?
+<br>
+<br>
+
+What is the *probability* of a child in Dakar weighing 11.5 kg?
+<br>
+<br>
+
+## Likelihood to the Rescue!
+Which is more likely: three children who weigh 11, 8.2, and 13kg, or three who weigh 10, 12.5 and 15 kg?
+
+How did you:
+
+- Find the likelihood of each observation?
+
+<br>
+<br>
+
+- Combine the likelihoods of a set of three observations?
+
+<br>
+<br>
+
+What did you have to assume about the set of observations?
+<br>
+<br>
+
+## How does this relate to linear regression?
+
+What if we think of this situation as a linear regression problem (with no predictors)?
+
+```{r}
+lm_version <- lm(AN3 ~ 1, data = wt)
+summary(lm_version)
+```
+
+### Model Equation:
+
+<br>
+<br>
+<br>
+<br>
+
+## Likelihood of a dataset, given a model
+Finally, now, we can understand what we were computing when we did
+
+```{r}
+logLik(lm_version)
+```
+
+For our chosen regression model, we know that the residuals should have a normal distribution with mean 0 and standard deviation $\sigma$ (estimated Residual Standard Error from R `summary()` output).
+
+For each data point in the dataset, for a given regression model, we can compute a model prediction.
+
+We can subtract the prediction from the observed response-variable values to get the residuals.
+
+We can compute the **likelihood** ($L$) of this set of residuals by finding the likelihood of each individual residual $e_i$ in a $N(0, \sigma)$ distribution.
+
+To get the likelihood of the full dataset given the model, we use the fact that the residuals are independent (they better be, because that was one of the conditions of of linear regression model) -- we can multiply the likelihoods of all the individual residuals together to get the joint likelihood of the full set.
+
+*That* is the "likelihood" that is used in the AIC and BIC calculations we considered earlier.
+
+<!--chapter:end:03-likelihood.Rmd-->
+
+```{r, setup-pdfs, include = FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+# PDFs and PMFs
+
+## Beyond Normal
+In our exploration of likelihoods, we did a little bit of work with the Normal probability density function.  Here, we will state some characteristics of the normal distribution slightly more formally, and then we will get familiar with some other probability distributions (a.k.a. "the normal distribution's wierd friends").
+
+## Types of probability distributions
+
+### Continuous distributions
+The probability distribution of a continuous variable (one that can take on continuous real values, at least within a certain range) is called a *probability density function* or **PDF** for short.
+
+PDFs are functions of one continuous variable (we'll call it $x$) that have two properties in common:
+
+- The total area under the curve is 1 ($\int_{-\infty}^{\infty} f(x)dx = 1$)
+- The values of the function are non-negative (0, or a positive real number) for all real $x$ ($f(x) \geq 0 \forall x \in \mathbb{R}$)
+
+For PDFs, the function values ($y$-axis values) are *probability densities*, useful for computing likelihoods; probabilities are given by finding *areas* under the curve.
+
+### Discrete Distributions
+We use categorical as well as quantitative variables in our regression models, so it will prove useful to have some discrete probability distributions as well as continuous ones. Discrete distributions associate each possible value of a discrete variable with its probability of occurence.
+
+A discrete probability distribution is characterized by a *probability mass function* or PMF for short (this is the discrete equivalent of a PDF).
+
+A PMF is a function of one *discrete* variable (we'll call it $x$) that have two properties in common:
+
+- The sum of all the function's values is 1 ($\sum_{x \in S} f(x) =1$, where $S$ is the set of all possible values $x$ can have)
+- All values of the function are between 0 and 1 inclusive (they are probabilities) ($f(x) \in [0,1] \forall x \in S$)
+
+## Relevant Features of Distributions
+For this course, the most important features to note about each probability distribuiton will be:
+
+- The **type** of distribution: discrete or continuous?
+- The **support** of the distribution: what range of possible values can the random variable $X$ take on?
+- The **parameters** of the distribution. Changing the parameters tunes the center and shape of the distribution, so these are what we need to estimate to fit a particular kind of distribution to a specific dataset. (For example, the parameters of the normal distribution are the mean $\mu$ and the standard deviation $\sigma$.)
+- The **shape** of the distribution: what shapes can the function take one? (For example, the normal distribution is always unimodal and symmetric.)
+- The PDF or PMF of the distribution. What mathematical expression controls the shape of the distribution?
+- We will also note a few examples of variables that might be well modelled by each distribution.
+
+## Examples of Continuous Distributions
+
+### Normal
+
+##### Type
+Continuous
+
+##### Support
+All real numbers
+
+##### Parameters
+ 
+ - $\mu$, the mean, which can take on any real value
+ - $\sigma$, the standard deviation, which can take on any positive real value
+ 
+##### Shapes
+The shape is always unimodal and symmetric.
+
+```{r, echo=FALSE}
+gf_dist('norm', params = c(mean=2, sd=3)) %>%
+  gf_dist('norm', params = c(mean=0, sd=1), color='darkblue') %>%
+  gf_dist('norm', params = c(mean=5, sd=0.5), color='lightblue') %>%
+  gf_labs(x='Possible Values of Variable', y='Probability Density') %>%
+  gf_text(0.6 ~ -5, label='mean=5 sd=0.5', color='lightblue' ) %>%
+  gf_text(0.55 ~ -5, label='mean=0, sd=1', color='darkblue') %>%
+  gf_text(0.5 ~ -5, label = 'mean=2, sd=3', color='black')
+```
+
+
+##### PDF or PMF
+
+The normal distribution has PDF:
+
+$$ f(x) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{\frac{(x-\mu)^2}{2\sigma^2}}$$
+
+
+##### Examples
+A normal distribution might be a good fit for data on childrens' weights in kg, or for the duration of visits at a zoo, or...
+
+### Gamma
+
+##### Type
+Continuous
+
+##### Support
+positive real numbers
+
+##### Parameters
+There are two alternate but equivalent parameterizations for the gamma distribution.
+
+The first option: $\alpha$ (shape) and $\beta$ (rate), where $\alpha>0$ and $\beta>0$ 
+
+The second option: $k$ (shape) and $\theta$ (scale), where $k >0$ and $\theta>0$.
+
+Converting between the two parameterizations: $\alpha = k$ and $\beta = \frac{1}{\theta}$.
+
+##### Shapes
+The gamma distribution can take on a unimodal, symmetric shape or a unimodal shape with any amount of right skew (up to an exponential distribution shape).
+
+
+```{r, echo=FALSE}
+colrs <- RColorBrewer::brewer.pal(8,'Set1')
+gf_dist('gamma', params = c(shape=1, scale=2)) %>%
+  gf_dist('gamma', params = c(shape=5, scale=1), color=colrs[1]) %>%
+  gf_dist('gamma', params = c(shape=1.5, scale=2), color=colrs[2]) %>%
+  gf_dist('gamma', params = c(shape=8, scale=2), color=colrs[3]) %>%
+  gf_labs(x='Possible Values of Variable', y='Probability Density')
+  
+```
+
+
+Note: you don't need to be familiar with exactly how the different values of parameters influence the shape of the gamma distribution PDF, so the curves here are not labelled with parameter values.
+
+##### PDF or PMF
+The gamma distribution has PDF:
+
+$$ f(x) = \frac{1}{\Gamma(k) \theta^k}x^{(k-1)}e^{\frac{-x}{\theta}}$$
+Where $\Gamma$ is the Gamma function (look up the definition if you choose),
+or equivalently,
+
+$$ f(x) = \frac{\beta^{\alpha}}{\Gamma(\alpha)}x^{(\alpha-1)}e^{-\beta x}$$
+
+##### Examples
+Gamma distributions are often used to model things like wind speed or duration of an event (any quantity that might have right skew and is never negative).
+
+### Beta
+
+##### Type
+Continuous
+
+##### Support
+Real numbers between 0 and 1 ([0,1])
+
+##### Parameters
+$\alpha$ (shape 1) and $\beta$ (shape 2), both of which must be $>1$.
+
+##### Shapes
+This distribution can take on almost any shape, for example:
+
+```{r}
+gf_dist('beta', params = c(shape1=5, shape2=1)) %>%
+  gf_dist('beta', params = c(shape1=1, shape2=3), color=colrs[1]) %>%
+  gf_dist('beta', params = c(shape1=2, shape2=2), color=colrs[2]) %>%
+  gf_dist('beta', params = c(shape1=2, shape2=5), color=colrs[3]) %>%
+  gf_dist('beta', params = c(shape1=0.5, shape2=0.5), color=colrs[4]) %>%
+  gf_labs(x='Possible Values of Variable', y='Probability Density') %>%
+  gf_lims(y=c(0,2.5))
+```
+
+##### PDF or PMF
+The PDF is:
+
+$$ f(x) = \frac{x^{(\alpha -1)}(1-x)^{(\beta-1)}}{ B(\alpha, \beta)}$$
+Where $B$ is the Beta function (again, feel free to look up the definition if you are interested).
+
+##### Examples
+Beta distributions could be used for any variable that takes on values between 0-1, for example, baseball players' batting averages, or test scores (as proportions).
+
+## Examples of Discrete Distributions
+
+### Binomial
+
+##### Type
+Discrete
+
+##### Support
+You can think about the support of this distribution two ways.
+Technically, the support is $k= 0, 1,2,3,\dots$: 0 and positive integers, interpreted as the number of "successes" in $n$ binomial trials. Binomial trials are independent observations of a process that has two possible outcomes, "success" or "failure", with set probabilities of each occurring. (And probabilities of success and failure must sum to 1.)
+
+So, for each individual binomial trial, the possible outcomes are 0 and 1, often interpreted as TRUE and FALSE or "success" and "failure".
+
+For our purposes, this distribution will be useful for modelling response variables that are categorical with two possible values (and the $n$ trials will be the $n$ rows in our dataset).
+
+##### Parameters
+Parameters are $n$, the number of independent trials, and $p$, the probability of success in each trial.
+
+##### Shapes
+The figure below shows the shape of binomial distributions with fixed $n=100$ and varying $p$:
+
+```{r}
+gf_dist('binom', params = c(size=100, prob=0.1), color=colrs[1]) %>%
+  gf_dist('binom', params = c(size=100, prob=0.25), color=colrs[2]) %>%
+  gf_dist('binom', params = c(size=100, prob=0.5), color=colrs[3]) %>%
+  gf_dist('binom', params = c(size=100, prob=0.75), color=colrs[4]) %>%
+  gf_dist('binom', params = c(size=100, prob=0.99), color=colrs[5]) %>%
+  gf_labs(x='k, the Number of Successes in 100 Trials', y='Probability')
+```
+
+The $p$ used were 0.1, 0.25, 0.5, 0.75, and 0.99. Can you tell which is which?
+
+##### PDF or PMF
+The PMF for the binomial distribution is:
+$$ P(X=k \vert n,p) = {n \choose k} p^k (1-p)^{n-k}$$
+
+Where $k$ is the number of successes observed in $n$ trials (you can think of $k$ as our "x-axis variable" for this PMF).
+
+##### Examples
+We might use this distribution to model any categorical variable with two possible values, like Age (if possible values are "adult" and "child") or health status ("has disease" or "does not have disease").  We'll think of each observation in the dataset as one of the $n$ indpendent trials, with one of two possible outcomes for each trial.
+
+### Poisson
+
+
+##### Type
+Discrete
+
+##### Support
+The support is 0 and positive integers (i.e., this distribution works well for count data).
+
+##### Parameters
+The Poisson distribution has one parameter, $\lambda$ (the event rate per unit time) which must be greater than 0.
+
+##### Shapes
+The distribution can take on unimodal shapes with varying amounts of right skew (from none, to an exponential shape).
+
+```{r}
+colrs <- RColorBrewer::brewer.pal(8, 'Set2')
+gf_dist('pois', params=c(lambda=0.5), color=colrs[1]) %>%
+  gf_dist('pois', params=c(lambda=3), color=colrs[2]) %>%
+  gf_dist('pois', params=c(lambda=6), color=colrs[3]) %>%
+  gf_dist('pois', params=c(lambda=15), color=colrs[4]) %>%
+  gf_labs(x='k (number of events)', y='Probability')
+
+```
+
+##### PDF or PMF
+The Poisson PMF is:
+
+$$P(X=k \vert \lambda) = \frac{\lambda^k e^{-\lambda}}{k!}$$
+
+##### Examples
+The Poisson distribution might be used to model any response variable that is comprised of counts, for example, the number of birds sighted in a bird survey, or the number of people admitted to an emergency room each hour.
+
+### Negative Binomial
+There are two versions or "types" of this distribution, cleverly known as NB1 (type 1) and NB2 (type 2). NB1 has "constant overdispersion" -- the variance of the distribution is greater than the mean according to a constant ratio. NB2 has "variable overdispersion" -- the variance is a quadratic function of the mean. The NB2 is the one that corresponds directly to conceptualization in terms of binomial trials (with the PMF giving the probability of observing $y$ failures before the $r$th success). [Hardin and Hilbe 2007](https://www.amazon.com/Generalized-Linear-Models-Extensions-Third/dp/1597181056/ref=sr_1_1?s=books&ie=UTF8&qid=1538705158&sr=1-1&keywords=Generalized+Linear+Models+and+Extensions%3A+third+edition) describe the negative binomial this way: "Instead of counts entering uniformly, we see counts entering with a specific gamma-distributed shape."
+
+##### Type
+Discrete
+
+##### Support
+The support is 0 and positive integers (i.e., this distribution works well for count data). It also has a derivation in terms of binomial trials, but in our regression models, we will only use it with count data.
+
+##### Parameters
+A common parameterization of the negative binomial (online and in actuarial science) has parameters $p$, the probability of success on each binomial trial, and $r$, the number of failures observed. The PMF then gives the probability of observing $k$ failures before the $r$th success in a series of Bernoulli trials.
+
+Here, we will use an alternate parameterization. The other common way to parameterize and derive the NB is as a Poisson-gamma mixture -- a modified version of a Poisson distribution.  In this scheme, the parameters of the distribution are $\mu$ and $\alpha$.  
+
+##### Shapes
+These distributions can take on unimodal shapes with varying amounts of right skew. In NB2 (type 2) distributions the variance (spread) is larger relative to the mean. 
+
+NB1:
+
+```{r, message = FALSE}
+require(gamlss.dist)
+colrs <- RColorBrewer::brewer.pal(8, 'Set2')
+gf_dist('NBI', params=c(mu=1, sigma=0.5), color=colrs[1]) %>%
+  gf_dist('NBI', params=c(mu=1, sigma=0.5), color=colrs[2]) %>%
+  gf_dist('NBI', params=c(mu=4, sigma=1), color=colrs[3]) %>%
+  gf_dist('NBI', params=c(mu=15, sigma=4), color=colrs[4]) %>%
+  gf_lims(x=c(0,20)) %>%
+  gf_labs(x='k (number of events)', y='Probability')
+
+```
+
+NB2:
+
+```{r}
+colrs <- RColorBrewer::brewer.pal(8, 'Set2')
+gf_dist('NBII', params=c(mu=1, sigma=0.5), color=colrs[1]) %>%
+  gf_dist('NBII', params=c(mu=1, sigma=0.5), color=colrs[2]) %>%
+  gf_dist('NBII', params=c(mu=4, sigma=1), color=colrs[3]) %>%
+  gf_dist('NBII', params=c(mu=15, sigma=4), color=colrs[4]) %>%
+  gf_lims(x=c(0,20)) %>%
+  gf_labs(x='k (number of events)', y='Probability')
+```
+
+##### PDF or PMF
+Details of the parameterizations and likelihood and fitting of NB1 and NB2 distributions can be found in [Hardin and Hilbe 2007](https://www.amazon.com/Generalized-Linear-Models-Extensions-Third/dp/1597181056/ref=sr_1_1?s=books&ie=UTF8&qid=1538705158&sr=1-1&keywords=Generalized+Linear+Models+and+Extensions%3A+third+edition), if you are interested.
+
+The PMF for the NB1, where the variance is a constant multiple of the mean,  is:
+
+$$ f(x \vert \mu, \alpha) = \frac{\Gamma(x + \mu)}{\Gamma(\mu)\Gamma(x+1)}(\frac{1}{1+\alpha})^\mu(\frac{\alpha}{1+\alpha})^x $$
+
+Where $\Gamma$ is a Gamma function. Note that if $\alpha$ = 0 this becomes a Poisson distribution, so the Poisson is a special case of the NB1.
+
+The PMF for the NB2, where the variance is a quadratic function of the mean, is:
+
+$$ f(x \vert \mu, \alpha) = \frac{\Gamma(x + \frac{1}{\alpha})}{\Gamma(\frac{1}{\alpha})\Gamma(x+1)}(\frac{1}{1+\alpha \mu})^{\frac{1}{\alpha}}(1 - \frac{1}{1+\alpha \mu})^x $$
+
+##### Examples
+NB distributions are good models for overdispersed count data, where (in the regression context) the residual variance is not equal to the expected (predicted) value. (Note that if you are reading this before learning about regression models for count data, you may not understand this sentence yet...don't worry, it will make sense when you return later!) Some examples might include sightings data on numbers of animals seen on wildlife surveys, or the number of items bought per order at an online retailer.
+
+### A Mixture Distribution: Tweedie
+The Tweedie family of distributions is a very large one - depending on the values of the different parameters, the PMF/PDF can be written in many different ways, and it can take on many different shapes. The description below is a simplified one, geared toward the types of Tweedie distributions we are likely to try to use in regression models in this course -- mainly the "compound Poisson-gamma" type.
+
+*Some extra resources for which you will not be held responsible in this course:*
+
+- You can find an accessible description and example of this kind of distribution at: [http://www.notenoughthoughts.net/posts/modeling-activity.html](http://www.notenoughthoughts.net/posts/modeling-activity.html).
+
+- The following site may also be useful in regard to using the Tweedie in regression models: [http://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/viewer.htm#statug_genmod_details28.htm](http://support.sas.com/documentation/cdl/en/statug/68162/HTML/default/viewer.htm#statug_genmod_details28.htm)
+
+##### Type
+These distributions are *both* continuous and discrete - a kind of mix of a Poisson distribution and gamma distribution(s).
+
+##### Support
+The support is non-negative real numbers (greater than or equal to 0).
+
+##### Parameters
+(Note: there are multiple different ways to parameterize these distributions.) We will use:
+
+- $p$, the index or power parameter, which can be 0 (resulting in a normal distribution), 1 (resulting in a Poisson distribution), **$1 < p < 2$ (a compound Poisson-gamma distribution -- what we will mainly use)**, 2 (a gamma distribution), 3 (an inverse Gaussian distribution), $<3$ (a positive stable distribution), or $\infty$ (an extreme positive stable distribuiton). For the case where $1 < p < 2$, and the distribution is a compound of a Poisson and a gamma, then $p = \frac{k+2}{k+1}$ where $k$ is the parameter of the gamma distribution. When $1<p<2$, $p$ closer to 1 means thant the Poisson distribution (the mass at 0) gets more "weight" in the compound distribution, and values of $p$ closer to 2 mean that the gamma distribution gets more "weight."
+- $\mu$. For the case where $1 < p < 2$, and the distribution is a compound of a Poisson and a gamma, then $\mu = \lambda k \theta$ where $\lambda$ is the parameter of the Poisson distribution and $k$ and $\theta$ are the parameters of the gamma.
+- $\phi$ For the case where $1 < p < 2$, and the distribution is a compound of a Poisson and a gamma, then $\phi = \frac{\lambda^{(1-p)} (k \theta) ^{(2-p)}}{2-p}$ where $\lambda$ is the parameter of the Poisson distribution and $k$ and $\theta$ are the parameters of the gamma.
+
+##### Shapes
+A compound Poisson-gamma Tweedie distribution can take on varying shapes; the main characteristic of interest for us is that it can have a mass at 0, then a unimodal or multimodal distribution with a long right tail (lots of right skew).
+
+```{r}
+require(tweedie)
+tex <- data.frame(x=seq(from=0, by=0.1, to=50)) %>%
+  mutate(dens.a = dtweedie(x, xi = 1.1, mu=4, phi=2)) %>%
+  mutate(dens.b = dtweedie(x, xi = 1.3, mu=4, phi=0.5)) %>%
+  mutate(dens.c = dtweedie(x, xi = 1.5, mu=4, phi=0.3)) %>%
+  mutate(dens.d = dtweedie(x, xi = 1.8, mu=4, phi=1)) %>%
+  mutate(dens.e = dtweedie(x, xi = 1.5, mu=4, phi=5))
+  
+
+gf_line(dens.a ~ x, data=tex, color=colrs[1]) %>%
+  gf_line(dens.b ~x, data=tex, color=colrs[2]) %>%
+  gf_line(dens.c ~x, data=tex, color=colrs[3]) %>%
+  gf_line(dens.d ~x, data=tex, color=colrs[4]) %>%
+  gf_line(dens.e ~x, data=tex, color=colrs[5])
+```
+
+##### PDF or PMF
+A Tweedie distribution with $p>1$ has the form:
+
+$$ f(X \vert \mu, \phi, p) = a(x, \phi)e^{\frac{1}{\phi}(\frac{x\mu^{(1-p)}}{(1-p)} - \kappa(\mu,p))}$$
+
+where $\kappa(\mu,p) = \frac{\mu^{(2-p)}}{(2-p)}$ if $p\neq2$, and if $p=2$,  $\kappa(\mu,p) = log(\mu)$; but $a(x,\phi)$ is a function that does not have an analytical expression. This expression is from SAS documentation at [https://support.sas.com/rnd/app/stat/examples/tweedie/tweedie.pdf](https://support.sas.com/rnd/app/stat/examples/tweedie/tweedie.pdf).
+
+Alternately (and more simply(?)), a Tweedie distribution with $1 < p < 2$ is a compound of a Poisson distribution with parameter $\lambda$ and a gamma distribution with parameters $k$ and $\theta$. For example:
+
+"Suppose that airplanes arrive at an airport following a Poisson process, and the number of passengers in each airplane follows a certain [gamma] distribution. Then, the number of passengers arriving at the airport follows a compound Poisson [gamma] process 
+$$ Y = \sum_{i=1}^{N} D_i$$
+where $N$ is the Poisson process that the airplanes follow, and $D_i$ is the [gamma] distribution that the passengers follow."  (Thanks to D. Mao, [http://math.uchicago.edu/~may/REU2013/REUPapers/Mao.pdf](http://math.uchicago.edu/~may/REU2013/REUPapers/Mao.pdf) for this example.)
+
+##### Examples
+The Tweedie distributions may be useful for "zero-inflated" data, where there is a class of observations for which the observed value of the variable is always zero, and another class for which the variable takes on positive continuous values. For example, this might model the number of birds present per unit area (when the study area includes places of unsuitable habitat where none are ever found), or perhaps the quantity of alcohol consumed per week by different people (some of whom may drink varying amounts, and others of whom may never drink at all).
+
+<!--chapter:end:04-pdf-pmf.Rmd-->
+
+
+```{r, setup-count-reg, include=FALSE}
+require(mosaic)   # Load additional packages here 
+require(tidyverse)
+require(ggformula)
+# Some customization.  You can alter or delete as desired (if you know what you are doing).
+theme_set(theme_bw(base_size=18))
+knitr::opts_chunk$set(
+  echo = TRUE,
+  tidy=FALSE,     # display code as typed
+  size="footnotesize",   # slightly smaller font for code
+  fig.width=6.5, fig.height=4, fig.show='hold')
+```
+# Regression for Count Data
+So far, we have fitted regression models for continuous-valued quantitative response variables.  What if our response variable is really **count data** -- discrete quantitative values limited to zero and positive integers?
+
+## Data Source
+The dataset used here is `beevisits`, from:
+
+Felicity Muth, Jacob S. Francis, and Anne S. Leonard. 2017. Bees use the taste of pollen to determine which flowers to visit. Biology Letters 12(7): DOI: 10.1098/rsbl.2016.0356. [http://rsbl.royalsocietypublishing.org/content/roybiolett/12/7/20160356.full.pdf](http://rsbl.royalsocietypublishing.org/content/roybiolett/12/7/20160356.full.pdf). 
+
+
+```{r, out.width='6.5in'}
+knitr::include_graphics('images/BeeExperiment.png')
+```
+
+## A bad idea: multiple linear regression model
+
+```{r, beedata-2, echo=FALSE, fig.width=6.5, fig.height=2.5}
+beevisits <- read.csv('http://sldr.netlify.com/data/beevisits.csv')
+beevisits$treatment <- relevel(beevisits$treatment, ref='quinine')
+levels(beevisits$treatment) <- c('Quinine', 'Cellulose', 'Sucrose')
+gf_histogram(~novisits | treatment, data=beevisits, bins=7) %>% gf_labs(x='Number of Visits', y='Number of Bees')
+```
+
+```{r }
+summary(beevisits)
+```
+
+```{r, bee-lms, echo=TRUE}
+bee.lm <- lm(novisits ~ flower + treatment +
+               colony, data=beevisits)
+summary(bee.lm)
+```
+
+```{r, assess1-b, fig.height=3.2, echo=FALSE}
+acf(resid(bee.lm), main='bee.lm Residuals')
+```
+
+```{r, assess2-b, echo=FALSE, fig.height=2.6}
+beevisits <- beevisits %>%
+  mutate(lm.resids = resid(bee.lm),
+         lm.fitted = predict(bee.lm))
+
+gf_point(lm.resids ~ lm.fitted, data=beevisits) %>%
+  gf_labs(title='bee.lm')
+gf_histogram(~lm.resids, data=beevisits, bins=15) %>%
+  gf_labs(title='bee.lm')
+```
+
+## Problems with the linear model
+What problems do we have with this model (its appropriateness, or goodness of fit to the data)?
+
+- Non-constant error variance
+- Non-normality of residuals
+- Some predicted values are less than 0 -- it's impossible that a bee could visit a flower a negative number of times!
+
+
+## Poisson Regression
+*Detailed notes on the model equation were filled in here in class*
+
+### Fitting the Model
+
+```{r, echo=TRUE}
+prm <- glm(novisits ~ flower + treatment +
+               colony, data=beevisits,
+           family=poisson(link='log')) 
+summary(prm)
+```
+
+### Conditions
+What conditions must hold for *this* model to be appropriate?
+
+- Response variable (y) contains count data
+- Linearity: $log(\lambda_{i})$ is a linear function of the covariates $x_1$, $x_2$, ... $x_n$. (*Later we will consider how to check this when some covariates are quantitative...in brief: plot log(rate) as a function of each covariate and look for (no non-)linear trend.*)
+- **Mean = Variance**
+- Independence (of residuals)
+- There is *not* a condition specifying a PDF that the residuals should follow.
+
+
+### Model Assessment
+Which conditions can we check already?
+
+```{r, echo=TRUE, fig.height=3.5}
+acf(resid(prm, type='response'), main='bee.lm Residuals')
+```
+
+What does `type='response'` mean?
+
+This means that the residuals are reported on the same scale as the response variable (that is, in units of counts, rather than log(counts)).
+
+```{r }
+beevisits <- beevisits %>%
+  mutate(pm.resids = resid(prm, type='response'),
+         pm.fitted = fitted(prm))
+
+gf_point(pm.resids ~ pm.fitted, data=beevisits) %>%
+  gf_labs(x='Fitted Values', y='Residuals')
+```
+
+This trumpet pattern is *what we expect!* Why?
+
+
+If the variance equals the mean, then as the mean (fitted value) goes up, then the variance (spread of residuals) will also be larger.
+
+But how can we decide if it's the *right amount* of increase in variance with increase in fitted value?  We can compute **Pearson** residuals, which are scaled by the *expected variance*.  **The Pearson residuals should have approximately constant variance as a function of fitted values, and a standard deviation of about 1.**
+
+```{r}
+beevisits <- beevisits %>%
+  mutate(pm.pearson.resids = resid(prm, type='pearson'))
+
+gf_point( pm.pearson.resids ~ pm.fitted, data=beevisits) %>%
+  gf_labs(x='Fitted Values', y='Pearson Residuals')
+```
+
+A more complex solution: we could divide the fitted values into bins (choice of bin size is somewhat arbitrary; generally, you want them as small as possible, but still containing enough observations per bin to get good mean and variance estimates). In each bin, compute the mean and the variance of the residuals.  Plot these means vs these variances and see if the slope is 1 (and intercept 0).
+
+First, split the fitted values into 5 bins:
+```{r}
+beevisits <- beevisits %>%
+  mutate(fitted.bins = cut(fitted(prm), breaks=5))
+
+head(beevisits)
+```
+
+Next, compute the means and variances in each bin, view the result, and plot:
+```{r}
+binned.bees <- beevisits %>%
+  group_by(fitted.bins) %>%
+  summarise(mean = mean(pm.fitted, na.rm=TRUE),
+            var = var(pm.resids))
+
+binned.bees
+
+gf_point(var ~ mean, data=binned.bees) %>%
+  gf_labs(x='Mean Fitted Value', 
+          y='Variance of Residuals') %>%
+   gf_abline(slope=1, intercept=0)
+```
+
+**That's a bit of a pain, and still a judgment call at the end.**
+
+How *else* can we check the Mean = Variance condition?
+
+### Checking for overdispersion using overdispersion factor
+We can estimate the **overdispersion factor**. This satisfies
+
+$$ \text{residual variance} = \text{overdispersion factor} * \text{mean}$$
+
+So if it's a lot larger than 1, we have a problem. The function `overdisp_fun()` in package `s245` computes an estimate:
+
+```{r}
+require(s245)
+overdisp_fun(prm)
+```
+
+Here, it's about 2: not too terrible, but still, residual variance is double what it should be according to our model. (Usually if the overdispersion is larger than 2 we will prefer a different model that better accounts for the fact that $\text{mean} \neq \text{variance}$.)
+
+## Accounting for overdispersion: Negative Binomial Models
+Finally, we could simply fit a model that allows for a more permissive mean-variance relationship (where the variance can be larger or smaller than the mean, by different amounts), and see if it is a better fit to the data according it our IC. The negative binomial distributions (type I and II) do this:
+
+```{r, echo = TRUE}
+require(glmmTMB)
+nbm1 <- glmmTMB(novisits ~ flower + treatment +
+               colony, data=beevisits,
+           family=nbinom1(link='log'))
+
+nbm2 <- glmmTMB(novisits ~ flower + treatment +
+               colony, data=beevisits,
+           family=nbinom2(link='log'))
+
+summary(nbm1)
+summary(nbm2)
+```
+
+We **can** use AIC or BIC-based model selection to decide which model fits best, between Poisson, NB1, and NB2 models.
+
+
+```{r}
+AIC(prm, nbm1, nbm2)
+```
+
+We have a clear winner: NB1!
+
+## Accounting for overdispersion: quasi-Poisson Model
+Or yet another option...in our class, we will not use quasi-Poisson models as much, as they are fitted via quasi-likelihood and this complicates model selection.
+
+```{r}
+qprm <- glm(novisits ~ flower + treatment +
+               colony, data=beevisits,
+           family=quasipoisson(link='log'))
+summary(qprm)
+```
+
+We **should not** compare AIC with QAIC to compare two models, so to decide between Poisson and quasi-Poisson (if you ever use it) you must rely on the model assessment plots and the overdispersion factor to decide which is better.
+
+## Model selection with dredge() and (Q)AIC, BIC
+Poisson and negative binomial models are fitted via maximum likelihood, so AIC or BIC may be used for model selection.
+
+How can we use model selection criteria in a case where the likelihood can't be computed exactly?
+
+The quasi (log) likelihood is an approximation to the likelihood. It has some properties in common with a (log) likelihood, but is not a likelihood; we resort to using it in cases where the (log) likelihood can not even be evaluated.
+
+With some code/mathematical gymnastics, we can use principles of quasi-likelihood to estimate QAIC (quasi-AIC, or AIC based on quasi-likelihood) in R for model selection. 
+
+### Review: all subsets selection with dredge()
+
+What if, instead of comparing two (or a few) specific models, we want to compare all possible models that contain some combination of a set of candidate covariates?  The package `MuMIn` contains a function, `dredge()`, that takes as input a "full" model (one containing all the candidate covariates). It then computes AIC (or other model selection criteria) for all possible models containing subsets of the covariate and reports the results in a ranked table.  For example, for our Poisson regression model, we could do:
+
+```{r, echo=TRUE}
+require(MuMIn)
+#have to make sure na.action is 'na.fail' for input model
+prm <- update(prm, na.action='na.fail')
+dredge(prm, rank='AIC')
+dredge(prm, rank='BIC')
+```
+
+### Review: IC "weights"
+Note the last two columns of the `dredge` output: the "delta" (or $\delta$) AIC or BIC values and the "weights". The $\delta$s are obtained by simply subtracting the best model's IC value from that of each other model.
+
+We already mentioned a rule of thumb: that the $\delta IC$ should be at least 3 or to provide reasonable evidence that one model is really better than the other.
+Another way of measuring the differences between models is to use model *weights*. Theoretically, these measure the relative likelihoods of different models; you can think of them as giving the probability that a given model is the best-fitting one in the set of models examined, according to the IC being used.
+
+Model weights are computed simply according to: 
+$$ e^\frac{-\delta IC}{2}$$
+
+And they sum to one for all models in a `dredge()`.
+
+### Extending dredge() to quasi-Likelihood
+
+With (rather a lot of) effort to define some custom functions, we can do the same thing for a quasi-Poisson model using quasi-AIC. *Note: This idea is based on notes by Ben Bolker provided with the R package `bbmle`.*
+
+```{r }
+require(MuMIn)
+
+# modify a glm() output object so that
+# it contains a quasipoisson fit but the 
+# AIC (likelihood) from the equivalent regular Poisson model
+x.quasipoisson <- function(...) {
+res <- quasipoisson(...)
+res$aic <- poisson(...)$aic
+res
+}
+
+# function to extract the overdispersion parameter
+# from a quasi model
+dfun <- function(object) {
+with(object,sum((weights * residuals^2)[weights > 0])/df.residual)
+}
+
+# function that modifies MuMIn::dredge() 
+# for use with quasi GLM
+qdredge <- function(model, family='x.quasipoisson', na.action=na.fail, chat = dfun(model), rank='QAIC', ...){
+  model2 <- update(model, family=family, na.action=na.action)
+  (dt <- dredge(model2, rank=rank, chat=chat, ...))
+}
+
+#do "dredge" for model selection
+qdredge(qprm)
+
+```
+
+Note: the `qdredge()` function is also provided for you in the package `s245`. So if you do want to use this, all you need to do is use `s245::qdredge()` instead of `dredge()`.
+
+## Offsets
+
+In our model, the response variable was the number of flowers visited by a bee, and each bee was in the same experimental setting for the same amount of time, so there was no need to account for effort or time spent in each case.
+
+This is not always true: consider, for example:
+
+- Dolphin surveys
+- Bird counts
+- Consider the schools and crime example from homework as well
+
+In this case, it would be natural to adjust for effort. The intuitive way to do it would be to use counts per unit effort as the response variable:
+
+$$ log(\frac{\lambda_i}{effort}) = \beta_0 + \dots $$
+
+But notice that this is equivalent to including $log(effort)$ as an ``offset" on the right hand side of the regression equation:
+
+$$ log(\lambda_i) = \beta_0 + \dots + log(effort)$$
+
+This is how we specify models with *offsets* in R:
+
+```{r, echo=TRUE, eval=FALSE}
+offset.mod <- glm(counts ~ predictor1 + predictor2 +
+                    offset(log(effort)), family=poisson)
+```
+
+**Note: if you use dredge() with a model with an offset, be sure to specify the offset as a "fixed" term, i.e. a term that must be included in *all* models:**
+
+```{r, echo=TRUE, eval=FALSE}
+dredge(offset.mod, fixed = 'offset(log(effort))')
+```
+
+## Prediction Plots
+Once you have a "best" model, how do you interpret it? 
+
+When we went to great lengths to make prediction plots for a linear regression model so we could "see" the slope of the predicted relationship, you may have wondered: *why bother?* I can just look at the slope estimate and get the same insight!
+
+Now, with a more complicated model equation with a link function, it's not so easy. Now, we will really appreciate those prediction plots!
+
+With the link function and the Poisson distribution, it is more challenging to interpret the coefficients of the model directly. The easiest way to understand the effects of different predictors is to look at plots of model predictions. However, as always we don't want to plot `fitted(model)` as a function of each predictor in a model with more than one predictor; predictors other than the one we are interested in will influence the predictions, introducing extra variation. Instead, we will construct a new (fake) dataset to make predictions for, in which all predictors but the one we are interested in are held constant. For example, using our quasi-Poisson model and looking at the effect of colony (predicted values with 95% CIs):
+
+```{r}
+newdata <- data.frame(colony=c('W', 'X', 'Y'),
+                      flower='familiar',
+                      target.colour='blue',
+                      treatment='Cellulose')
+
+pred = predict(qprm, newdata=newdata,
+                 type='response',
+                 se.fit=TRUE)
+
+newdata <- newdata %>%
+  mutate(preds = pred$fit,
+         CIlow = pred$fit - 1.96*pred$se.fit,
+         CIup = pred$fit + 1.96*pred$se.fit)
+
+gf_point(preds ~ colony, data=newdata) %>%
+  gf_labs(x='Colony', y='Predicted\nN. Visits') %>%
+  gf_errorbar(CIlow + CIup ~ colony, data=newdata)
+```
+
+If we had a quantitative predictor instead, the process would be similar, except when we define `newdata`, we would have to choose a range and granularity for which to make predictions. For example, imagine if bee length in mm was one of our predictors, and we wanted predictions for lengths between 0.5 and 3 mm (with a value every 0.05mm). We might begin:
+
+```{r, }
+newdata <- expand.grid(bee.length = seq(from=0.05, by=0.05, to=3),
+                       colony=c('W'),
+                       flower='familiar',
+                      target.colour='blue',
+                      treatment='Cellulose')
+head(newdata)
+```
+
+Then, when we make the plot, we would need to use `gf\_ribbon()` instead of `gf\_errorbar()` to show the CI.
+
+We can also use `pred_plot(fitted_model, 'variable_name')` to make these plots with a lot less code (and if you need to know the values at which other predictors are fixed, use `get_fixed(dataset)`).
+
+<!--chapter:end:06-count-data-regression.Rmd-->
+
+```{r, setup-mave, include=FALSE}
+require(mosaic)   # Load additional packages here 
+require(ggformula)
+require(s245)
+# Some customization.  You can alter or delete as desired (if you know what you are doing).
+theme_set(theme_bw(base_size=18)) # change default color scheme for lattice
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small", fig.width=7, fig.height=3, warning= FALSE, message = FALSE)   # slightly smaller font for code
+```
+# Model Averaging
+So far, we have used AIC and/or BIC for model selection, to decide which variables to keep in a "best" model and which to exclude. But we have already seen a number of cases where there is not **one** model that is clearly superior to all the others. In those cases, we have decided on the smallest model (with the fewest predictors), but there are other options when many competing models have similar scores. 
+
+One option is *not to choose* -- instead, keep them all, and make predictions via a weighted average of all the models. The models with the best IC scores get more weight. This can be a good option if the main goal is accurate prediction (rather than deciding definitively which predictors are "good" ones and which are not).
+
+How can we do it? Let's explore an example.
+
+## Data: School Survey on Crime and Safety
+The data for this example are from a survey of U.S. schools, the 2000 School Survey on Crime and Safety.  There is information about the study at
+
+ [http://catalog.data.gov/dataset/2000-school-survey-on-crime-and-safety](http://catalog.data.gov/dataset/2000-school-survey-on-crime-and-safety), 
+ 
+ which says the study "is a cross-sectional survey of the nation's public schools designed to provide estimates of school crime, discipline, disorder, programs and policies. SSOCS is administered to public primary, middle, high, and combined school principals in the spring of even-numbered school years...Public schools were sampled in the spring of 2000 to participate in the study." 
+
+The dataset you will use is available online at:
+
+[http://sldr.netlify.com/data/sscrime.csv](http://sldr.netlfiy.com/data/sscrime.csv)
+
+It contains a number of variables:
+
+- `VisitorCheckIn`: Whether visitors to the school must check in to gain entry to the school.
+-	`LockedGates`: Whether there are locked gates at the entry to the school.
+-	`MetalDetectors`: Whether there is a metal detector at the entrance to the school.
+-	`DrugSniffDog`: Whether a drug-sniffing dog is randomly brought into the school to carry out inspections.
+-	`DrugTesting`: Whether any drug testing of students occurs.
+-	`UniformsRequired`:Whether students are required to wear uniforms.
+-	`DressCode`: Whether a strict dress code is enforced.
+-	`Lockers`: Whether students have lockers.
+-	`StudentIDBadges`: Whether students are required to wear ID badges.
+-	`StaffIDBadges`: Whether teachers and other staff are required to wear ID badges.
+-	`SecurityCameras`: Whether there are security cameras on the premises.
+-	`OfficialRiotPlan`: Whether the school has a written plan in place for how to deal with a riot or large-scale fight.
+-	`ViolenceReductionProgram`: Whether the school has a Violence Reduction Program in place.
+-	`Security`: Whether security officers are present on the premises.
+-	`TrainingHours`:  Average amount of time (in hours) that teachers and staff have devoted to training related to violence reduction.
+-	`AttacksWithoutWeapon`: Number of attacks that have occurred at the school, not involving a weapon.
+-	`Thefts`: Number of thefts.
+-	`Vandalism`: Number of incidents of vandalism.
+-	`ViolentIncidentsTotal`: Number of violent incidents of all types that have occurred at the school.
+-	`Enrollment`: Number of students enrolled in the school (categorical)
+-	`NEnrollment`: Number of students enrolled in the school (numeric)
+-	`SurveyRespondent`: The identity of the person who filled out the survey.
+-	`Location`: Whether the location of the school is Urban, Rural, etc.
+
+```{r, ssc-data-in}
+ssc <- read.csv('http://sldr.netlify.com/data/sscrime.csv')
+```
+
+## Modelling number of violent incidents per school
+
+We will fit a model for the number of violent incidents total as a function of a number of predictors. This is count data and we will fit a negative binomial regression model:
+
+```{r }
+require(glmmTMB)
+school.nb2 <- glmmTMB(ViolentIncidentsTotal ~ TrainingHours + Location + 
+                        SecurityCameras + DressCode + UniformsRequired + 
+                        NEnrollment, data=ssc,
+                family=nbinom2(link='log'))
+```
+
+I will use AIC and the `dredge()` function to compare all possible subsets of my saturated model and figure out which variables should be included in the best model. I chose AIC in this case because it is perhaps more widely used than BIC (that's not a good reason unless you really have no better one, but there you have it) and because with the relatively small sample size here, I don't feel a particular need to use BIC for its larger penalty term.
+
+```{r, }
+require(MuMIn)
+#do "dredge" for model selection
+mod.sel <- dredge(school.nb2, rank='AIC')
+head(mod.sel, 8)
+```
+
+Because the first 7 or so models all have AIC scores within 3 units of each other, it is hard to choose one best model here. In this situation, one way to choose is to pick the model that includes the smallest number of predictors, and still acheives an AIC that is among the best. Another option would be to use **model averaging**.
+
+## Model Averaging
+What if we wanted to use model averaging to find the best model, instead? We might choose this route because there are several models that all have AIC that are close to each other and thus fit the data approximately equally well.  So we might choose to make predictions (and compute coefficients) that are the *average* of all the models (weighted by IC weights).
+
+Notes of caution:
+
+- If the model is not a linear regression (if there is a link function for instance) then it's important to get **predictions** by *averaging the predictions from the different models*, **not** by making predictions using the model-averaged coefficients. The code below is careful to do this.
+- Model averaging is used pretty widely but is also controversial (like most model selection methods, in fact!) For example, see: [https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/14-1639.1] and [https://drewtyre.rbind.io/post/rebutting_cade/].
+
+To do model averaging, we use package `MuMIn` (function `model.avg`).
+
+
+### Getting the Averaged Model
+The following code gets the average model. If we did the default (`fit=FALSE`), it would be a bit faster, but we would then not be able to get predictions from the model.
+
+```{r, }
+mod.sel2 <- dredge(school.nb2)
+ave.model <- MuMIn::model.avg(mod.sel2, fit=TRUE)
+summary(ave.model)
+```
+
+**If you are trying to get model-averaged coefficients from the summary output above, be sure to look for the "full average" ones and not the "conditional average" (which only includes models where the predictor was included, i.e., where the coefficient was not 0).**
+
+### Getting Predictions from the Averaged Model
+
+```{r}
+ma.preds <- predict(ave.model, se.fit=TRUE,
+                    type = 'response', 
+                    backtransform = FALSE)
+```
+
+The resulting predictions are a list with entries `fit` and `se.fit` just like we are used to. (So you could make predictions with a `newdata` data set and use them for prediction plots, for example. Be careful -- your "new" dataset now has to include values for all candidate predictors in the full model.)
+
+Comparing with the predictions from our previous "best" model:
+
+```{r, fig.width = 3.25, fig.show = 'hold', fig.height = 2.5}
+best.school.nb2 <- glmmTMB(ViolentIncidentsTotal ~ DressCode + Location,
+                           data=ssc,family=nbinom2(link='log'))
+
+
+pred_plot(ave.model, 'DressCode', ylab = 'N. Incidents',
+            data = ssc, color = 'red')
+
+pred_plot(best.school.nb2, 'DressCode', ylab = 'N. Incidents',) 
+```
+
+So they are pretty comparable, but a little different (the differences may be bigger the more there are different models with similar IC results contributing to the average model -- when one model carries almost all the weight, then the "single best" model and the model-averaging model will give almost the same results). It also makes sense that there will be a bit more uncertainty in the average model.
+
+<!--chapter:end:07-model-averaging.Rmd-->
+
+
+```{r, setup-interactions, include = FALSE}
+# load packages that are going to be used
+require(tidyverse)   # this loads mosaic, ggformula, etc. too
+require(ggformula)
+require(mosaic)
+require(s245)
+# Some customization.  You can alter or delete as desired (if you know what you are doing).
+
+theme_set(theme_bw(base_size=12))     # change theme for ggplot2/ggformula
+
+knitr::opts_chunk$set(
+  echo = TRUE,      # for homework, always show R code (this is the default)
+  tidy = FALSE,     # display code as typed (rather than reformatted)
+  size = "small",   # slightly smaller font for code
+  message = FALSE, warning = FALSE,
+  fig.width = 6.5, fig.height = 2.1, fig.align = 'center') # don't print warnings or messages in compiled document. So you MUST check them in RStudio!
+
+teach_beauty <- read.csv('http://www.stat.columbia.edu/~gelman/arm/examples/beauty/ProfEvaltnsBeautyPublic.csv') %>%
+  rename(beauty = btystdave,
+         eval = courseevaluation) %>%
+  mutate(race_eth = ifelse(minority == 0, 'White/Caucasian', 'Other'),
+         language = ifelse(nonenglish == 1, 'English', 'Other Language'),
+         formal = ifelse(formal == 1, 'Formal Dress', 'Informal Dress'),
+         female = ifelse(female == 1, 'female', 'not female')) %>%
+  dplyr::select(beauty, eval, race_eth, language, age, students, formal, profnumber, female)
+```
+
+# Interactions
+
+Two predictors **interact** when you need to know values of *both* in order to make an accurate prediction of the response variable value.
+
+Predictors can interact in *any* type of regression model (so this chapter could really be placed almost anywhere).
+
+## Example: Quantitative-Categorical Interaction
+
+```{r}
+gf_point(eval ~ beauty, color = ~female, shape = ~female, data = teach_beauty) %>%
+  gf_lm()
+```
+
+`Eval` may go up as `beauty` increases, but the *slope* of the relationship is *different* for females and non-females.  This is an **interaction** between `beauty` and `female`.
+
+## Categorical-Categorical Interaction Example
+
+```{r}
+gf_boxplot(eval ~ formal | female, data = teach_beauty)
+```
+
+Perhaps *Informal Dress* affects `eval` scores, but really only for non-females -- for females, `formal` dress doesn't make a difference either way.
+
+The effect of `formal` dress is *different* depending on the value of `female`. This is an interaction between `formal` and `female`.
+
+## Quant-Quant interactions?
+Yes, these are possible, but very hard to visualize and conceptualize. Basically, it would mean that the slope of the line for one predictor changes gradually as the value of a second variable changes. 
+
+## R code
+If you want to include an interaction term in a model in R, use a `*` rather than a `+` between the predictors that (may) interact. For example, based on our exploration above, we might try:
+
+```{r}
+beauty_mod <- lm(eval ~ beauty*female +
+                   formal*female, 
+                 data = teach_beauty, 
+                 na.action = 'na.fail')
+summary(beauty_mod)
+```
+
+Notice the additional indicator variables in the coefficient table/model equation. Now we need to *adjust* the effects of the `beauty` predictor depending on the values of `formal` and `female`, which interact with it.
+
+We can use IC-based model selection to determine whether including these interactions in a model is important or not.
+
+```{r}
+require(MuMIn)
+dredge(beauty_mod, rank = 'AIC')
+```
+
+In the case of the particular model we fitted, the "best" model starting from this full model is actually one *without* interactions. If you want to explore the dataset further, you will find that actually a model where `age`, `beauty` AND `female` interact fits much better...
+
+## Cautionary note
+If you include an interaction in a regression model, you **must** also include the corresponding "fixed effects" -- this means if you have an indicator variable/slope term for an interaction in your model, you must also have the indicator variables/slopes corresponding to the individual predictors. Our fitting functions (`lm()`, `glm()`, `glmmTMB()`, etc.) are smart enough to ensure this for you. So is `dredge()`. (It would take effort to mess this up in R.) 
+
+<!--chapter:end:08-Interactions.Rmd-->
+
+
+```{r, frog-binary-setup, include=FALSE}
+require(mosaic)   # Load additional packages here 
+require(ggformula)
+require(tidyverse)
+# Some customization.  You can alter or delete as desired (if you know what you are doing).
+theme_set(theme_bw(base_size=18))
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="footnotesize",   # slightly smaller font for code
+  fig.width=3.5, fig.height=2, fig.show='hold')
+```
+# Binary Regression
+Our next goal: establish a framework for doing regression modelling when the response variable is a categorical one, with two categories.
+
+## Data Source
+The dataset used here is on Alaskan wood frogs, detailing some physical characteristics, habitat characteristics, and the number of developmental and other abnormalities found in the frogs. It was originally obtained from:[http://datadryad.org/resource/doi:10.5061/dryad.sq72d].
+
+The data file can be accessed online at: [http://sldr.netlify.com/data/FrogAbnormalities.csv]
+
+```{r, frogdat, echo=FALSE, fig.width=6.5, fig.height=2.5}
+frogs <- read.csv('http://sldr.netlify.com/data/FrogAbnormalities.csv')
+head(frogs,3)
+```
+
+## Logistic Regression
+Recall, for linear regression we fitted a model for continuous (numeric) response variable $y$ according to:
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon $$
+
+where $x$s are the $k$ predictor variables, $\beta$s are the parameters to be estimated by the model, and $\epsilon \sim N(0,\sigma)$ are the model residuals.
+
+When our response variable was a *count* variable, we modified our equation to:
+
+$$log(\lambda_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon_{link} $$
+
+positing that $y_i \sim Pois(\lambda_i)$ for Poisson regression; similarly for quasiPoisson or negative binomial regression, we just replaced that Poisson distribution with a quasiPoisson or a negative binomial distribution.
+
+What if our response variable is *logical* -- a categorical variable with just two possible values?  We will designate one of the two values a "success," and then we want to predict the probability of success as a function of some set of predictors.  What will our model equation look like in this case?
+
+$$ logit(p_i) = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + ...\beta_k x_k + \epsilon_{link}$$
+
+where the `logit` function is $logit(x) = log(\frac{x}{1-x})$. This function maps probabilities to positive and negative real numbers, effectively "spreading them out" from the range 0-1 to the full range of real numbers. How does this equation relate back to our desired response variable? Well, $i$th observation of the response variable is assumed to follow a binomial distribution with probability $p_i$ ($y_i \sim Binom(n_i, p_i)$). ($n_i$ depends on the setup of the data -- often n=1 for each row of the dataset, as here where each row is one frog. We can think of each frog as one binomial trial, with success/failure meaning abnormality/normality of the frog.)
+
+## Checking the data setup
+We would like to model the proportion frogs with abnormalities as a function of a set of covariates. The variable `Abnormal` has values "Yes" and "No".  In R, if we use this (factor) variable as our response, how will R determine which level (value of the variable) is a "success"?
+
+R uses the FIRST variable value as "failure" and the second as "success" -- this makes sense if you imagine coding 0 for failure and 1 for success (and then sorting in numeric/alphabetical order).  If you have a categorical variable with informative values, you will need to make sure that the "base" (first) level is the one you want to equate with "failure".
+
+```{r}
+levels(frogs$Abnormal)
+```
+
+If you do need to rearrange the levels, one way to do it is to use the `forcats::fct_relevel()` function. Example:
+
+```{r}
+#ref will be the FIRST level after releveling
+frogs <- frogs %>% 
+  mutate(Abnormal = forcats::fct_relevel(Abnormal, ref='No'))
+frogs %>% pull(Abnormal) %>% levels()
+```
+
+## Fitting a saturated model
+Let's try fitting a model for Abnormalities as a function of Stage, Year, RoadType, and RoadDistance. Why do you think these variables and not others were chosen?
+
+Perhaps it makes sense that type and distance to road are proxies for urbanization, and frogs may do better in more pristine habitats. It also seems likely that there would be differences over time.  There may also be differences by Stage, if frogs with severe abnormalities have trouble even surviving to the later/older stages.
+
+```{r, lrm-frogs, echo=TRUE}
+frog.logr <- glm(Abnormal ~ Stage + factor(Year) + RoadType + RoadDistance,
+                 data=frogs, family=binomial(link='logit'))
+summary(frog.logr)
+```
+
+## Link Functions
+Here, we have used the logit link function, which is the most common. However, there are other functions that translate proportions to real numbers, and are sometimes used in regression for binary data. Two common options are:
+
+- Probit regression: link='probit'
+- Complementary log-log regression: link='cloglog'
+
+There are not closed-form expressions for the the probit and complementary log-log functions that are easy to write down, so that is why the exact functions are not given here. As shown below, the shapes of these three functions are very similar. So it may come as no big surprise that frequently they provide similar goodness of fit to data (according to IC). If that is the case, choose logit (which makes some of the interpretation of results easier).
+
+```{r, out.width='3in', echo = FALSE}
+knitr::include_graphics('binary-regression-links.png')
+```
+
+Note: figure is from [http://data.princeton.edu/wws509/notes].
+
+## Conditions
+Under what conditions is a logistic regression model appropriate?
+
+- Response variable is logical -- you can characterize it as the outcome of a binomial trial (or a set of independent binomial trials). Some response variables can be expressed as proportions, but can *not* be well modelled with binomial regression. For example, you might take one-minute recordings in the woods and measure the proportion of each minute during which bird song was audible.  The data will look like proportions, but you can't think of them as binomial trials and should not model them with binomial regression (what is a "trial" here, and what is a "success"?  Make sure you can answer those questions before using binomial regression.)
+- Linearity: logit(p) should have a linear relationship with each predictor variable. (A bit hard to check - see solutions to HW8 for an example of how it can be done.)
+- Independence: Same as usual.
+- Mean-variance relationship: The Pearson or Deviance residuals will decrease as a function of fitted value, and should have approximately constant variance as a function of fitted value. But a residuals vs fitted plot is of almost no use to us -- the examples later on show how you can expect it to look, and if it deviates from the expected appearance, try to figure out why and what is going on; but if it looks as expected, you can say "there is no evidence in this figure of a violation of the conditions of binary regression."
+- NO distributional assumptions about residuals.
+
+## Model Assessment Plots
+```{r, frog-assess1, fig.height=2.8, echo=FALSE}
+acf(resid(frog.logr), main='frog.logr Residuals')
+```
+
+```{r, frog-assess2, echo=TRUE, fig.height=2}
+gf_point(resid(frog.logr, type='pearson') ~ fitted(frog.logr)) %>%
+  gf_labs(title='frog.logr', 
+          y=' Pearson\nResiduals',x='Fitted Values')
+
+gf_point(resid(frog.logr, type='deviance') ~ fitted(frog.logr)) %>%
+  gf_labs(title='frog.logr', 
+          y=' Deviance\nResiduals',x='Fitted Values')
+
+gf_point(resid(frog.logr, type='response') ~ fitted(frog.logr)) %>%
+  gf_labs(title='frog.logr', 
+          y=' Raw Response\nResiduals',x='Fitted Values')
+
+gf_histogram(~resid(frog.logr, type='pearson'), bins=15) %>%
+  gf_labs(title='frog.logr', 
+          x='Residuals', y='Count')
+```
+
+The two "lines" in the residuals vs fitted plots correspond with the two possible values of the response variable in the data.  
+
+And remember - there is not a strict distributional assumption about the residuals (in other words, they don't have to follow, say, a normal distribution), so we don't really have to make a histogram of them. The one here is shown just to help you remember that you don't *have* to check it, and if you do, it will look "strange" (bimodal like this) yet it is nothing to worry about.
+
+## Odds Ratios
+
+The **odds** (or *odds ratio*) is $\frac{p}{1-p}$ -- the ratio of success to failure. So if P(success) = 0.75, then the odds will be $\frac{0.75}{0.25}$ = 3 or "three to one" -- you will usually succeed three times for every failure.
+
+Remember, the logit function was $logit(x) = log(\frac{p}{1-p})$? In other words, the logit is the log of the odds ratio. This means that the coefficients of a binary regression model with logit link function have special interpretations in terms of odds ratios.
+
+Let's consider a simplified version of our model (just to make it easier to write out the model equation):
+
+```{r, simple-frog-lr}
+simple <- glm(Abnormal ~ Stage, data = frogs, family=binomial(link='logit'))
+coef(simple)
+```
+
+So our model equation is:
+
+$$ logit(p_i) = -1.46 + 0.10I_{s43} - 0.11I_{s44} - 0.45I_{s45} - 0.51I_{s46}$$
+
+According to this model, the log-odds (logit(p)) for a Stage 42 frog is -1.46, so the odds of being Abnormal for a Stage 42 frog are $e^{-1.46} = 0.23$.
+
+The log-odds for a Stage 46 frog are -1.46 - 0.51 = -1.97, so the odds of it being Abnormal are $e^{-1.97} =  0.14$.
+
+The *change* in odds going from Stage 42 to 46 is then $\frac{0.14}{0.23} = 0.61$ -- the odds of a Stage 42 frog being abnormal are nearly double those of a Stage 46 frog.
+
+Notice -- we didn't actually have to compute all that to find the 0.6 value!
+
+We know that for Stage 46
+
+$$ log(\frac{p}{1-p}) = -1.46 -0.51$$
+so
+
+$$ \frac{p}{1-p} = e^{-1.46 - 0.51} = e^{-1.46}e^{-0.51}$$
+
+And $e^{-1.46}$ is the odds for Stage 42...aha! So, $e^{-0.51} = 0.60$ is the *multiplier* on the odds ratio to go from stage 42 to 46.  And in general, $e^{\beta}$ is the multiplier on the odds ratio for a one-unit change in the predictor variable for which $\beta$ is the model coefficient.
+
+## Model Selection
+
+As usual:
+
+```{r}
+require(MuMIn)
+frog.logr <- update(frog.logr, na.action='na.fail')
+mod.sel <- dredge(frog.logr, rank='AIC')
+head(mod.sel,5)
+afm <- model.avg(mod.sel, fit=TRUE)
+coef(afm)
+```
+
+## Prediction Plots
+Shown here are example prediction plots for Stage and RoadDistance. First, check out a summary table for the variables in the model to help determine fixed values.
+
+```{r}
+frogs$Year <- factor(frogs$Year)
+summary(frogs[,c('RoadDistance', 'RoadType', 'Stage',
+                 'Year')])
+```
+
+```{r, include=FALSE}
+theme_set(theme_bw(base_size=12))
+```
+
+```{r, fig.width=6.5}
+require(s245)
+pred_plot(afm, 'Stage', data = frogs)
+```
+
+```{r, fig.width=6.5}
+pred_plot(afm, 'RoadDistance', data = frogs)
+```
+
+How does this compare to the raw data?
+
+```{r}
+tally(~Abnormal|Stage, data=frogs, format='prop')
+bins <- cut(frogs$RoadDistance,breaks=c(0, 25, 50, 100, 250,800))
+prop(~Abnormal=='Yes'|bins, data=frogs)
+```
+
+But...remember, in the raw data, other predictors may also be influencing the patterns that you see in the data. In addition, we can look at the width of the confidence bands on the model estimates, and look at the model selection results to get an idea of whether this predictor is really important in the model or not. This is just an example to get you thinking about what prediction plots are showing you and what you can do with them! 
+
+<!--chapter:end:09-BinaryRegression1.Rmd-->
+
+
+```{r, setup-binreg2, include=FALSE}
+require(mosaic)   # Load additional packages here require(ggformula)
+# Some customization.  You can alter or delete as desired (if you know what you are doing).
+require(tidyverse)
+require(ggformula)
+theme_set(theme_bw(base_size=18))
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="footnotesize",   # slightly smaller font for code
+  fig.width=3.5, fig.height=2, fig.show='hold')
+```
+# Binary regression: Data with more than one trial per row
+So far, the dataset we used for binary regression had one "trial" per row: there was a categorical variable in the dataset with two categories, "success" and "failure" (for the frogs: Abnormal and Normal). We wanted to estimate the probability of "success" as a function of several predictors.
+
+If there are multiple trials that all have the same predictor-variable values, we can group them together into one row of data, and just record the number of "trials" and the number of "successes".  (From this, we can also get the number of "failures" = "trials" - "successes", if needed.) If we have a dataset that is stored in this format, we can still use `glm()` to fit a binary regression model.  The R code to fit the model changes just a bit, and we are able to do better model assessment a bit more easily.
+
+An example follows.
+
+## Data
+The dataset used here is a reality-based simulated EIA dataset on duck sightings before and after windfarm installation (`impact`). Hourly, observers did up to 200 scans of the study area, and for each scan recorded whether duck(s) were seen (a success) or not (a failure).
+
+The data file can be accessed online at:\\ \url{http://sldr.netlify.com/data/EIApropdata.csv}
+
+```{r, duckdat, echo=FALSE, fig.width=6.5, fig.height=2.5}
+pd <- read.csv('http://sldr.netlify.com/data/EIApropdata.csv')
+head(pd,3)
+```
+
+## Checking the data setup
+We would like to model the proportion scans with ducks sighted as a function of a set of covariates. Each row of our dataset gives us the number of successes in some number of trials (and also gives the corresponding values of the covariates for ALL those trials). We can also use this kind of summary data with a logistic regression; we will just need to add a column for the number of failures:
+
+```{r}
+pd <- pd %>% mutate(failures = trials-successes)
+#or same thing in base R
+pd$failures = pd$trials - pd$successes
+```
+
+
+## Fitting a saturated model
+Let's try fitting a model for proportion sightings as a function of day, month, and impact. 
+
+We need a response "variable" that is really 2 variables bound together: a column with the "successes" and a column with the "failures".  These don't have to be literally called successes and failures -- you can use whatever variable names you like -- but the first one of the two should be successes (the thing you want to compute the proportion for) and the second failures.
+
+```{r, duck-lrm, echo=TRUE}
+duck.logr <- glm( cbind(successes, failures) ~ day + month + impact, 
+                  family=binomial(link='logit'),
+                  data=pd)
+summary(duck.logr)
+
+#or maybe...
+duck.logr2 <- glm( cbind(successes, failures) ~ day + factor(month) + impact, 
+                   family=binomial(link='logit'), 
+                   data=pd)
+summary(duck.logr2)
+```
+
+## Checking linearity
+What should be linear here? Well, `logit(p)` (where `p` is the probability of success, for a given set of predictor-variable values) should be a linear function of the predictors. *We can actually check this graphically now that we have multiple trials per row of data!* (But remember that the effects of other, unplotted predictors may also be influencing the plot that you see...)
+
+Here, we need to decide: Do we see a linear pattern (or no pattern)? For the month and day data here, we might also consider whetehr it would make more sense to fit either of them as a categorical covariate rather than numeric.
+
+```{r}
+gf_point(logit(successes/trials) ~ day, data=pd) %>%
+  gf_labs(y='logit(p)')
+gf_point(logit(successes/trials) ~ month, data=pd)%>%
+  gf_labs(y='logit(p)')
+```
+
+## Model Assessment
+With data set up as proportions (many trials with the number of successes and failures in each row, rather than one row per trial), model assessment plots are a bit more useful. Specifically, we can check the Pearson residuals vs. fitted plot for constant variance as a function of fitted value, to confirm that the mean-variance relationship matches what we expect.
+
+Since the Pearson residuals are already adjusted for the expected variance, we should see approximately constant spread, with values ranging from about -2 to 2 (and not more than a few larger than $\pm$ 3).
+
+```{r}
+acf(resid(duck.logr2, type='pearson'))
+gf_point(resid(duck.logr2, type='pearson') ~ fitted(duck.logr2))
+```
+
+## Model Selection
+We can do model selection as usual.
+Here, it looks like the best model is the saturated (full) model.
+
+```{r}
+require(MuMIn)
+duck.logr2 <- update(duck.logr2, na.action='na.fail')
+dredge(duck.logr2)
+```
+
+We might also try using model selection to help us decide whether to use quantitative or categorical month and/or day...
+
+```{r}
+duck.logr2 <- update(duck.logr2, formula= . ~ . + month + factor(day), na.action='na.fail')
+dredge(duck.logr2, rank='BIC')
+```
+
+Here it looks like day as quantitative and month as categorical works best.
+
+<!--chapter:end:10-BinaryRegression2.Rmd-->
+
+
+```{r setup-collin, include=FALSE}
+require(mosaic)
+require(s245)
+require(GGally)
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.width=6, fig.height=6,
+                      size='small',
+                      cache=TRUE)
+```
+
+# Collinearity and Multicollinearity
+Problematic collinearity and multicollinearity happen when two (collinearity) or more than two (multicollinearity) predictor variables are *highly* correlated with each other.
+
+This can result in variance inflation: our uncertainty estimates (standard errors of coefficients, and confidence intervals on predictions) get bigger. Basically, if several predictors bear a lot of the same information, it can be hard for the model-fitting process to "allocate" the relationship between that predictor information and the response variable - it is "not sure" which predictor has which effect. 
+
+## Graphical Checks
+There are two functions in the package  `GGally` that we can use to visualize the level of correlation between predictor variables.
+
+As a simple example, let's consider a small dataset on blood pressure and other variables for 20 adults with high blood pressure. It contains variables:
+
+- patient number (`Pt`)
+- blood pressure (`BP` in mm Hg)
+- `Age` in years
+- Weight, in kg
+- body surface area (`BSA`, in $m^2$)
+- duration of hypertension (`Dur`, in years)
+- basal pulse (`Pulse`, in beats per minute)
+- stress index (`Stress`)
+
+```{r}
+bp <- read.table('http://sldr.netlify.com/data/bloodpress.txt', 
+                 header=TRUE)
+```
+
+Imagine we want to predict BP as a function of the other variables in the dataset. How can we use a plot to check whether any of the predictors at (too) correlated with each other?
+
+### Preferred option: Correlation Scatter Plot
+
+```{r, message=FALSE}
+require(GGally)
+bp2 <- bp %>% dplyr::select(Age, Weight, BSA, Dur, Pulse, Stress)
+ggpairs(bp2)
+```
+
+### Another option: Heat map of correlation coefficients
+
+```{r, fig.width=4, fig.height=4}
+# label=TRUE input adds numeric corr coef labels
+ggcorr(bp2, label=TRUE)
+```
+
+### How to use this information
+
+But how do we know how much correlation is *too much*? Some people suggest excluding predictors from a model if their pairwise correlation is above about 0.8, but that is a very arbitrary rule; sometime model estimate works just fine in the face of that much correlation. In other cases correlation of each pair of variables is low, but there is multicollinearity (a group of variables that predicts one other variable very well). Having a look at the data is always useful, but what else can we do to decide which predictors to include or exclude?
+
+So, one solution is to decide if there is "too much" collinearity or multicollinearity, and if there *is* "too much" for a given predictor, remove that one from the model.
+
+*There are also other options - model fitting techinques that get around the problem in other ways. (Key words in this arena are things like "lasso" and "neural net regression"). We will likely not have time to consider these in our class.*
+
+## Variance Inflation Factors
+A more precise way to check for collinearity *and* multicollinearity is to use VIFs. To get them, we will use the function `vif()` from package `car` (Companion to Applied Regression).
+
+But...what are the actually measuring?
+
+$$VIF = \frac{1}{1 - R^2_i}$$
+
+Where
+
+$$R^2_i$$ is the $R^2$ value for a regression model with the $i$th predictor as the *response* variable, and all the *other* predictors as a predictor.  So $R^2_i$ measures how well values of *predictor $i$* can be estimated based on the *other* predictors. High $R^2_i$ indicates a predictor that is redundant, providing the same information as other predictors.
+
+Since $R^2_i$ is in the *denominator* of the $VIF$ expression, **larger** VIFs indicate **more** problematic correlations between predictors.
+
+*Note: an alternate interpretation of VIFs is that they measure the factor by which variance of model coefficient estimates is "inflated" due to collinearity between predictors. Big is still bad, because big VIF means inflated (high) uncertainty.*
+
+### Quantitative predictors (VIFs)
+For our blood pressure example:
+
+```{r, message=FALSE}
+require(car)
+m1 <- lm(BP ~ Age + Weight + BSA + Dur + Pulse + Stress, data=bp)
+vif(m1)
+m2 <- lm(BP ~ Age + BSA + Dur + Pulse + Stress, data=bp)
+vif(m2)
+```
+
+### (Some) Categorical Predictors (GVIFs)
+What if some predictors are categorical? In this case, `vif()` will report generalized VIFs (GVIFs) and scaled GVIFs ($GVIF^{\frac{1}{2DF}}$).
+
+### Rules of Thumb
+If a VIF (or squared scaled GVIF) is 1, that means there is no added uncertainty in model estimates because of collinearity. If VIF (or squared scaled GVIF) is greater than 4, then there's a problem and you should probably try to fix it; if VIF (or squared scaled GVIF) is more than 10, then something *definitely* must be done to correct the problem. 
+
+*As suggested above...To use these rules of thumb with scaled GVIFs ($GVIF^{\frac{1}{2DF}}$), **square** the scaled GVIF value before applying the rule.*
+
+Let's look at an example from the built-in R dataset Duncan, which has data from 1950 on characteristics of different professions (type ?Duncan in R if you want more info on the data).
+
+If we only include quantiative predictors, we get VIFs as before:
+
+```{r}
+m2 <- lm(prestige ~ income + education, data=Duncan)
+vif(m2)
+```
+
+If we include a categorical predictor, then we get GVIFs:
+
+```{r}
+m3 <- lm(prestige ~ income + education + type, data=Duncan)
+vif(m3)
+```
+
+In this case, it seems that the only apparent problem is with the `education` variable in the three-predictor model. We might try to correct this by excluding the education predictor. If we do, we see that the $R^2$ value of the model will not decrease by very much (since most of the information encoded in the education variable was already present in the others):
+
+```{r}
+summary(m3)$r.squared
+m4 <- update(m3, . ~ . -education)
+summary(m4)$r.squared
+```
+
+## Was it worth it?
+(How would we have done at sorting this out using graphical methods only? Check by creating a pairwise scatterplot using the Duncan data on your own.)
+
+
+<!--chapter:end:11-collinearity.Rmd-->
+
+
+```{r, setup-zeroinfl, include=FALSE}
+require(mosaic)   # Load additional packages here 
+require(ggformula)
+require(pscl)
+# Some customization.  You can alter or delete as desired (if you know what you are doing).
+theme_set(theme_bw(base_size=18)) # change default color scheme for lattice
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="small", cache=TRUE, message=FALSE, warning=FALSE,
+  fig.width = 3.5, fig.height = 2.2, fig.align = 'center', fig.show = 'hold')   # slightly smaller font for code
+```
+
+# Zero-Inflation
+Zero-inflated data are count data that:
+
+- Have a lot of zeros; **and**
+- It may not be appropriate to explain the extra zeros via a model for count data with overdispersion (NB or quasi-Poisson) because:
+    - There is too much overdispersion to account for this way
+    - The zeros in the data are of two classes: *true* zeros (definite absence) and *other* zeros (might have been a positive count but just happened to be a 0 this time).  
+
+## Reference material
+On the topic of zero-inflated data (as on many other topics), your book is ...terse! I have several copies of \url[Mixed models and extensions for ecology in R](https://highstat.com/index.php/mixed-effects-models-and-extensions-in-ecology-with-r) if you want to borrow -- You may want to check out Chapter 11 in that book.
+
+## Data for Example
+
+The state wildlife biologists want to model how many fish are being caught by fishermen at a state park. Visitors are asked how long they stayed, how many people were in the group, were there children in the group and how many fish were caught. Some visitors do not fish, but there is no data on whether a person fished or not. Some visitors who did fish did not catch any fish so there are excess zeros in the data because of the people that did not fish.
+
+We have data on 250 groups that went to a park. Each group was questioned about how many fish they caught (count), how many children were in the group (child), how many people were in the group (persons), and whether or not they brought a camper to the park (camper).
+
+In addition to predicting the number of fish caught, there is interest in predicting the existence of excess zeros, i.e., the probability that a group caught zero fish. We will use the variables child, persons, and camper in our model. Let's look at the data.
+
+```{r}
+zinb <- read.csv("https://stats.idre.ucla.edu/stat/data/fish.csv")
+head(zinb)
+
+zinb <- zinb %>% mutate(nofish=factor(nofish),
+                        livebait=factor(livebait),
+                        livebait = ifelse(livebait==0, 'No', 'Yes'),
+                        camper=factor(camper),
+                        camper = ifelse(camper ==0, 'No', 'Yes'),
+                        child_cat = factor(child))
+head(zinb)
+```
+
+## Visualization?
+In class, we created several figures for data exploration. They are not printed here.
+```{r, include = FALSE, results = 'hide', fig.show = 'hide'}
+gf_histogram(~count, data=zinb) %>%
+  gf_labs(y='Number of Observations', x='Fish Caught')
+
+gf_boxplot(count ~  factor(child), data=zinb)
+gf_boxplot(log(count) ~ livebait, data=zinb)
+gf_boxplot(log(count) ~ camper, data=zinb)
+```
+
+
+One idea was to make a pairs plot to look at possible collinearity. Good idea! But all our predictors are either yes/no or have very small ranges of integers as their values, so it doesn't prove very informative with our data - feel free to try for yourself to illustrate:
+
+```{r, eval=FALSE, echo=TRUE}
+require(GGally)
+ggpairs(zinb[, c('livebait', 'camper', 'persons', 'child')])
+```
+
+Another idea would be to plot response as a function of possible predictors, to check the linearity conditions of the parts of the model. This could be a good idea, but on the other hand we don't have any predictors that are unequivocally numerical. (If we had one, we could plot log(count) as a function of the predictor.)
+
+## Collinearity/Multicollinearity?
+We might want to check VIFs, but we can't compute them directly for a ZIP model (fitted later) using `vif()` from the `car` package.
+
+However, note: VIFs really depend mainly on the covariates, not the model fitted. We can check them effectively by fitting the Poisson model (and the logistic regression, if we had more than one predictor in that part of the model) and checking **its** VIFs:
+
+```{r}
+P <- glm(count ~ camper + child + persons, data=zinb, family=poisson)
+require(car)
+vif(P)
+```
+
+No evidence of any problem there!
+
+
+## Fitting models
+
+### Zero-inflated Poisson
+```{r}
+require(pscl)
+ZIP <- zeroinfl(count ~ child + camper + persons | 1, data = zinb,
+                dist = 'poisson')
+summary(ZIP)
+```
+
+### Zero-inflated NB: one way
+We can also use this function to fit a NB model. *BUT BEWARE:* this is a different parameterization of the NB model than the NB1 and NB2 models we use in `glmmTMB()` and may be closer to type 1 or type 2 depending on the dataset. You could compare all three NB versions via IC.
+
+```{r}
+ZINBx <- zeroinfl(count ~ child + camper + persons | 1, data = zinb,
+                  dist='negbin')
+summary(ZINBx)
+```
+
+#### What do the `summary()` outputs mean? 
+
+The second part of the output (labelled "Zero Inflation model coefficients") is from a logistic regression with one predictor (persons) to predict the probability of an observation being a "true zero" - a group that was not in the park to fish.  (We can't really tell from thsi output whether being there to fish, or not, is considered a true zero by the model...I figured it out by reading the help file for zeroinfl and looking at prediction plots below).  The first part of the out put (labelled "Count model coefficients") is a Poisson regression fitted to the count data for the proportion of the groups in the data set who were *not* true zeros (and were thus actually there to fish).  Both parts of the model can have predictors included; to have no predictors in the logistic regression part, you would use a formula like **y ~ x1 + x2 ... + xn | 1**, and to include the *same* predictors for both the Poisson and logistic parts, you exclude the **|...** part, for example ** y ~ x1+x2** is the same as **y ~ x1 + x2 | x1 + x2**.
+
+### Zero-inflated negative binomial (other way)
+
+```{r}
+require(glmmTMB)
+ZINB1 <- glmmTMB(count ~ child + camper + persons, ziformula = ~1, data=zinb, family=nbinom1(link='log'))
+ZINB2 <- glmmTMB(count ~ child + camper + persons, ziformula = ~1, data=zinb, family=nbinom2(link='log'))
+summary(ZINB1)
+```
+
+Note the difference from the `zeroinfl()` model formula and function call. There is an separate input, `ziformula`, to add zero inflation to a `glmmTMB()` model.  (The default is no zero inflation, if you do not include a `ziformula`). The zero-inflation model always uses a logit link.
+
+### Tweedie Model
+Another option for this type of data might be to try a Tweedie model, because it also has a probability mass at 0 (in other words, allows for zero inflation). The Tweedie distributions we are considering are not exactly perfect for count data since the positive part of the distribution is like a gamma distribution (continuous, not counts), but the shape and support of the distribution are pretty close to our data. Let's try:
+
+```{r}
+ZIT <- glmmTMB(count ~ child + camper + persons, data=zinb, family=tweedie(link = 'log'))
+summary(ZIT)
+```
+
+## Model Assessment
+We can do model assessment "like" we do for other count data models...more or less. (It is much harder to get something like Pearson residuals for these models, though...) *Please stay tuned!*
+
+## Model Selection?
+One thing to understand is: is the ZIP model a better fit to the data than just a Poisson model?  We can think of ZI as a different way of modelling overdispersion, an alternative to NB or quasi-Poisson models when we know there are true zeros in the data set.
+
+```{r}
+P <- glm(count ~ camper + child + persons, data=zinb, family=poisson)
+NB1 <- glmmTMB(count ~ camper + child + persons, data=zinb,
+              family=nbinom1(link='log'))
+NB2 <- glmmTMB(count ~ camper + child + persons, data=zinb,
+              family=nbinom2(link='log'))
+AIC(ZIP,P, NB1, NB2)
+```
+
+Well, yes, the ZIP model is much better than the Poisson! But, the NB1 and NB2 models are *much* better than both.
+
+Among the different families and types of models that we have tried, which seems to be best for this data set?
+
+```{r}
+BIC(P, ZIP, ZINB1, ZINB2, ZINBx, ZIT)
+```
+
+For these data, the zero-inflated models are very similar to the other NB models, in terms of the AIC.  If we used BIC instead, the non-zero inflated models would look quite a bit better! The improvement in goodness of fit with the zero-inflation is not really enough to make us prefer these ZI models to simpler models that also allow overdispersion, like the NB models.
+
+The NB models and the ZI models (with whatever "family" you choose) are two *different* ways of dealing with overdispersion caused by an abundance of zeros in the data. I'd recommend choosing ZI models if:
+
+- There are *true zeros* and *other zeros* in your data, and you want to model this explicitly; or if
+- The ZI models fit the data much better than a simpler non-ZI NB (or perhaps Tweedie) model.
+
+The zero-inflated negative binomial models seem to be best, among the ZI models. However, there is still a lot more work that could be done here!  For example...
+
+
+### Zero inflation covariates
+what if the Logistic regression part of the model *also* depends on covariates? That seems reasonable -- maybe the number of people present, whether they are camping, and the number of kids present would help you to predict whether a group was not going to go fishing at all.  To check that, we would need to change the `ziformula` (in NB models) or the part of the formula after the $\vert$ in ZIP models.  It is possible this change **might** make the ZI models competitive with, or better than, the non-ZI NB models in IC terms.
+
+### Interaction terms
+For this dataset, it may also make sense to consider some more predictors, and interaction terms. For example, maybe live bait use is a good predictor, and maybe the relationship between live bait use and number of fish caught changes depending on the number of children present -- for example, we might try something like:
+
+```{r}
+ZINB1b <- glmmTMB(count ~ camper + child*livebait + persons, ziformula= ~1, 
+                  data=zinb, family=nbinom1(link='log'))
+summary(ZINB1b)
+AIC(ZINB1, ZINB1b)
+```
+
+Hmmm...it looks like we made an improvement. But do you think the improvement is because of the interaction term?
+
+Looking at the p-values, we might suspect that while `livebait` helps predict fish caught, there isn't a clear interaction between effects of live bait use and the number of kids present.
+
+In this case, it is hard to fathom all the model selection options because there are predictors in *both parts* of the model. 
+
+If you continue by hand, one thing to remember is: You can **never** include an interaction term in a model without also including the corresponding "main effect" term. For example, you *can not* have an interaction between `child` and `livebait` without also having both `child` and `livebait` as individual predictors in the model. (In fact, I have intentionally not taught you how to fit the "wrong" model...as long as you use the * to specify an interaction in your model formula, you should be fine!)
+
+### Dredge
+We *can* also use dredge(), but:
+
+- It will only put covariates in/out of the model, not compare zero-inflated with non-zero-inflated models. 
+- It *will* put covariates in and out of both the zero-inflation and regular parts of the model. 
+
+So to do a comprehensive comparison, you would need to start with several full models -- one for each "family" you want to try, with and without ZI, and with all possible predictors included for both the count and ZI parts of the models -- and compare dredge results for all of them. 
+
+`dredge()` is also nice and smart about interaction terms -- it will never
+include an interaction unless the main effect terms are also present.
+
+```{r, message=FALSE, warning=FALSE}
+require(MuMIn)
+ZINB1c <- glmmTMB(count ~ child_cat*livebait + camper + persons, 
+                  ziformula = ~ child_cat + camper + persons, 
+                  data=zinb, family=nbinom1(link='log'), na.action = 'na.fail')
+ms <- dredge(ZINB1c, rank='AIC')
+head(ms)
+```
+
+In this case, which model do you think is best? What else might you try?
+
+## Prediction Plots
+We can also use prediction plots as usual. Here, they will help us clarify what "success" is in the logistic regression part of the model -- according to the help file for the `zeroinfl()` function, we should be able to see that a "success" is to be a "true zero".
+
+Let's try an example - making prediction plots for our ZIP model for different numbers of persons in the group.
+
+First let's check the range of the data for different variables:
+
+```{r}
+summary(zinb[,c('camper', 'child', 'persons')])
+```
+
+Now, the prediction plots:
+```{r}
+new_data <- data.frame(persons=c(1,2,3,4),
+                       camper='Yes',
+                       child=0)
+pred <- predict(ZIP, newdata=new_data)
+gf_point(pred~persons, data=new_data) %>%
+  gf_labs(x='People in Group', y='Number of Fish Caught')
+```
+
+
+The number of fish caught goes *up* as the number of people in the group goes up.  But persons was a predictor for the logistic regression (zero-inflation part) of the model! And its coefficient was estimated to have a negative value. So according to our model, the more persons in the group, the less likely you are to be a "true zero" (and the more likely you are to be in the park to fish). Therefore, the number of fish your group catches goes up.
+
+However, notice that unfortunately, the `predict()` function for `zerofinl()` ZIP models does not return standard errors on the fitted values. Shucks! We would have to compute these ourselves to show uncertainty on the prediction plot. We could use something called a parametric or nonparametric bootstrap to do it.  We may learn how to do this later on in the course, but for now we don't have a tool to do it.
+
+If you use one of the `glmmTMB()` models, though, you should be able to make prediction plots with uncertainty as usual. 
+
+## Acknowledgements
+Many thanks to: <https://stats.idre.ucla.edu/r/dae/zip/>, a source of the data set and information used in preparing these notes.
+
+
+<!--chapter:end:12-zero-inflation.Rmd-->
+
+
+```{r setup-ncv, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message=FALSE)
+require(mosaic)
+require(ggformula)
+theme_set(theme_bw(base_size=14))
+```
+
+# Non-constant variance (and other unresolved problems)
+So far, we have worked to assemble a tool-kit that allows us to fit appropriate regression models for a variety of types of response and predictor variables. If we fit an appropriate model (conditions are met) to an appropriate dataset (representative sample of the population of interest), we should be able to draw valid conclusions -- but as we have seen, if conditions are *not* met, then our conclusions (model predictions, judgements about which predictors are important, etc.) may all be unreliable. 
+
+So what can we do if we've fit the best model we know how to fit, and it's still not quite right? We have seen a number of examples so far where, even after we fit a model with what seem to be the right family and sensible predictors, conditions are not met. The most common problems are non-constant variance of residuals (often seen with non-normal residuals), and non-independent residuals.  Solutions for non-independent residuals are coming soon, in future sections. Here we'll review options (some already in our tool-kit, and some new) to try to improve the situation when non-constant variance (NCV) is present.
+
+What can we try if a model seems to fit data well, except for the fact that the constant variance condition doesn't hold (for linear regression) or the mean-variance relationship is not as expected (GLMs etc.)? (Note: this problem is also often accompanied by right skew in the distribution of the residuals.) Possible solutions are presented approximately in order of desirability...
+
+### Already in Our Tool Box: Make sure the model is "right"
+Improving the model specification sometimes corrects a problem with non-constant variance.  Make sure you have considered: 
+
+- Is the right "family" being used for the data type being modelled?
+- Are **all** the variables that you think are important predictors (and are available to you in the data) included in the model?
+<!-- If there is a need for random effects (or GEE clusters), are they included in the model? -->
+
+### Already in Our Tool Box: Models that estimate dispersion parameters
+Negative binomial (and quasi-Poisson) models include estimation of a dispersion parameter that helps to account for over- or under-disperion (that is - the variance is larger, or smaller, than the mean value). If one of these models is being used (or is appropriate for the data) - NCV should be accounted for! (We can also verify this: If all is working well, the Pearson residuals will have constant variance.)
+
+### Gamma GLMs
+**If** you are fitting a linear regression and:
+
+- The response variable of interest is non-negative, **and** 
+- There is right skew in residuals **and/or**
+- There is non-constant variance of residuals...
+
+You may want to try fitting a model using the **Gamma** family (`link = 'log'` or `link = 'inverse'` link functions are the most common).  If needed you can use model assessment plots and/or model selection criteria (AIC, BIC...) to decide between link functions. For example:
+
+```{r, eval=FALSE, echo=TRUE}
+gamma.mod <- glm(resp ~ pred1 + pred2, data=dataset,
+                 family=Gamma(link='log')) # or can use link='inverse'
+```
+
+
+### Beta GLMs
+If your response variable happens to be bounded between 0-1 (but NOT a probability, so that a binary data regression would not be appropriate), you can also try a Beta regression (using the beta distribution). Since the shape of the distribution is extremely flexible, it will help with residuals whose distribution is not as expected. The variance of the beta distribution also *does* depend on its mean, so it is likely to be better than a linear model at addressing NCV. A code example is below. You must use `glmmTMB()` to fit this model.
+
+```{r, eval=FALSE}
+beta_model <- glmmTMB(response ~ predictor1 + predictor2,
+                      data=my_data,
+                      family=beta_family(link='logit'))
+```
+
+### Transformations
+In some cases, a logarithmic or square-root transformation of the **response variable** can correct a problem with the variance of the residuals. This is most sensible as a solution if the `log(variable)` or `sqrt(variable)` makes some "sense" to a human...for example, if the response variable is `wages` in dollars, then `log10(wages)` is kind of the order of magnitude of the salary, which makes some sense as a measure of income. Another example: sound pressure is measured in $\mu Pa$, but we perceive sound logarithmically, so that a sound that has 10 times greater pressure "sounds" about twice as loud.  So `log10(sound_pressure)` could be a sensible metric.
+
+Why does this work?  These transformations don't affect the magnitude of *small* residual values very much, but they make *large* residuals get *a lot* smaller.  The result is that the histogram of residuals has less right skew and the large-magnitude residuals (the ones causing the "flare" of the "trumpet" in the residuals vs. fitted plot) get much smaller.
+
+```{r, echo=FALSE, fig.show='hold', fig.width=2.2, fig.height=2}
+require(ggformula)
+require(mosaic)
+d <- data.frame(orig=rgamma(500, 1,1))
+d$log <- log10(d$orig)
+d$sqrt <- sqrt(d$orig)
+gf_histogram(~orig, data=d) %>%
+  gf_labs(x='Untransformed\nResiduals')
+gf_histogram(~log, data=d) %>%
+  gf_labs(x='Log10-transformed\nResiduals')
+gf_histogram(~sqrt, data=d) %>%
+  gf_labs(x='Square-root\nTransformed\nResiduals')
+```
+
+### Modelling non-constant variance
+If your model is a linear regression, then there are a few specialized fitting functions that can allow you to fit models with non-constant variance of the residuals. 
+
+For multiple linear regression (original fit with **lm()**), you can use **gls()** from package **nlme** and add input *weights=varPower()* -- inputs are otherwise the same as for **lm()**. 
+
+```{r, eval=FALSE, echo=TRUE}
+require(nlme)
+nls(response ~ pred1 + pred2, data=dataset,
+    weights=varPower())
+```
+
+<!-- For random effects models fitted via **lmer()**, similar options are available, setting input *weights=varPower()* or (to allow different variance in each random effect group, or each group of another categorical variable) *weights = varIdent(form= ~1|categorical.variable)*. -->
+
+<!-- ```{r, eval=FALSE, echo=TRUE} -->
+<!-- require(lme4) -->
+<!-- # variance increases with some power of fitted value -->
+<!-- lmer(response ~ pred1 + pred2 + (~1|ID), data=dataset, -->
+<!--     weights=varPower()) -->
+<!-- # variance is different for each level of random effect: -->
+<!-- lmer(response ~ pred1 + pred2 + (~1|ID), data=dataset, -->
+<!--     weights=varIdent(form=~1|ID)) -->
+<!-- ``` -->
+
+*If you're interested in learning more about this method (and other options for specification of the form of the non-constant variance), see the references below in R (you will not be held responsible for the information contained in these help files for STAT 245 - just provided for further reference.)*
+
+```{r, echo=TRUE, eval=FALSE}
+?nlme::nls
+?nlme::varClasses
+```
+
+<!--chapter:end:13-NCV.Rmd-->
+
+
+
+```{r setup-re1, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE)
+pdf.options(useDingbats = TRUE)
+require(mosaic)
+require(ggformula)
+require(lme4)
+theme_set(theme_bw(base_size=12))
+```
+
+# Random Effects
+We have seen a number of cases where model residuals were not independent, violation regression model conditions. What kind of model can address this kind of *dependent* data? Hierarchical models - here, models including *random effects* - are one way to approach this problem. These kinds of models go by many names, including hierarchical models, multi-level models, random effects models,or mixed effects models.
+
+## Dataset
+From: Falcone et al. 2017, <http://rsos.royalsocietypublishing.org/content/royopensci/4/8/170629.full.pdf>
+
+Satellite tags were used to record dive data and movements of 16 Cuvier's beaked whales for up to 88 days each. The whales were incidentally exposed to different types of naval sonar exercises during the study period. How did characteristics of their dives change during sonar exposure? We will look specifically at shallow dive duration as a response variable. 
+
+```{r}
+d <- read.csv('http://sldr.netlify.com/data/zshal.csv')
+d$SonarA <- factor(d$SonarA)
+d$SonarB <- factor(d$SonarB)
+```
+
+## Data Exploration
+For these data, we are especially interested in how dive duration depends on sonar exposure. We also need to control for effects of other variables like depth and time of day.
+
+```{r, fig.width=3.5, fig.height=2, fig.show='hold'}
+gf_boxplot(DurAvg ~ factor(SonarA), data=d) %>%
+  gf_labs(x='Sonar A Presence', y='Dive Duration (min.)')
+gf_boxplot(DurAvg ~ factor(SonarB), data=d) %>%
+  gf_labs(x='Sonar B Presence', y='Dive Duration (min.)')
+gf_boxplot(DurAvg ~ TransClass, data=d) %>%
+  gf_labs(x='Time of Day', y='Dive Duration (min.)')
+gf_point(DurAvg ~ DepthAvg, data=d, alpha=0.5) %>%
+  gf_labs(x='Max. Depth (m)', y='Dive Duration (min.)')
+gf_point(DurAvg ~ SonarAPercOL.fill, data=d, alpha=0.5) %>%
+  gf_labs(x='Percent Sonar A Overlap', y='Dive Duration (min.)')
+gf_point(DurAvg ~ SonarBPercOL.fill, data=d, alpha=0.5) %>%
+  gf_labs(x='Percent Sonar B Overlap', y='Dive Duration (min.)')
+```
+
+## A Base Linear Model
+A starting point for these data would be a basic linear regression, because the response variable is continuous, and we don't have strong indication of nonlinear predictor-response relationships.
+
+```{r}
+base.model <- lm(DurAvg ~ DepthAvg + TransClass +   SonarA +
+                   SonarB +SonarAPercOL.fill +
+                   SonarBPercOL.fill, data=d)
+summary(base.model)
+```
+
+### Model assessment
+Let's take a look right away at the model assessment plot that we suspect will be problematic for time-series data like ours. As we fear...
+
+```{r, fig.width=6.5, fig.height=3.3}
+acf(resid(base.model), main='Residual ACF for base lm')
+```
+
+
+## A Random Effects model
+This time we will try to account for the correlation over time within individuals using something called a *random effect* model (also known as a *mixed effects model*, *multilevel level*, among others). How does this model change our regression equation?
+
+Recall that the form of a base linear model (with just 2 predictors) would be:
+
+$$ y = \beta_0 + \beta_1x_1 + \beta_2x_2 + \epsilon$$
+
+Where $\epsilon \sim N(0,\sigma)$ are the normally distributed residuals with mean 0.
+
+Now...
+\vspace{2in}
+
+### The Formula
+The function to fit a linear random effect model is `lmer()`. For a Poisson or Logistic regression with random effects, it's `glmer()`. Both are from the package `lme4`. We add random effects to the model formula with:
+
+$$ + (1|variable)$$
+
+or nested:
+
+$$ + (1|variable1/variable2)$$
+
+Let's try a random effect of individual whale first. We have:
+
+```{r}
+rem1 <- lmer(DurAvg ~ DepthAvg + TransClass +
+  SonarA + SonarB +SonarAPercOL.fill+ 
+    SonarBPercOL.fill + (1|TagID), 
+  data=d)
+```
+
+Why yes - we *should* consider rescaling...what/why/how?
+\vspace{0.5in}
+
+```{r}
+d$SonarAPercScale <- scale(d$SonarAPercOL.fill)
+d$SonarBPercScale <- scale(d$SonarBPercOL.fill)
+rem2 <- lmer(DurAvg ~ DepthAvg + TransClass +
+  SonarA + SonarB + SonarAPercScale + 
+    SonarBPercScale + (1|TagID), 
+  data=d)
+```
+
+### The Results
+
+```{r}
+summary(rem2)
+```
+
+How does this model compare to the original linear regression model? (Coefficient estimates? SEs? Additional stuff in the summary output?)
+
+\vspace{1.5in}
+
+### Model Assessment
+How have the model assessment plots changed? Here we'll focus mainly on the problem ACF.
+
+```{r, fig.width=6.5, fig.height=2}
+gf_point(resid(rem2)~fitted(rem2), alpha=0.5)
+```
+```{r, fig.width=6.5, fig.height=3}
+acf(resid(rem2))
+```
+
+
+### Refinement
+What can we try next?
+\vspace{1in}
+
+```{r}
+head(d, 3)
+rem3 <- lmer(DurAvg ~ DepthAvg + TransClass + SonarA +
+               SonarB +SonarAPercScale + SonarBPercScale +
+               (1|TagID/TagDayPeriod), data=d)
+```
+
+```{r, fig.width=6.5, fig.height=3}
+acf(resid(rem3))
+```
+
+## Model Selection for Mixed Models
+Can we use our standard likelihood-based model selection criteria with random effects models?
+
+Well...yes, and no.  
+
+### REML or ML?
+There are two different ways to fit these models to data:
+
+- by maximizing the likelihood (ML, as we learned about earlier in the course). Unfortunately, it turns out that in this case, the ML estimates of the variance components (the random effects) is biased, toward underestimating variance, when sample size is small.
+- by maximizing the restricted maximum likelihood (REML), which separates the likelhood into two parts (one with the fixed effects and one with the variance components). Maximizing parameters with respect to the second part only yields the REML estimators, which are unbiased and so preferred for smaller sample sizes. BUT there's a catch...REML values can be used to compare models with different error and random effects structures, but *not* to determine which predictor variables should remain in a best model. 
+
+Here, we do have a large sample size, so if we ensure our model is fitted by ML we can try using AIC or BIC for model selection.  The default of `lmer()` and `glmer()` is to use REML, so if we want ML we have to add the input REML=FALSE to our call.
+
+```{r}
+rem4 <- lmer(DurAvg ~ DepthAvg + TransClass + SonarA + SonarB +
+               SonarAPercScale +  SonarBPercScale +
+               (1|TagID/TagDayPeriod), data=d,
+             na.action='na.fail', REML=FALSE)
+```
+
+In doing model selection for random effects models, `dredge()` knows to keep the random effects terms present in all models, so we don't have to specify them as *fixed* terms.
+
+```{r}
+require(MuMIn)
+rem4_sel <- dredge(rem4, rank='BIC')
+head(rem4_sel)
+```
+
+### Best model so far:
+```{r}
+rem5 <- lmer(DurAvg ~ DepthAvg + TransClass + SonarA + SonarB +
+               (1|TagID/TagDayPeriod), data=d,
+             na.action='na.fail', REML=FALSE)
+```
+
+## Random Slopes?
+What we just practiced and called a "random effect" is sometimes also called a "random intercept" model because, although we allowed for an offset between the overall average predicted response value and that of an individual, we did not allow the *slope* of the relationship with any of the predictor variables to vary randomly with individual. It is possible to do this, although in my experience it often makes interpretation difficult.
+
+Before you do it, think to yourself: do you really think that there is random variation in the relationship of the predictor with the response? One case where random slopes will work well is where there is a strong, clear overall effect and small variations in its magnitude between individuals. Another might be where the relationship with a certain predictor has very strong and very different slopes for different individuals, and you want to account for the added variability this adds to the model.   
+
+In the `(g)lmer()` formula, a model with a random slope *and* intercept in relation to a particular predictor is specified with the form:
+
+$$ ... + (PredictorVariable | GroupingVariable)$$
+or equivalently
+$$ ... + (1 + PredictorVariable | GroupingVariable)$$
+
+If you want to have a random slope for a certain predictor *without* the corresponding random intercept ( I can't think of an example where this would be a good idea but you can do it), then use:
+
+$$ ... + (0 + PredictorVariable | GroupingVariable)$$
+
+## Prediction Plots
+There is a bit of added work involved in making prediction plots for some random effects models. 
+
+Unlike GEEs, which provide *marginal* predictions (predictions of the population average value for any combination of predictor variable values), random effects models provide predictions for an *average individual*. **For a linear regression model (or any model with the identity link function, that is, no link function), the predicted values for the population average and average individual are the same**.  But with a link function in the mix, **it's different**. Consider a (hypothetical) example of a logistic regression modelling probability of passing a test as a function of hours of instruction spent before the test.
+```{r, fig.width=3.5, fig.height=3.5, echo=FALSE, message = FALSE}
+require(RColorBrewer)
+colrs <- brewer.pal(5, 'Set2')
+gf_abline(intercept=~c(-2, -1, 0, 1, 2),
+          slope=~c(1,1,1,1,1),
+          color=colrs, lwd=2) %>% gf_lims(x=c(0,10),
+                                   y=c(-4,14))
+
+knitr::include_graphics('LogRegIndAve.png')
+```
+
+### Parametric bootstrap to the rescue!
+How can we get around this problem?  We can make predictions from our model for many, many (simulated) individuals to get a ``population" of predictions. Then, we can take a point-wise average over all those individuals (and also use them to find a CI), to get population average predictions and confidence intervals.
+
+We can do this with help from the function `bootMer()` from the `lme4` package.
+
+To make this work, we first need a **function** that makes **predictions from our model**.
+
+```{r}
+# function to make predictions from a fitted model
+require(s245)
+predict_rem4 <- function(model){
+  orig_dat <- model@frame
+  fixed_vals <- get_fixed(orig_dat[,c(2:ncol(orig_dat))])
+  new_dat <- get_new_data(orig_dat, predictor='SonarA', fixed_vals)
+  return(predict(model, newdata = new_dat, 
+                 type = "response", allow.new.levels=TRUE))
+}
+```
+
+`bootMer()` does parametric bootstrap simulations and each time, computes some function of the fitted model (here, predictions.) We can then examine the quantiles of these bootstrap predictions (the median or mean is our *estimate* or best-guess predicted value, and the *2.5 and 97.5 percentiles* are the *bounds of a 95 percent CI*).
+
+```{r, fig.width=6.5, fig.height=2.5}
+boot_rem4 <- bootMer(rem4, FUN = predict_rem4, nsim = 1000, 
+                     type = "parametric", use.u = FALSE)
+```
+
+```{r}
+glimpse(boot_rem4$t )
+```
+
+```{r, fig.width=6.5, fig.height=2.5}
+orig_dat <- rem4@frame
+fixed_vals <- get_fixed(orig_dat[,c(2:ncol(orig_dat))])
+new_dat <- get_new_data(orig_dat, predictor='SonarA',
+                          fixed_vals)
+new_dat <- new_dat %>%
+  mutate(pred = apply(boot_rem4$t, 2, mean),
+         CIlow = apply(boot_rem4$t, 2, quantile, probs=0.025),
+         CIhigh = apply(boot_rem4$t, 2, quantile, probs=0.975)
+         )
+
+gf_point(pred ~ SonarA, data=new_dat) %>%
+  gf_labs(x='Sonar A Presence', y='Dive Duration (min.)') %>%
+  gf_errorbar(CIlow + CIhigh ~ SonarA, data=new_dat, width=0.3)
+```
+
+ (Because...)
+ 
+```{r, error = TRUE}
+pred_plot(rem4, 'SonarA')
+```
+
+<!--chapter:end:14-random-effects.Rmd-->
+
+
+```{r setup-tmb-re, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache=TRUE, fig.width = 3, 
+                      message = FALSE, fig.height =1.5)
+pdf.options(useDingbats = TRUE)
+require(mosaic)
+require(ggformula)
+require(lme4)
+theme_set(theme_bw(base_size=12))
+```
+
+## Random effects with glmmTMB and standardized residuals
+In the previous chapter we considered fitting mixed-effects models with `lme4`. What about fitting the same models with package `glmmTMB`? And how can we assess expectations about residual variance for models like these?
+
+## Model for whale dive duration
+We start with our previous model for whale dive duration.
+
+```{r, include = FALSE}
+d <- read.csv('http://sldr.netlify.com/data/zshal.csv')
+d$SonarA <- factor(d$SonarA)
+d$SonarB <- factor(d$SonarB)
+```
+
+```{r}
+rem5 <- lmer(DurAvg ~ DepthAvg + TransClass + SonarA + SonarB +
+               (1|TagID/TagDayPeriod), data=d,
+             na.action='na.fail', REML=FALSE)
+```
+
+## glmmTMB
+We fitted these models using `lmer()` and `glmer()` from package `lme4`, which is probably the most commonly used R package to fit these models.  But we've also used `glmmTMB` in this course, and *it* can also fit random effects models. The syntax to add random effects to a `glmmTMB()` model is *exactly the same* as for the `lme4` functions.
+
+One difference is that for `glmmTMB()` **REML = FALSE is the default**.
+
+`glmmTMB` may be faster in some cases.
+
+```{r}
+require(glmmTMB)
+rem6 <- glmmTMB(DurAvg ~ DepthAvg + TransClass + SonarA + SonarB +
+               (1|TagID/TagDayPeriod), data=d,
+             na.action='na.fail', REML=FALSE)
+```
+
+If you view the summaries, you will see that `rem5` and `rem6` are basically identical (in terms of model coefficients and variance estimates).
+
+## Model assessment with scaled residuals
+For models where Pearson residuals are not helpful/can not be computed, one option is **scaled residuals** via simulation.
+
+- Simulate many replicates from the fitted model corresponding to each data observation
+- Examine the distribution of the simulated data, and use it to scale the observed value to get a "scaled residual" such that a residual of 0 means that *all simulated values are larger than the observed value*, and a *residual of 0.5 means half of the simulated values are larger than the observed value*, and a *residual of 1 means that the observed value is larger than all the simulated values.*
+
+**These scaled residuals should be uniformly distributed between 0 and 1, if the model is correct.**
+
+There is a much more detailed explanation in the [DHARMa package documentation](https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html#calculating-scaled-residuals) online.
+
+Example: computing scaled residuals, creating 1000 simulated datasets (don't lower it much below this to get good estimates). Note: use R chunk setting "message = FALSE" to print messages during simulation to your screen, rather than your knitted file.
+
+```{r}
+require(DHARMa)
+sims <- simulateResiduals(fittedModel = rem5, n = 1000)
+d <- d %>%
+  mutate(scaled_resids = sims$scaledResiduals,
+         fitted = fitted(rem5))
+```
+
+If our model is perfectly correct, we would expect:
+
+- Histogram of scaled residuals looks uniform between 0 and 1
+- Plot of scaled residual vs. fitted, or vs. any predictor, look uniform (evenly spread, no trends, constant in variance).
+
+```{r, fig.show = 'hold'}
+gf_histogram(~scaled_resids, data =d)
+gf_point(scaled_resids ~ fitted, data = d, alpha = 0.5)
+```
+
+### glmmTMB version
+
+```{r}
+sims2 <- simulateResiduals(fittedModel = rem6, n = 1000)
+d <- d %>%
+  mutate(scaled_resids_TMB = sims2$scaledResiduals,
+         fitted_TMB = fitted(rem6))
+```
+
+```{r}
+gf_point(scaled_resids_TMB ~ fitted_TMB, data = d, alpha = 0.5)
+```
+
+### You now have the power!
+You may use these scaled residuals for any of the models considered so far this semester. It is basically an alternative method of scaling residuals so that we know "how they should look" in residual plots.
+
+
+<!--chapter:end:15-RandomEffects-resids-glmmTMB.Rmd-->
+
+```{r, setup-gee, include=FALSE}
+require(mosaic)   
+require(ggformula)
+require(tidyverse)
+require(s245)
+require(MuMIn)
+theme_set(theme_bw(base_size=18))
+knitr::opts_chunk$set(
+  tidy=FALSE,     # display code as typed
+  size="footnotesize",   # slightly smaller font for code
+  fig.width=3.5, fig.height=2, fig.show='hold')
+```
+
+# GEEs
+So far, we looked at random effects as one way to account for non-independence of residuals due to a variable that we don't want to include as a regular predictor. Another option for this kind of situation is to use Generalized Estimating Equations (GEEs).
+
+## Data Source
+The dataset used here is industry data from a skin care company. It contains data from experiments with 20 subjects. Each person tested 6 different skin moisturizers, and the hydration level of their skin was measured every 2 hours for 24 hours following application of each product.
+The variables are:
+
+- `Subjects` Numeric code identifying the person
+- `CorneoDiff` The hydration CorneoDiff
+- `Time` Time in hours since product application
+- `Product` Which product was used
+
+The data file can be accessed online at:
+
+<http://sldr.netlify.com/data/hydrationData.csv>
+
+```{r, hyddat, echo=FALSE, fig.width=6.5, fig.height=2.5}
+hyd <- read.csv('http://sldr.netlify.com/data/hydrationData.csv')
+hyd <- hyd %>% mutate(Subjects = factor(Subjects),
+                      Product = factor(Product))
+hyd.sm <- hyd %>% dplyr::filter(Subjects %in% c('1', '2', '3','4','5', '6'))
+```
+
+## Data Exploration
+We would like to model the hydration, `CorneoDiff`, over time and as a function of product.
+
+```{r, fig.width=7, fig.height=3.5, warning=FALSE}
+gf_point(CorneoDiff ~ Time | Product, data=hyd.sm) %>%
+  gf_lims(x=c(0,24)) 
+```
+
+```{r, fig.width=7, fig.height=3.5, warning=FALSE}
+gf_point(CorneoDiff ~ Time | Subjects, color=~Product, data=hyd.sm) %>%
+  gf_line(CorneoDiff ~ Time | Subjects, color=~Product, data=hyd.sm) %>%
+  gf_lims(x=c(0,24)) 
+```
+
+## Linear Regression
+We could try just fitting a linear regression. What do you expect?
+
+```{r}
+lm1 <- lm(CorneoDiff ~ Time + Product, data=hyd.sm)
+summary(lm1)
+```
+
+```{r, fig.width=7, fig.height=3.5, warning=FALSE}
+gf_point(CorneoDiff ~ Time | Subjects, color=~Product, data=hyd.sm) %>%
+  gf_line(CorneoDiff ~ Time | Subjects, color=~Product, data=hyd.sm) %>%
+  gf_lims(x=c(0,24))  %>%
+  gf_abline(intercept=7.86, slope=0.05608)
+```
+
+## Model Assessment
+For the linear regression:
+```{r, fig.width=6, fig.height=3.5}
+acf(resid(lm1))
+```
+
+```{r, fig.width=6, fig.height=3.5}
+hyd.sm <- arrange(hyd.sm,Time, Subjects)
+lm1 <- lm(CorneoDiff ~ Time + Product, data=hyd.sm)
+acf(resid(lm1))
+```
+
+*As we expected, things do not look good...*
+
+## Linear Regression
+We tried a linear regression and encountered two problems:
+
+- The residuals are not independent.  There seems to be correlation over time within subjects.
+- We can't account for inter-person differences unless we include person as a predictor, but we don't want to do that, because if we do we can not make predictions from the fitted model without specifying which of these exact people we want to predict for.  That's not ideal - we want predictions for all people, or at least averaged over all people.
+
+## Generalized Estimating Equations (GEEs)
+A potential solution we will invesitgate today is to use a generalized estimating equation (GEE) instead of a GLM.  GEEs:
+
+- Are a ``PA" model:
+- Work by changing...
+</br>
+</br>
+</br>
+</br>
+
+What residual correlation structures can be accomodated in this framework?
+
+- Independence (`corstr=`independence'`)
+- Exchangeable = Block Diagonal (`corstr=`exchangeable'`)
+- AR1 (first-order auto-regressive) (`corstr=`ar1'`)
+- Unstructured (CAUTION!) (`corstr=`unstructured'`)
+
+### Fitting GEEs with different correlation structures
+
+```{r,}
+require(geepack)
+hyd <- arrange(hyd, Subjects, Time)
+lm1 <- lm(CorneoDiff ~ Time + Product, data=hyd)
+summary(lm1)
+gee.ind <- geeglm(CorneoDiff ~ Time + Product, data=hyd, 
+                  id = Subjects, corstr='independence')
+summary(gee.ind)
+gee.ar1 <- geeglm(CorneoDiff ~ Time + Product, data=hyd,
+                  id = Subjects, corstr='ar1')
+summary(gee.ar1)
+gee.exch <- geeglm(CorneoDiff ~ Time + Product, data=hyd, 
+                   id = Subjects, corstr='exchangeable')
+```
+
+What is **the same** (or similar) and what is very **different** between the models?
+
+### Comparing different correlation structures}
+
+We can use a specific variance of QIC, $QIC_{R}$, to compare models with different correlation structures:
+
+```{r,}
+require(MuMIn)
+QIC(gee.ind, gee.exch, gee.ar1, typeR=TRUE)
+```
+
+How can we interpret this result?
+
+## GEE model assessment
+Model assessment for a GEE is mostly the same as for the corresponding linear regression or GLM (Poisson, Logistic, etc.)
+
+We were using GEEs to try to correct for issues with non-independent residuals.  How does the residual plot change for a GEE relative to the corresponding (g)lm? *Does* it change? *Should* it?
+
+```{r,fig.width=3.5, fig.height=2.8}
+acf(resid(lm1), main='LM ACF')
+acf(resid(gee.ind), main='GEE ACF')
+```
+
+**What is going on here?**
+
+## Model Selection - Which variables?
+We can use another variant of the QIC to do model selection to determine which variables are important to retain in a GEE model.
+
+```{r}
+gee.ind <- update(gee.ind, na.action='na.fail')
+dredge(gee.ind, rank='QIC', typeR=FALSE)
+```
+
+How would you interpret these results and present them to the cosmetics company that collected the data?
+
+
+## Prediction Plots
+As for models we studied previously, we can make prediction plots to visualize the relationships a model specifies between the predictor and response variables.
+
+However, we can not use `predict()` to get model predictions **with standard errors** from a GEE.
+
+`pred_plot()` works, though; for example:
+
+```{r}
+s245::pred_plot(gee.ind, 'Product') %>%
+  gf_labs(y = 'CorneoDiff')
+```
+
+Once again we're grateful for the parametric bootstrap! (This time, `pred_plot()` is silently doing the work for us.)
+
+
+<!--chapter:end:16-GEE-Motivation.Rmd-->
+
+
+```{r setup-corstr, include=FALSE}
+require(tidyverse)
+knitr::opts_chunk$set(echo = TRUE, fig.width=6.5, fig.height=2.5)
+```
+
+# Correlation Structures
+This section is an appendix to the GEE chapter, to illustrate and discuss the different correlation structures that we can specify when fitting a GEE.
+
+### Variance/Covariance or Correlation?
+Statisticians often talk about a model's **variance-covariance** matrix (which gives residual variance on the diagonal and covariance between residuals in its off-diagonal elements).  Here we will consider **correlation** matrices instead. This will give us a simplified way of looking at similar ideas. In a correlation matrix, the diagonal entries will be all 1s (the correlation of something with itself is 1), and off-diagonal elements will show correlation between residuals. 
+
+### Example Case
+Let's consider an example for a dataset with 9 observations; three observations for each of three individuals. *(Side note: The groupings causing non-independence in the residuals don't have to be "individuals" -- it could be some other relationship, like being from the same school or town or country or ethnic group -- any single categorical variable that defines the groups of interest and induces non-independence withing the groups, could work. Here we are just calling them "individuals" for convenience, and because when time-series data are collected on multiple individuals, this kind of model often works well.)*
+
+Each of the correlation matrices below has one row and one column for each observation.
+
+The *diagonal* entries will all, always, be 1.
+
+The *off-diagonal* entries indicate how the different residuals depend on each other -- in other words, they describe mathematically exactly *how* each residual is correlated with the others.
+
+We will use the letter $\rho$ for correlations.
+
+### Independence
+If the residuals are all independent of each other, then all the correlations between them will be zero:
+
+$$
+\begin{vmatrix}
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1\\
+\end{vmatrix}
+$$
+
+This corresponds to all of the models we have considered previously in class (which all have a condition that residuals should be independent).
+
+### ACF Example
+The residual ACF from a model fitted to data that perfectly embody this structure with 5 observations per individual might look like:
+
+```{r, echo=FALSE}
+d <- data.frame(r = as.numeric(arima.sim(model = list(), n=5)))
+while(nrow(d) < 100){
+  a <- data.frame(r = as.numeric(arima.sim(model = list(), n=5)))
+  d <- bind_rows(d,a)
+}
+acf(d$r, main='Residual ACF')
+
+```
+
+### Exchangeable = Block Diagonal
+In an exchangeable or block diagonal structure, all residuals for one individual are equally correlated (correlation = $\rho$). All residuals from different individuals are independent (correlation = 1).
+
+$$
+\begin{vmatrix}
+1 & \rho & \rho & 0 & 0 & 0 & 0 & 0 & 0\\
+\rho & 1 & \rho & 0 & 0 & 0 & 0 & 0 & 0\\
+\rho & \rho & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & \rho &\rho & 0 & 0 & 0\\
+0 & 0 & 0 & \rho & 1 & \rho & 0 & 0 & 0\\
+0 & 0 & 0 & \rho & \rho & 1 & 0& 0& 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & \rho & \rho\\
+0 & 0 & 0 & 0 & 0 & 0 & \rho & 1 & \rho\\
+0 & 0 & 0 & 0 & 0 & 0 & \rho & \rho & 1\\
+\end{vmatrix}
+$$
+
+#### ACF Example
+The residual ACF from a model fitted to data that perfectly embody this structure would show non-independence in the residual ACF, out to about the number of lags that there are observations per individual, but the autocorrelation coefficients would not decline at exactly the rate predicted by an AR(1) process (see below). 
+
+
+
+### AR1 (first-order autoregressive process)
+In this structure, we again assume that residuals are uncorrelated (independent) between individuals.
+
+Within an individual, we assume measurements that are closer to one another are more correlated.  More precisely, we say that observations 1 lag apart have correlation $\rho$; observations 2 lags apart have correlation $\rho^2$; three lags apart $\rho^3$, and so on.
+
+To illustrate this, I show below a correlation structure for a model with 10 observations: 5 observations from each of 2 individuals.
+
+$$
+\begin{vmatrix}
+1 & \rho & \rho^2 & \rho^3 & \rho^4 & 0 & 0 & 0 & 0 & 0\\
+\rho & 1 & \rho &\rho^2 & \rho^3 & 0 & 0 & 0 & 0& 0\\
+\rho^2 & \rho & 1 & \rho & \rho^2 & 0 & 0 & 0 & 0& 0\\
+\rho^3 & \rho^2 & \rho & 1 & \rho & 0 & 0 & 0 & 0& 0\\
+\rho^4 & \rho^3 & \rho^2 & \rho & 1 & 0 & 0 & 0 & 0& 0\\
+0 & 0 & 0 & 0 & 0 & 1 & \rho & \rho^2 & \rho^3 & \rho^4\\
+0 & 0 & 0 & 0 & 0 & \rho & 1 & \rho &\rho^2 & \rho^3\\
+0 & 0 & 0 & 0 & 0 & \rho^2 & \rho & 1 & \rho & \rho^2 \\
+0 & 0 & 0 & 0 & 0 & \rho^3 & \rho^2 & \rho & 1 & \rho\\
+0 & 0 & 0 & 0 & 0 & \rho^4 & \rho^3 & \rho^2 & \rho & 1\\
+\end{vmatrix}
+$$
+
+
+#### ACF Example
+The residual ACF from a model fitted to data that perfectly embody this structure with $\rho=0.99$ and 5 observations per individual, might look like:
+
+```{r, echo=FALSE}
+d <- data.frame(r = as.numeric(arima.sim(model = list(ar = 0.99), n=5)))
+while(nrow(d) < 100){
+  a <- data.frame(r = as.numeric(arima.sim(model = list(ar = 0.99), n=5)))
+  d <- bind_rows(d,a)
+}
+acf(d$r, main='Residual ACF')
+```
+
+### Unstructured
+This one is not of practical use because it is so hard to estimate.
+
+$$
+\begin{vmatrix}
+1 & \rho_{1,2} & \rho_{1,3} & 0 & 0 & 0 & 0 & 0 & 0\\
+\rho_{1,2} & 1 & \rho_{2,3} & 0 & 0 & 0 & 0 & 0 & 0\\
+\rho_{1,3} & \rho_{2,3} & 1 & 0 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & \rho_{1,2} & \rho_{1,3} & 0 & 0 & 0\\
+0 & 0 & 0 & \rho_{1,2} & 1 & \rho_{2,3}& 0 & 0 & 0\\
+0 & 0 & 0 & \rho_{1,3} & \rho_{2,3} & 1&0 & 0 & 0\\
+0 & 0 & 0 & 0 & 0 & 0 & 1 & \rho_{1,2} & \rho_{1,3}\\
+0 & 0 & 0 & 0 & 0 & 0 & \rho_{1,2} & 1 & \rho_{2,3}\\
+0 & 0 & 0 & 0 & 0 & 0 & \rho_{1,3} & \rho_{2,3} & 1\\
+\end{vmatrix}
+$$
+
+<!--chapter:end:17-corr-struct.Rmd-->
+
+# Other Model Selection Approaches
+The way we have been doing model selection thus far is *definitely* not the only way. What other options are out there? Many - let's consider a few.
+
+This section also includes some miscellaneous R notes (making summary tables, and sources of inspiration for cool figures).
+
+### Rationale
+Until now, we have focused on using information criteria for model selection, in order to get very familiar with one coherent framework for choosing variables across model types.  But:
+
+- In some fields, using hypothesis tests for variable selection is preferred
+- For datasets that are large and/or models that are complex, `dredge()` can be a challenge (taking a very long time to run and perhaps timing out on the server)
+- Using hypothesis tests for selection is quite common, so we should know how it's done!
+
+### Hypotheses
+Basically, for each (fixed effect) variable in a model, we'd like to test:
+
+$$H_0: \text{all } \beta\text{s for this variable are 0; it's not a good predictor}$$
+$$H_1: \text{ at least one } \beta\text{ is non-zero; it's a good predictor}$$
+
+We want to test these hypotheses *given that all the other predictors in the current full model are included*. Because of this condition, and because there are *multiple $\beta$s* for categorical predictors with more than 2 categories, we can **not** generally just use the p-values from the model `summary()` output.
+
+Instead, we use `Anova()` from the package `car`.  `lm()` example:
+
+```{r, message = FALSE}
+iris_mod <- lm(Petal.Length ~ Petal.Width + Species + Sepal.Length, data = iris)
+summary(iris_mod)
+require(car)
+Anova(iris_mod)
+```
+
+Notice that `Anova()` reports *one* p-value for each predictor (excellent!). If the p-value is small, that gives evidence against $H_0$, and we'd conclude we should keep the predictor in the model. Many people use $\alpha = 0.05$ as the "dividing line" between "small" and "large" p-values and thus "statistically significant" and "non-significant" test results, but remember the p-value is a probability - there's no magical difference between 0.049 and 0.051.
+
+*Warning: be careful with your capitalization! The R function `anova()` does someting kind of similar to `Anova()` but* **NOT** *the same and should be avoided -- it does sequential rather than marginal tests.*
+
+## Backward selection
+How do we use p-value-based selection to arrive at a best model? There are many options and much controversy about different approaches; here I'll suggest one. None of these methods are guaranteed to arrive at a model that is theoretically "best" in some specific way, but they do give a framework to guide decision-making and are computationally quick. The premise is that we'd like a simple algorithm to implement, and we will begin with a full model including all the predictors that we think *should* or *could* reasonably be important (not just throwing in everything possible).  
+
+### Algorithm
+
+- Obtain p-values for all predictors in full model
+- Remove the predictor with the largest p-value that you judge to be "not small" or "not significant"
+- Re-compute p-values for the new, smaller model
+- Repeat until all p-values are "significant"
+
+### Example
+Let's consider a logistic regression to predict whether a person in substance-abuse treatment is homeless.
+
+```{r}
+home_mod0 <- glm(homeless ~ sex + substance + i1 + cesd + 
+                  racegrp + age,
+                data = HELPrct, family = binomial(link = 'logit'))
+Anova(home_mod0)
+```
+
+Removing `age`:
+
+```{r}
+home_mod <- update(home_mod0, .~. - age)
+Anova(home_mod)
+```
+
+Removing `racegrp`
+
+```{r}
+home_mod <- update(home_mod, .~. - racegrp)
+Anova(home_mod)
+```
+
+Remove `cesd` (a score indicating depression level)
+
+```{r}
+home_mod <- update(home_mod, .~. - cesd)
+Anova(home_mod)
+```
+
+Remove `substance`
+
+```{r}
+home_mod <- update(home_mod, .~. - substance)
+Anova(home_mod)
+```
+
+Remove `sex`
+
+```{r}
+home_mod <- update(home_mod, .~. - sex)
+Anova(home_mod)
+```
+
+### Can't this be automated?
+Strangely...functions are not widely available.
+
+### Stepwise IC-based selection
+Another option may be to use **backward stepwise selection** (same algorithm as above), but using AIC or BIC as the criterion at each stage instead of p-values. If the IC value is better (by *any* amount) without a variable, it gets dropped. Variables are dropped one by one until no further IC improvement is possible.
+
+This evaluates many fewer models than `dredge` so should be much faster, but may not find the best of all possible models.
+
+For example, for our model using AIC (*note: this may or may not work for all model types.*):
+
+```{r, message = FALSE}
+require(MASS)
+stepAIC(home_mod0)
+```
+
+Note that we might want to still remove *one more* variable than `stepAIC()` does! Above, you see that if you were to remove `age`, the AIC would only go up by about 1 unit. So according to our $\Delta AIC \sim 3$ threshold, we would take `age` out too.
+
+Using BIC instead, we need to specify the input `k = log(nrow(data))` (the BIC penalty multiplier):
+
+```{r}
+stepAIC(home_mod0, k = log10(nrow(HELPrct)))
+```
+
+To get less verbose output, set `trace = 0` -- but then you won't know whether it would make sense to perhaps remove additional variables...
+
+```{r}
+stepAIC(home_mod0, k = log10(nrow(HELPrct)), trace = 0)
+```
+
+## Summary tables
+You may want to compute and display summary tables for your projects. Here are a few examples of how to do it.
+
+### Mean (or sd, median, IQR, etc.) by groups
+Compute the mean and sd (could use any other summary stats you want, though) for several quantitative variables, by groups.
+
+Example: find mean and sd of iris flower `Petal.Length` and `Petal.Width` by `Species` and display results in a pretty table. The dataset is called `iris`.
+
+Make a little one-row table for each variable being summarized, then stick them together.
+
+```{r, message = FALSE}
+require(knitr)
+
+length_stats <- iris %>% 
+  df_stats(Petal.Length ~ Species, mean, sd, long_names = FALSE) %>%
+  mutate(variable = 'Petal Length')
+
+width_stats <- iris %>% 
+  df_stats(Petal.Width ~ Species, mean, sd, long_names = FALSE) %>%
+  mutate(variable = 'Petal Width')
+
+my_table <- bind_rows(length_stats, width_stats)
+
+kable(my_table)
+```
+
+What if we want to round all table entries to 2 digits after the decimal?
+
+```{r}
+kable(my_table, digits = 2)
+```
+
+What if we want the column order to be Variable, Species, mean, sd, and sort by Species and then Variable?
+
+```{r}
+my_table <- my_table %>%
+  dplyr::select(variable, Species, mean, sd) %>%
+  arrange(Species, variable)
+kable(my_table, digits = 2)
+```
+
+What if we actually want a column for mean length, sd length, etc. and one row per species?
+
+```{r}
+require(tidyverse)
+my_table2 <- my_table %>%
+  pivot_wider(names_from = variable, 
+              values_from = c("mean", "sd"),
+              names_sep = ' ')
+kable(my_table2, digits = 2, align = 'c')
+```
+
+### Proportions in categories by groups
+You may also want to make a table of proportion observations in each category by groups, potentially for many variables.
+
+For just one variable, we can use tally:
+
+```{r}
+tally(~substance | sex, data = HELPrct, format = 'prop') %>%
+  kable(caption = 'Proportion using each substance', digits = 2)
+```
+
+For many variables we can use a loop. For example, we might want to know the proportion homeless and housed **and** proportion using each substance, both by sex, from the `HELPrct` dataset. Above we were using the function `knitr::kable()` to make tables, but we can use `pander::pander()` too:
+
+```{r}
+# select only variables needed for the table
+# make the first variable the groups one
+cat_data <- HELPrct %>% dplyr::select(sex, substance, homeless) 
+
+for (i in c(2:ncol(cat_data))){
+tally(~cat_data[,i] | cat_data[,1], format = 'prop') %>% 
+    pander::pander(caption = paste('Proportion in each ',
+                                   names(cat_data)[i]))
+  # can rename variables in cat_data if you want better captions
+  }
+```
+
+## Figures
+We've made a lot of figures in this class, and almost all have been kind of mediocre.  To aim for awesome, here are a couple of great references for inspiration, ideas, and best practices:
+
+- *Fundamentals of Data Visualization* by Claus Wilke. <https://serialmentor.com/dataviz/>
+- <https://infogram.com/blog/20-best-data-visualizations-of-2018/>
+- visualizingdata.com blog
+  - <https://www.visualisingdata.com/2019/08/10-significant-visualisation-developments-january-to-june-2019/>
+  - <https://www.visualisingdata.com/2016/03/little-visualisation-design/>
+
+<!--chapter:end:18-anova-plus.Rmd-->
+
+
+```{r, setup-gams, include=FALSE}
+require(mosaic) 
+require(ggformula)
+theme_set(theme_bw(base_size=14))
+knitr::opts_chunk$set(
+  tidy=FALSE, echo=TRUE, 
+  size="small", message=FALSE, results='markup',
+  fig.width=6, fig.height=3.5, cache=FALSE)
+```
+
+# GAMs: Generalized Additive Models
+So far, we have learned ways to model continuous, logical, and count response variables as functions of quantitative and categorical predictors.  We started with linear models - where both the response and predictor variables are quantitative and the relationship between them is *linear*.  What about nonlinear relationships?
+
+So far, we have considered...
+
+- **Categorical predictor variables**. Making use of indicator variables for (all but one of the) categories, we can model a situation where each value of the predictor variable has a different effect on the response. But...
+    - How many categories?
+    - What about periodicity?
+- **GLMs**. In logistic, Poisson, etc. regression, the action of the link function results in a relationship between the predictors and the response variable that is linear on the scale of the link function ( = scale of the RHS of the equation), but non-linear on the scale of the response variables (LHS). But...
+    - Nonlinear, but **monotonic**
+
+## Non-linear, non-monotonic relationships
+It's not true that all interesting predictor-response relationships are linear or monotonic. One example is in some data on bat migration: how does the probability of bats leaving on their migratory journey depend on air humidity?
+
+```{r}
+bats <- read.csv('https://ndownloader.figshare.com/files/9348010')
+```
+
+```{r, include = FALSE}
+    # old url: 'http://rsbl.royalsocietypublishing.org/highwire/filestream/33982/field_highwire_adjunct_files/2/rsbl20170395supp3.csv')
+```
+
+```{r,fig.width=6.5, fig.height=2, fig.show = 'hold', echo = FALSE}
+gf_boxplot(relativehumid ~ factor(migration), data = bats)
+
+bats <- bats %>%
+  mutate(humid_bins = cut(bats$relativehumid, breaks=7))
+
+bats2 <- bats %>%
+   group_by(humid_bins) %>%
+  summarize(migration_prop = prop(~migration == 1)) %>%
+  ungroup()
+
+gf_point(migration_prop ~ humid_bins, data = bats2) %>% 
+  gf_labs(x='Relative Humidity', y='Proportion Migrating')
+```
+
+Another dataset (our example for the day) -- ozone levels as a function of solar radiation (`rad`), temperature (`temp`) and wind speed (`wind`):
+
+```{r, fig.width=2.2, fig.height=2, fig.show='hold'}
+oz <- read.csv('http://geog.uoregon.edu/GeogR/data/csv/ozone.csv')
+gf_point(ozone ~ rad, data=oz, alpha=0.4)
+gf_point(ozone ~ temp, data=oz, alpha=0.4)
+gf_point(ozone ~ wind, data=oz, alpha=0.4)
+```
+
+
+## Smooth terms
+We can fit a model where the relationship between the response and the predictor is a ``smooth" -- no linearity or monotonicity requirement.
+
+### Basis functions
+
+- A smooth term is constructed as the sum of several parts, or *basis functions*. Each of these functions has a relatively simple shape, but scaled and added together, they can produce nearly any ``wiggly" shape. 
+- Increasing the dimension of the basis (more functions added together) can allow more wiggliness. 
+- Goal: allow enough wiggliness to fit the data well, without *overfitting* (smooth goes through every point in the data, or follows ``trends" that are spurious)
+
+
+We will fit smooth models to data using the function `gam()` from the package `mgcv`.  It includes many options for basis functions (types of smooths) - see `?mgcv::gam` or [https://rsconnect.calvin.edu:3939/content/28/] for details.
+
+## Fitting GAMs
+
+An excellent resource: <https://converged.yt/mgcv-workshop/>.
+
+### Choosing model formulation
+Which terms should be modelled as smooth terms? Explore the data!
+
+- Pros:
+- Cons:
+
+### Model formula
+
+Let's fit a simple GAM for the ozone data as a function of radiation, temperature and wind. Note the `s()` function for specifying a smooth, which takes as input:
+
+- a variable name (or more than one, for advanced users)
+- `k`
+- `bs`
+
+How do we choose? For some exploration, see: [https://rsconnect.calvin.edu:3939/content/28/].
+
+We can also fit the model and smooths by different methods and with options:
+
+- `method = 'GCV.Cp'`
+- `method = 'REML'`
+- `method = 'ML'`
+- `select = TRUE` (or `FALSE`)
+
+
+```{r, fig.show='hold', fig.width=2.2, fig.height=2.25, results='markup'}
+require(mgcv)
+oz.gam <- gam(ozone ~ s(rad, k=5, bs='tp') +
+                s(wind, k=5, bs='tp') +
+                s(temp, k=5, bs='tp'), data=oz,
+              method='REML', select=TRUE)
+par(mar=c(4,4,2,2))
+plot(oz.gam)
+summary(oz.gam)
+```
+
+## Model Assessment
+In addition to what you already know (...which all still holds, except linearity expectation!) `mgcv` has some nice model checking functions built in.
+
+```{r, fig.show='hold', fig.width=5.5, fig.height=3.5, results='markup'}
+par(mar=c(4,4,2,2))
+gam.check(oz.gam)
+```
+
+### Concurvity
+Like collinearity and multicollinearity, but for smooths...values of 0 indicate no problem, and 1 a huge problem (total lack of identifiability -- same information in multiple predictors).
+
+
+Overall, does the model have problems with concurvity?
+
+```{r}
+concurvity(oz.gam, full=TRUE)
+```
+
+Or alternatively, which specific pairs of terms cause problems?
+
+```{r}
+concurvity(oz.gam, full=FALSE)
+```
+
+## Model Selection
+### Shrinkage and Penalties
+With GAMs, in a sense, some model selection is (or can be) done during model fitting - what smooth is best? Or is the relationship a line? A flat line?  Using *shrinkage* basis or including `select=TRUE` allows for this.
+
+### P-value selection
+Cautions: **p-values are approximate!** Successfulness of the procedure best when fitting method is: ML (1st choice), REML (2nd choice).
+
+```{r, results = 'hide'}
+anova(oz.gam)
+```
+
+Interpretation as usual. Note that `anova()` (not `Anova()`) works here - especially for GAMs, it does *not* do sequential tests; and `Anova()` doesn't handle GAMs.
+
+### Information criteria
+
+- Conditional/Approximate - bias
+- Fitting method: 
+  - REML-based IC scores can be used to compare models with different *random effects* but **not** different predictors. (IF `select = TRUE` and using a shrinkage basis.)
+  - ML-based IC scores can be used to compare models with different fixed effects (regular predictors) and different `family`, but **not** different random effects 
+
+```{r}
+require(MuMIn)
+oz.ml <- update(oz.gam, method='ML', na.action='na.fail')
+head(dredge(oz.ml, rank='AIC'),2)
+```
+
+
+<!--chapter:end:19-gams.Rmd-->
+
+`r if (knitr:::is_html_output()) '
+# References {-}
+'`
+
+<!--chapter:end:19-references.Rmd-->
+
