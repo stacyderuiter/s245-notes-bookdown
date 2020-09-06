@@ -215,9 +215,26 @@ Notice that in this chapter, we are building up from a simpler model to a more c
 
 **But this is ** *not* **how to build a model in practice**.  Recall, we agreed to think carefully and choose a reasonable set of predictors to use at the outset, doing as much of the work as possible before even looking at the dataset. Our $p < \frac{n}{15}$ rule gives a rough limit to the maximum number of parameters we can estimate. If we do otherwise, we have to be cautious and know all our conclusions are on much shakier ground.
 
-How can we know if the model with more predictors is "better"? (For a more detailed answer, wait about a week...) But before we can define a "better" model: how did R find the "best" intercept and slopes?
+### Estimation
 
+But...how did R come up with those estimates of the slope and intercept (and residual standard deviation) parameters? 
 
+In the simple linear regression case, it's easy to visualize:
+
+```{r, echo = FALSE, fig.width = 7, fig.height = 3}
+bonobos <- bonobos %>%
+  mutate(sr = resid(slr),
+         sp = predict(slr))
+gf_point(fWHR ~ AssR, data=bonobos) %>% 
+  gf_lm(color = 'black', size = 2) %>%
+  gf_segment(fWHR + sp ~ AssR + AssR, color = 'brown2', size = 0.6)
+```
+
+The *best* line is the one that makes the residuals the smallest (by going right through the middle of the points). OK, let's be careful: some residuals are positive and some are negative, and we want the line that minimizes their magnitude. The traditional approach is to choose the slope that minimizes the sum of the squared residuals, 
+
+$$ SSE = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2$$
+
+How does this work when we have *multiple* predictors?  It's harder to draw, but just as easy to compute $\hat{y}$ and thus the observed residuals $e_i$.
 
 
 ### Computing Predictions
